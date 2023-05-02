@@ -45,6 +45,7 @@
   <div class="input">
     <select name="type" id="type">
       <option value="png">png</option>
+      <option value="svg">svg</option>
       <option value="pdf">pdf</option>
     </select>
     <input id="search" />
@@ -131,7 +132,8 @@ countdown.innerHTML = days + " <span class=\'times\'>ngày</span> " + hours + " 
       find();
     }
   });
-
+// Comment đoạn mã cũ
+      /*
   function find() {
     const val = document.getElementById("search").value;
     const type = document.getElementById("type").value;
@@ -158,6 +160,44 @@ countdown.innerHTML = days + " <span class=\'times\'>ngày</span> " + hours + " 
       frame.style.display = "block";
     }
   }
+  */
+  function find() {
+  const val = document.getElementById("search").value;
+  const type = document.getElementById("type").value;
+  const text = val.toUpperCase();
+
+  let n = 55;
+  if (type === "png") {
+    frame.style.display = "none";
+      
+    for (let i = 1; i <= n; i++) {
+      const showImg = new Image();
+      showImg.src = `./image${i}/${text}.png`;
+      showImg.onload = () => {
+        img.src = `./image${i}/${text}.png`;
+        img.style.width = "100%";
+        img.style.marginTop = "10px";
+        img.style.display = "block";
+      };
+    }
+  } else if (type === "pdf") {
+    img.style.display = "none";
+    const index = text.split("_")[0];
+    frame.src = `./pdf${index}/${text}.pdf`;
+    frame.style.display = "block";
+  } else if (type === "svg") {
+    img.style.display = "none";
+    const showImg = new Image();
+    showImg.src = `./image/${text}.svg`;
+    showImg.onload = () => {
+      img.src = `./image/${text}.svg`;
+      img.style.width = "100%";
+      img.style.marginTop = "10px";
+      img.style.display = "block";
+    };
+  }
+}
+
 </script>
 
 <!-- Đoạn này làm lịch vạn niên -->
