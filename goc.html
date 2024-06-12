@@ -1,4 +1,66 @@
 <!DOCTYPE html>
+<style>
+  .navbar {
+    overflow: hidden;
+    background-color: #333;
+  }
+
+  .navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  .dropdown {
+    float: left;
+    overflow: hidden;
+  }
+
+  .dropdown .dropbtn {
+    font-size: 16px;  
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+  }
+
+  .navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #ddd;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+</style>
+
 <head>
   <style>
     html,
@@ -120,7 +182,22 @@ countdown.innerHTML = days + " <span class=\'times\'>ngày</span> " + hours + " 
   <h2>Nếu thấy hữu ích, bạn có thể mời mình 1 cốc cafe nhé. Thanks</h2>
   <h2>Momo: 0389821115</h2>
 </center>
+
 <!--  Kết thúc Đoạn này làm tài trợ -->
+<div class="navbar">
+  <div class="dropdown">
+    <button class="dropbtn">Tài Liệu 
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/sangnhc/id.github.io/main/toan12/Main-HHOXYZ-TDM%20-%20Copy.pdf&embedded=true" target="_blank">Xem Tài liệu</a>
+      <a href="path/to/document2.pdf" target="_blank">Tài liệu 2</a>
+      <a href="path/to/document3.pdf" target="_blank">Tài liệu 3</a>
+    </div>
+  </div> 
+</div>
+
+
 <script>
   const input = document.getElementById("search");
   var img = document.getElementById("img");
