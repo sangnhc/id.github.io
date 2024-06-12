@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Code</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+        }
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .buttons {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="#contact">Contact</a>
+        <a href="tron_de.html">Trộn Đề</a>
+        <a href="fixcode.html">Fix Code</a>
+        <a href="find_latex.html">Tìm Kiếm</a>
+        <a href="Ve_hinh.html">Vẽ Hình</a>
+        <a href="tuong_tu.html">Đề Tương Tự</a>
+        <a href="menu_tree.html">Menu ID</a>
+    </div>
+    <div class="container">
+        <h1>Fix Code</h1>
+        <div class="buttons">
+            <button class="btn btn-primary" onclick="word2tex()">Chuyển Câu Trắc Nghiệm</button>
+            <button class="btn btn-secondary" onclick="wordtotex()">Chuyển Câu Tự Luận</button>
+            <button class="btn btn-success" onclick="fixCode()">Fix Mathpix</button>
+        </div>
+        <div class="form-group mt-3">
+            <label for="inputCode">Dán mã cần sửa:</label>
+            <textarea class="form-control" id="inputCode" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="outputCode">Kết quả sau khi sửa:</label>
+            <textarea class="form-control" id="outputCode" rows="10" readonly></textarea>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="replace.js"></script>
+</body>
+</html>
