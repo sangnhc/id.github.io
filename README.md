@@ -1,1 +1,3 @@
 # id.github.io
+cùng chung với sangtoan.gitub.io và gitlap.io mail gitlap là nguýenangnhc và sangtoan@c3....
+chia sẽ chung thư mục Kho_Latex
