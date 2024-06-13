@@ -105,7 +105,7 @@ function hoanViCauTruc(text) {
 
     function processGroup(group) {
         return group.map(sentence => {
-            let indexChoice = sentence.search(/\\choice|\\choiceTF|\\choiceTFt|\\choiceTF\[t\]|\\choiceTF\[n\]/);
+            let indexChoice = sentence.search(/\\choice|\\motcot|\\haicot|\\choiceTF\[2\]|\\choiceTF\[t\]|\\choiceTF|\\choiceTFt|\\choiceTF\[t\]|\\choiceTF\[n\]/);
             if (indexChoice !== -1) {
                 let noiDungTruocChoice = sentence.slice(0, indexChoice);
                 let noiDungSauChoice = sentence.slice(indexChoice);
