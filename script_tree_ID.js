@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const treeContainer = document.getElementById('tree-container');
 
-    // Tạo các phần riêng biệt cho các loại câu hỏi khác nhau
     const choiceContainer = document.createElement('div');
     choiceContainer.id = 'choice-container';
     const choiceTFContainer = document.createElement('div');
@@ -16,14 +15,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultContainer = document.getElementById('result-container');
 
     console.log('Loading tex_files.json...');
-    fetch('tex_files.json')
-        .then(response => response.json())
+    fetch('https://sangtoan.github.io/tex_files.json')  // URL của tex_files.json trong repo khác
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(files => {
             console.log('Files:', files);
             const fetchedFiles = [];
 
             let filePromises = files.map(file => 
-                fetchFileContent(file).then(content => {
+                fetchFileContent(`https://sangtoan.github.io/${file}`).then(content => {  // URL của các tệp .tex trong repo khác
                     console.log('Fetched content for:', file);
                     fetchedFiles.push({ path: file, content: content });
                 }).catch(error => {
