@@ -1,0 +1,169 @@
+{
+    "baitoan": [
+        {
+            "name": "Bài toán 1",
+            "content": "y = {a}x^2 + {b}"
+        },
+        {
+            "name": "Bài toán 2",
+            "content": "def({a} + {A}*2)"
+        },
+        {
+            "name": "Bài toán 3",
+            "content": "math.pow({a}, {A})"
+        },
+        {
+            "name": "Bài toán với Algebrite",
+            "content": "alg(integrate(x^2, x))"
+        }
+    ],
+    "mathjs": [
+        {
+            "name": "Số học",
+            "subcategories": [
+                {
+                    "name": "math.add",
+                    "content": "math.add(2, 3)"
+                },
+                {
+                    "name": "math.subtract",
+                    "content": "math.subtract(10, 4)"
+                },
+                {
+                    "name": "math.multiply",
+                    "content": "math.multiply(5, 6)"
+                },
+                {
+                    "name": "math.divide",
+                    "content": "math.divide(15, 3)"
+                },
+                {
+                    "name": "math.mod",
+                    "content": "math.mod(8, 3)"
+                },
+                {
+                    "name": "math.abs",
+                    "content": "math.abs(-4.2)"
+                },
+                {
+                    "name": "math.sqrt",
+                    "content": "math.sqrt(16)"
+                },
+                {
+                    "name": "math.pow",
+                    "content": "math.pow(2, 3)"
+                },
+                {
+                    "name": "math.log",
+                    "content": "math.log(10000, 10)"
+                },
+                {
+                    "name": "math.exp",
+                    "content": "math.exp(1)"
+                }
+            ]
+        },
+        {
+            "name": "Lượng giác",
+            "subcategories": [
+                {
+                    "name": "math.sin",
+                    "content": "math.sin(math.pi / 4)"
+                },
+                {
+                    "name": "math.cos",
+                    "content": "math.cos(0)"
+                },
+                {
+                    "name": "math.tan",
+                    "content": "math.tan(math.pi / 4)"
+                },
+                {
+                    "name": "math.asin",
+                    "content": "math.asin(1)"
+                },
+                {
+                    "name": "math.acos",
+                    "content": "math.acos(0)"
+                },
+                {
+                    "name": "math.atan",
+                    "content": "math.atan(1)"
+                }
+            ]
+        },
+        {
+            "name": "Nguyên hàm và tích phân",
+            "subcategories": [
+                {
+                    "name": "math.integrate",
+                    "content": "math.integrate(x^2, x)"
+                },
+                {
+                    "name": "math.derivative",
+                    "content": "math.derivative(x^2 + x, x)"
+                }
+            ]
+        },
+        {
+            "name": "Đại số",
+            "subcategories": [
+                {
+                    "name": "math.factor",
+                    "content": "math.factor(x^2 - 4x + 3)"
+                },
+                {
+                    "name": "math.simplify",
+                    "content": "math.simplify(2x + 3x)"
+                },
+                {
+                    "name": "math.expand",
+                    "content": "math.expand((x + 1)^2)"
+                },
+                {
+                    "name": "math.evaluate",
+                    "content": "math.evaluate(2 + 3 * sqrt(4))"
+                }
+            ]
+        },
+        {
+            "name": "Khai triển đa thức",
+            "subcategories": [
+                {
+                    "name": "math.expand",
+                    "content": "math.expand((a + b)^2)"
+                }
+            ]
+        },
+        {
+            "name": "Đại số tổ hợp",
+            "subcategories": [
+                {
+                    "name": "math.combinations",
+                    "content": "math.combinations(5, 3)"
+                },
+                {
+                    "name": "math.permutations",
+                    "content": "math.permutations(5, 3)"
+                }
+            ]
+        },
+        {
+            "name": "Các hệ số và hằng số",
+            "subcategories": [
+                {
+                    "name": "math.pi",
+                    "content": "math.pi"
+                },
+                {
+                    "name": "math.e",
+                    "content": "math.e"
+                },
+                {
+                    "name": "math.tau",
+                    "content": "math.tau"
+                }
+            ]
+        }
+    ]
+}
