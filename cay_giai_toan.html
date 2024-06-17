@@ -197,15 +197,31 @@
                 <button onclick="toggleInstructions()">Hướng dẫn</button>                
             </div>
             <div id="instructions">
-                <p>Ký tự được quy ước:</p>
-                <ul>
-                    <li><span class="highlight">{a}</span>: Số ngẫu nhiên từ -10 đến 10</li>
-                    <li><span class="highlight">{A}</span>: Số ngẫu nhiên từ -10 đến 10</li>
-                    <li><span class="highlight">def(...)</span>: Thực hiện phép toán bên trong</li>
-                </ul>
-                <p>Chế độ hiển thị:</p>
-                <button onclick="toggleExact()">Chuyển đổi S<=>D</button>
-            </div>
+    <p>Ký tự được quy ước:</p>
+    <ul>
+        <li><span class="highlight">{a}</span>: Số ngẫu nhiên từ -10 đến 10</li>
+        <li><span class="highlight">{A}</span>: Số ngẫu nhiên từ -10 đến 10</li>
+        <li><span class="highlight">def(...)</span>: Thực hiện phép toán bên trong</li>
+        <li><span class="highlight">{Z}</span>: Năm hiện tại</li>
+        <li><span class="highlight">{A+}</span>: Số dương ngẫu nhiên từ 1 đến 10</li>
+        <li><span class="highlight">{A-}</span>: Số âm ngẫu nhiên từ -10 đến -1</li>
+        <li><span class="highlight">{G+}</span>: Số chẵn dương ngẫu nhiên từ 2 đến 10</li>
+        <li><span class="highlight">{K+}</span>: Số lẻ dương ngẫu nhiên từ 1 đến 9</li>
+        <li><span class="highlight">{O+}</span>: Số nguyên tố dương ngẫu nhiên (2, 3, 5, 7)</li>
+        <li><span class="highlight">{S+}</span>: Số dương ngẫu nhiên từ 1 đến 5</li>
+        <li><span class="highlight">{X+}</span>: Số nhỏ dương ngẫu nhiên từ 1 đến 3</li>
+        <li><span class="highlight">{a+}</span>: Bội số của 3 dương ngẫu nhiên từ 3 đến 9</li>
+        <li><span class="highlight">{G-}</span>: Số chẵn âm ngẫu nhiên từ -2 đến -10</li>
+        <li><span class="highlight">{K-}</span>: Số lẻ âm ngẫu nhiên từ -1 đến -9</li>
+        <li><span class="highlight">{O-}</span>: Số nguyên tố âm ngẫu nhiên (-2, -3, -5, -7)</li>
+        <li><span class="highlight">{S-}</span>: Số âm ngẫu nhiên từ -1 đến -5</li>
+        <li><span class="highlight">{X-}</span>: Số nhỏ âm ngẫu nhiên từ -1 đến -3</li>
+        <li><span class="highlight">{a-}</span>: Bội số của 3 âm ngẫu nhiên từ -3 đến -9</li>
+    </ul>
+    <p>Chế độ hiển thị:</p>
+    <button onclick="toggleExact()">Chuyển đổi S<=>D</button>
+</div>
+
             <div class="results" id="results"></div>
             <button onclick="downloadResults()">Tải về kết quả</button>
         </div>
