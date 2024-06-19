@@ -32,5 +32,7 @@
     {"find": "B C D \\\\cdot A' B' C'", "replace": "BCD.A'B'C'"},
     {"find": "A B C \\\\cdot A' B' C'", "replace": "ABC.A'B'C'"},
     {"find": "B C D \\\\cdot A'", "replace": "BCD.A"},
+    {"find": "ABC\\\\cdotA'", "replace": "ABC.A"},
+    {"find": "BCD\\\\cdotA'", "replace": "BCD.A"},
     {"find": "\\$D=", "replace": "$\\mathscr{D}="}
 ]
