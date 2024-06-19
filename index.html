@@ -94,27 +94,97 @@
         #login-container button:hover {
             background-color: #0056b3;
         }
+        /* CSS for the menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            background-color: #f1f1f1;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-submenu:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body id="body">
     <div class="menu">
         <a href="index.html">Home</a>
         <a href="tron_de.html">Trộn Đề</a>
-        <a href="fixcode.html">Fix Code</a>
-        <a href="find_latex.html">Tìm Kiếm</a>
-        <a href="Ve_hinh.html">Vẽ Hình</a>
-        <a href="menu_tree.html">Menu ID</a>
-        <a href="symbols.html">Mathtype Latex</a>
-        <a href="contact.html">Tác Giả</a>
+        <div class="dropdown">
+            <span class="dropbtn">Tiện ích</span>
+            <div class="dropdown-content">
+                <a href="fixcode.html">Fix Code</a>
+                <a href="find_latex.html">Tìm Kiếm</a>
+                <a href="Ve_hinh.html">Vẽ Hình</a>
+                <a href="menu_tree.html">Menu ID</a>
+                <a href="symbols.html">Mathtype Latex</a>
+                <a href="contact.html">Tác Giả</a>
+                <div class="dropdown-submenu">
+                    <a href="#" class="dropdown-toggle">Menu ID</a>
+                    <div class="dropdown-content">
+                        <a href="menu_tree.html">Menu Tree</a>
+                        <a href="cay_giai_toan.html">Menu Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--
-    <div id="login-container">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" />
-        <input type="password" id="password" placeholder="Password" />
-        <button onclick="login()">Login</button>
-    </div>
-    -->
     <div id="main-content" class="container" style="display: block;">
         <div class="input">
             <select name="type" id="type">
@@ -172,23 +242,42 @@
             let n = 55; // số lượng thư mục image
             let found = false; // biến kiểm tra xem ảnh có được tìm thấy không
 
+            function checkImage(url) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.src = url;
+                    img.onload = () => resolve(url);
+                    img.onerror = () => reject(url);
+                });
+            }
+
             if (['png', 'jpg', 'svg'].includes(type)) {
                 frame.style.display = "none";
                 img.style.display = "none"; // ẩn ảnh trước đó nếu có
 
-                for (let i = 1; i <= n; i++) {
-                    const showImg = new Image();
-                    showImg.src = `./image${i}/${text}.${type}`;
-                    showImg.onload = () => {
-                        if (!found) { // chỉ hiển thị ảnh đầu tiên tìm thấy
-                            found = true;
-                            img.src = showImg.src;
-                            img.style.width = "100%";
-                            img.style.marginTop = "10px";
-                            img.style.display = "block";
-                        }
-                    };
-                }
+                const sources = [
+                    `./image`,
+                    `https://sangnhc.id.github.io/image`
+                ];
+
+                sources.forEach(source => {
+                    for (let i = 1; i <= n; i++) {
+                        const url = `${source}${i}/${text}.${type}`;
+                        checkImage(url)
+                            .then(foundUrl => {
+                                if (!found) {
+                                    found = true;
+                                    img.src = foundUrl;
+                                    img.style.width = "100%";
+                                    img.style.marginTop = "10px";
+                                    img.style.display = "block";
+                                }
+                            })
+                            .catch(errorUrl => {
+                                console.log(`Image not found: ${errorUrl}`);
+                            });
+                    }
+                });
             } else if (type === "pdf") {
                 img.style.display = "none";
                 const index = text.split("_")[0];
