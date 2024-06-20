@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ghi Chú</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
         body {
             margin: 0;
@@ -39,7 +38,7 @@
             color: black;
         }
         #note-container {
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
             background: rgba(255, 255, 255, 0.8);
@@ -51,7 +50,7 @@
         }
         #note-container textarea {
             width: 100%;
-            height: 70vh; /* Khung ghi chú cao gần cả màn hình */
+            height: 70vh;
             padding: 10px;
             font-size: 16px;
         }
@@ -81,14 +80,16 @@
 </head>
 <body>
     <div class="menu">
-        <a href="index.html">Home</a>
-        <a href="#contact">Contact</a>
+        <a href="index.html">Home</a>        
         <a href="tron_de.html">Trộn Đề</a>
         <a href="fixcode.html">Fix Code</a>
         <a href="find_latex.html">Tìm Kiếm</a>
         <a href="Ve_hinh.html">Vẽ Hình</a>
         <a href="tuong_tu.html">Đề Tương Tự</a>
         <a href="menu_tree.html">Menu ID</a>
+        <a href="note.html">Ghi Chú</a>
+        <a href="symbols.html">symbols</a>
+        <a href="contact.html">Tác giả</a>
     </div>
 
     <div id="note-container">
@@ -99,94 +100,38 @@
         </div>
     </div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD159nOuuaZvZQ5m4VnJXd2mXmDSrgLFvE",
-            authDomain: "sangtoan-c4c9d.firebaseapp.com",
-            projectId: "sangtoan-c4c9d",
-            storageBucket: "sangtoan-c4c9d.appspot.com",
-            messagingSenderId: "401028957214",
-            appId: "1:401028957214:web:dcfe67534f5e151cf21a0f",
-            measurementId: "G-PT47FCXPJR"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth();
-
-        // Google Sign-In
-        const provider = new GoogleAuthProvider();
+    <script>
+        // Temporarily disable the login functionality
+        // const correctPassword = "sangnhc"; // Thay "yourpassword" bằng mật khẩu bạn muốn
 
         document.addEventListener('DOMContentLoaded', (event) => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is signed in
-                    document.getElementById('note-container').style.display = 'flex';
-                    loadNote();
-                } else {
-                    // User is signed out
-                    signInWithPopup(auth, provider)
-                        .then((result) => {
-                            console.log("Signed in as: ", result.user.displayName);
-                        })
-                        .catch((error) => {
-                            console.error("Error signing in: ", error);
-                        });
-                }
-            });
+            // document.getElementById('login-container').style.display = 'flex';
+            document.getElementById('note-container').style.display = 'flex';
+            document.getElementById('note').value = localStorage.getItem('note') || '';
         });
 
-        // Functions to handle note actions
-        async function saveNote() {
-            const noteContent = document.getElementById('note').value;
-            try {
-                await setDoc(doc(db, "notes", "note1"), {
-                    content: noteContent
-                });
-                alert('Ghi chú đã được lưu!');
-            } catch (error) {
-                console.error("Error saving note: ", error);
-                alert('Có lỗi xảy ra khi lưu ghi chú!');
-            }
+        // function checkPassword() {
+        //     const password = document.getElementById('password').value;
+        //     if (password === correctPassword) {
+        //         document.getElementById('login-container').style.display = 'none';
+        //         document.getElementById('note-container').style.display = 'flex';
+        //         document.getElementById('note').value = localStorage.getItem('note') || '';
+        //     } else {
+        //         alert('Mật khẩu không đúng!');
+        //     }
+        // }
+
+        function saveNote() {
+            const note = document.getElementById('note').value;
+            localStorage.setItem('note', note);
+            alert('Ghi chú đã được lưu!');
         }
 
-        async function loadNote() {
-            const docRef = doc(db, "notes", "note1");
-            try {
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    document.getElementById('note').value = docSnap.data().content;
-                } else {
-                    console.log("No such document!");
-                }
-            } catch (error) {
-                console.error("Error loading note: ", error);
-                alert('Có lỗi xảy ra khi tải ghi chú!');
-            }
-        }
-
-        async function clearNote() {
+        function clearNote() {
             document.getElementById('note').value = '';
-            try {
-                await deleteDoc(doc(db, "notes", "note1"));
-                alert('Ghi chú đã được xóa!');
-            } catch (error) {
-                console.error("Error deleting note: ", error);
-                alert('Có lỗi xảy ra khi xóa ghi chú!');
-            }
+            localStorage.removeItem('note');
+            alert('Ghi chú đã được xóa!');
         }
-
-        // Gán các hàm vào đối tượng window để có thể truy cập từ onclick
-        window.saveNote = saveNote;
-        window.clearNote = clearNote;
-        window.loadNote = loadNote;
     </script>
 </body>
 </html>
