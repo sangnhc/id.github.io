@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultContainer = document.getElementById('result-container');
 
     console.log('Loading tex_files.json...');
-    fetch('https://sangtoan.github.io/tex_files.json')  // URL của tex_files.json trong repo khác
+    fetch('tex_files.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fetchedFiles = [];
 
             let filePromises = files.map(file => 
-                fetchFileContent(`https://sangtoan.github.io/${file}`).then(content => {  // URL của các tệp .tex trong repo khác
+                fetchFileContent(file).then(content => {
                     console.log('Fetched content for:', file);
                     fetchedFiles.push({ path: file, content: content });
                 }).catch(error => {
@@ -109,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const fileLi = document.createElement('li');
                     fileLi.className = 'file';
                     fileLi.textContent = file.id; // Hiển thị ID không có dấu gạch nối
-                    fileLi.addEventListener('click', () => {
+                    fileLi.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Ngăn sự kiện click lan lên phần tử cha
                         displayFileContent(file);
                     });
                     container.appendChild(fileLi);
