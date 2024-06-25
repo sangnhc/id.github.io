@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fix Code</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css">
     <style>
         /* CSS for the menu */
         .menu {
@@ -72,6 +73,15 @@
         .dropdown-submenu:hover .dropdown-content {
             display: block;
         }
+
+        /* CSS for the render result */
+        #renderResult {
+            min-height: 300px;
+            overflow: auto;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -79,6 +89,7 @@
         <a href="index.html">Home</a>
         <a href="tron_de.html">Trộn Đề</a>
         <a href="fixcode.html">Fix Code</a>
+        <a href="key.html">Key</a>
         <div class="dropdown">
             <span class="dropbtn">Tiện ích</span>
             <div class="dropdown-content">
@@ -98,22 +109,28 @@
         </div>
     </div>
     <div class="container">
-        <h1>Fix Code</h1>
-        <div class="buttons">
+        <h1 class="mt-4">Fix Code</h1>
+        <div class="buttons mb-3">
             <button class="btn btn-primary" onclick="word2tex()">Chuyển Câu Trắc Nghiệm</button>
             <button class="btn btn-secondary" onclick="wordtotex()">Chuyển Câu Tự Luận</button>
             <button class="btn btn-success" onclick="fixCode()">Fix Mathpix</button>
         </div>
-        <div class="form-group mt-3">
+        <div class="form-group">
             <label for="inputCode">Dán mã cần sửa:</label>
             <textarea class="form-control" id="inputCode" rows="10"></textarea>
         </div>
         <div class="form-group">
             <label for="outputCode">Kết quả sau khi sửa:</label>
-            <textarea class="form-control" id="outputCode" rows="10" readonly></textarea>
+            <textarea class="form-control" id="outputCode" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="renderResult">Kết quả hiển thị:</label>
+            <div id="renderResult" class="border p-3"></div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
     <script type="module">
         import { wordtotex } from './wordtotex.js';
         import { word2tex } from './word2tex.js';
@@ -122,6 +139,124 @@
         window.wordtotex = wordtotex;
         window.word2tex = word2tex;
         window.fixCode = fixCode;
+    
+        function layCacNgoacLon(text) {
+            let ngoacLon = [];
+            let demNgoac = 0;
+            let batDau = null;
+
+            for (let i = 0; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        let ketThuc = i;
+                        ngoacLon.push([batDau, ketThuc]);
+                        batDau = null;
+                    }
+                }
+            }
+
+            return ngoacLon;
+        }
+
+        function replaceHeva(content) {
+            const regexHeva = /\\heva\s*\{/g;
+            let match;
+            while ((match = regexHeva.exec(content)) !== null) {
+                const startIndex = match.index;
+                const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+                if (ngoacLon.length > 0) {
+                    const [batDau, ketThuc] = ngoacLon[0];
+                    const innerContent = content.slice(startIndex + batDau + 1, startIndex + ketThuc);
+                    const newContent = innerContent.replace(/&/g, '\\\\').trim();
+                    const fullMatch = content.slice(startIndex, startIndex + ketThuc + 1);
+                    const replacedMatch = `\\begin{cases} ${newContent} \\end{cases}`;
+                    content = content.replace(fullMatch, replacedMatch);
+                }
+            }
+            return content;
+        }
+
+        function replaceHoac(content) {
+            const regexHoac = /\\hoac\s*\{/g;
+            let match;
+            while ((match = regexHoac.exec(content)) !== null) {
+                const startIndex = match.index;
+                const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+                if (ngoacLon.length > 0) {
+                    const [batDau, ketThuc] = ngoacLon[0];
+                    const innerContent = content.slice(startIndex + batDau + 1, startIndex + ketThuc);
+                    const newContent = innerContent.replace(/&/g, '\\\\').trim();
+                    const fullMatch = content.slice(startIndex, startIndex + ketThuc + 1);
+                    const replacedMatch = `\\left[\\begin{array}{l} ${newContent} \\end{array}\\right.`;
+                    content = content.replace(fullMatch, replacedMatch);
+                }
+            }
+            return content;
+        }
+
+        function replaceChoice(content) {
+            const regex = /\\choice\s*\{/g;
+            let match;
+            while ((match = regex.exec(content)) !== null) {
+                const startIndex = match.index;
+                const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+                if (ngoacLon.length >= 4) {
+                    const [batDau1, ketThuc1] = ngoacLon[0];
+                    const [batDau2, ketThuc2] = ngoacLon[1];
+                    const [batDau3, ketThuc3] = ngoacLon[2];
+                    const [batDau4, ketThuc4] = ngoacLon[3];
+                    const choices = [
+                        content.slice(startIndex + batDau1 + 1, startIndex + ketThuc1),
+                        content.slice(startIndex + batDau2 + 1, startIndex + ketThuc2),
+                        content.slice(startIndex + batDau3 + 1, startIndex + ketThuc3),
+                        content.slice(startIndex + batDau4 + 1, startIndex + ketThuc4)
+                    ];
+                    const labels = ['A', 'B', 'C', 'D'];
+                    let transformedChoices = '<div class="choices">' + choices.map((choice, index) => {
+                        const isCorrect = choice.includes('\\True');
+                        choice = choice.replace('\\True', '');
+                        return `<div class="choice"><input type="radio" name="choice" value="${isCorrect}"> ${labels[index]}. ${choice}</div>`;
+                    }).join('') + '</div><div class="result"></div>';
+                    content = content.slice(0, startIndex) + transformedChoices + content.slice(startIndex + ketThuc4 + 1);
+                }
+            }
+            return content;
+        }
+
+        function processContent(content) {
+            content = replaceHeva(content);
+            content = replaceHoac(content);
+            content = replaceChoice(content);
+            content = content.replace(/\\\\/g, '<br>');
+            return content;
+        }
+
+        function renderMath() {
+            let content = document.getElementById('outputCode').value;
+            content = processContent(content);
+            const renderElement = document.getElementById('renderResult');
+            renderElement.innerHTML = content;
+            renderMathInElement(renderElement, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ]
+            });
+        }
+
+        document.getElementById('outputCode').addEventListener('input', renderMath);
+
+        // Manually trigger the event for initial rendering
+        document.getElementById('outputCode').dispatchEvent(new Event('input'));
     </script>
 </body>
 </html>
