@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search LaTeX Files</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+        }
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        #githubRepoInput {
+            display: none;
+        }
+        .hidden-checkbox {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .hidden-checkbox:checked::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(0, 0, 0, 0.1);
+            position: absolute;
+            left: 4px;
+            top: 4px;
+        }
+        #fileCountMessage {
+            font-weight: bold;
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="#contact">Contact</a>
+        <a href="tron_de.html">Trộn Đề</a>
+        <a href="fixcode.html">Fix Code</a>
+        <a href="find_latex.html">Tìm Kiếm</a>
+    </div>
+    <div class="container">
+        <h1>Tìm kiếm tệp LaTeX</h1>
+        <div class="form-group mt-3">
+            <label for="searchKeyword">
+                Nhập từ khóa (cách nhau bằng dấu phẩy):
+                <input type="checkbox" id="searchBothCheckbox" class="hidden-checkbox">
+            </label>
+            <input type="text" class="form-control" id="searchKeyword" placeholder="Nhập từ khóa để tìm tệp LaTeX">
+        </div>
+        <div id="fileCountMessage"></div>
+        <div class="form-group mt-3">
+            <label for="searchEnvironment">Môi Trường:</label>
+            <select class="form-control" id="searchEnvironment">
+                <option value="ex">ex</option>
+                <option value="bt">bt</option>
+                <option value="vd">vd</option>
+                <option value="tikzpicture">hình vẽ</option>
+                <option value="dn">dn</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="latexFiles">Chọn các tệp LaTeX:</label>
+            <input type="file" class="form-control-file" id="latexFiles" webkitdirectory directory multiple onchange="handleFileUpload()">
+        </div>
+        <button class="btn btn-primary" onclick="searchTexFiles()">Tìm Kiếm</button>
+        <button class="btn btn-secondary" onclick="loadMoreFiles()">Tải bổ sung tệp</button>
+        <button class="btn btn-success" onclick="downloadResults()">Tải kết quả</button>
+        <div class="form-group mt-3">
+            <input type="text" id="githubRepoInput" placeholder="Nhập repo GitHub (e.g., user/repo)">
+        </div>
+        <div class="mt-3" id="results"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        let allFiles = [];
+
+        window.onbeforeunload = function() {
+            return "Bạn có chắc chắn muốn reload trang? Dữ liệu chưa được lưu sẽ mất.";
+        };
+
+        function handleFileUpload() {
+            const filesInput = document.getElementById('latexFiles').files;
+            const previousFileCount = allFiles.length;
+            for (const file of filesInput) {
+                if (!allFiles.includes(file)) {
+                    allFiles.push(file);
+                }
+            }
+            const newFileCount = allFiles.length;
+            document.getElementById('fileCountMessage').innerText = `Số tệp đã tải: ${previousFileCount}_${newFileCount}`;
+        }
+
+        async function searchTexFiles() {
+            const keywordInput = document.getElementById('searchKeyword').value;
+            const keywords = keywordInput.split(',').map(kw => kw.trim().toLowerCase());
+            const searchEnvironment = document.getElementById('searchEnvironment').value;
+            const searchBoth = document.getElementById('searchBothCheckbox').checked;
+            let results = '';
+
+            document.getElementById('results').innerHTML = 'Đang tìm kiếm...';
+
+            for (const file of allFiles) {
+                const content = await file.text();
+                const matches = findMatches(content, keywords, searchEnvironment);
+                if (matches.length > 0) {
+                    matches.forEach(match => {
+                        results += `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <pre>${escapeHtml(match)}</pre>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard(\`${escapeHtml(match)}\`)">Copy</button>
+                                </div>
+                            </div>`;
+                    });
+                }
+            }
+
+            if (searchBoth) {
+                const repo = document.getElementById('githubRepoInput').value || 'sangtoan/sangtoan.github.io';
+                const folderPath = 'Kho_Latex';
+                const files = await fetchFiles(repo, folderPath);
+                for (const file of files) {
+                    const content = await fetchFileContent(file);
+                    const matches = findMatches(content, keywords, searchEnvironment);
+                    if (matches.length > 0) {
+                        matches.forEach(match => {
+                            results += `
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <pre>${escapeHtml(match)}</pre>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard(\`${escapeHtml(match)}\`)">Copy</button>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                }
+            }
+
+            document.getElementById('results').innerHTML = results || '<p>Không tìm thấy kết quả nào.</p>';
+        }
+
+        function loadMoreFiles() {
+            document.getElementById('latexFiles').click();
+        }
+
+        async function fetchFiles(repo, path) {
+            const response = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
+            const data = await response.json();
+            let files = [];
+            for (const item of data) {
+                if (item.type === 'file' && item.name.endsWith('.tex')) {
+                    files.push(item.download_url);
+                } else if (item.type === 'dir') {
+                    const subFiles = await fetchFiles(repo, item.path);
+                    files = files.concat(subFiles);
+                }
+            }
+            return files;
+        }
+
+        async function fetchFileContent(url) {
+            const response = await fetch(url);
+            return response.text();
+        }
+
+        function findMatches(content, keywords, searchEnvironment) {
+            const envPattern = new RegExp(`\\\\begin\\{${searchEnvironment}\\}.*?\\\\end\\{${searchEnvironment}\\}`, 'gs');
+            const matches = content.match(envPattern);
+            if (matches) {
+                return matches.filter(match => {
+                    return keywords.every(keyword => match.toLowerCase().includes(keyword));
+                });
+            }
+            return [];
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function copyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Copied to clipboard!');
+        }
+
+        function downloadResults() {
+            const results = document.getElementById('results').innerText;
+            const blob = new Blob([results], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'result_file.tex';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+    </script>
+</body>
+</html>
