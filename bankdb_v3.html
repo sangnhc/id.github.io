@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX Uploader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+        .collapsible {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .active, .collapsible:hover {
+            background-color: #45a049;
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .total-row {
+            background-color: #e0e0e0;
+            font-weight: bold;
+        }
+        #databaseSize {
+            font-weight: bold;
+        }
+        #fileList {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .file-item button {
+            margin-left: 10px;
+        }
+        #loadingMessage, #searchingMessage {
+            color: red;
+            font-weight: bold;
+        }
+        .search-result {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .textarea-container {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: none;
+            outline: none;
+            resize: none;
+        }
+        .search-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .search-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .search-container select, 
+        .search-container input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .search-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+        .buttons-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .buttons-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .buttons-container button:hover {
+            background-color: #45a049;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Quay Lại Trang Chủ</a>
+    </div>
+    <h1>Tải Kho LaTeX Tạo Bank</h1>
+    <h2>Nơi tạo kho dữ liệu, tìm kiếm và lọc dữ liệu</h2>
+    <div class="buttons-container">
+        <input type="file" id="fileInput" webkitdirectory multiple>
+        <!--<button onclick="processFiles()">Tải lên và phân tích</button>-->
+        <button onclick="downloadAllFiles('zip')">Tải toàn bộ kho (Zip)</button>
+        <button onclick="downloadAllFiles('sql')">Tải toàn bộ kho (SQL)</button>
+        <button onclick="clearDatabase()">Xóa tất cả tệp</button>
+    </div>
+
+    <div id="loadingMessage" style="display: none;">Đang xử lý...</div>
+    <div id="searchingMessage" style="display: none;">Đang tìm kiếm...</div>
+
+    <h2>Thống kê ngân hàng câu hỏi</h2>
+    <button class="collapsible">Lớp 10</button>
+    <div class="content">
+        <table id="exTable10" border="1">
+            <thead>
+                <tr>
+                    <th>Loại từ khóa</th>
+                    <th>Số câu</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <button class="collapsible">Lớp 11</button>
+    <div class="content">
+        <table id="exTable11" border="1">
+            <thead>
+                <tr>
+                    <th>Loại từ khóa</th>
+                    <th>Số câu</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <button class="collapsible">Lớp 12</button>
+    <div class="content">
+        <table id="exTable12" border="1">
+            <thead>
+                <tr>
+                    <th>Loại từ khóa</th>
+                    <th>Số câu</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <h2>Thống kê cho các môi trường khác</h2>
+    <button class="collapsible">Môi trường khác</button>
+    <div class="content">
+        <table id="otherEnvTable" border="1">
+            <thead>
+                <tr>
+                    <th>Môi trường</th>
+                    <th>Tổng số</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <h2>Các file đã tải lên</h2>
+    <button class="collapsible">Danh sách file</button>
+    <div class="content">
+        <ul id="fileList"></ul>
+    </div>
+
+    <h2>Thông tin cơ sở dữ liệu</h2>
+    <p id="databaseSize">Dung lượng cơ sở dữ liệu hiện tại: 0 MB</p>
+
+    <h2>Tìm kiếm trong cơ sở dữ liệu</h2>
+    <div class="search-container">
+        <label for="searchEnv">Môi trường:</label>
+        <select id="searchEnv">
+            <option value="ex">ex</option>
+            <option value="tikzpicture">hình vẽ</option>
+            <option value="dn">dn</option>
+            <option value="dl">dl</option>
+            <option value="tc">tc</option>
+            <option value="luuy">luuy</option>
+            <option value="note">note</option>
+        </select>
+        <label for="searchKeywords">Từ khóa (cách nhau bởi dấu phẩy):</label>
+        <input type="text" id="searchKeywords" placeholder="Nhập từ khóa">
+        <button onclick="searchDatabase()">Tìm kiếm</button>
+    </div>
+
+    <h2>Kết quả tìm kiếm</h2>
+    <div id="searchResults"></div>
+
+    <script src="bank_script_v2.js"></script>
+</body>
+</html>
