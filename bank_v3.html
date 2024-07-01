@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX File Uploader</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: #00796b;
+            color: white;
+            padding: 1em;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        main {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5em;
+            margin: 0 0 10px;
+        }
+        .file-input, .file-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .file-input div, .file-options div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+        .file-input label, .file-options label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .file-input button, .file-options button, #upload-label {
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 40px; /* Chiều cao đồng bộ cho tất cả */
+            background-color: #00796b;
+            color: white;
+            cursor: pointer;
+        }
+        .file-options input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 40px; /* Chiều cao đồng bộ */
+            background-color: white;
+            color: black;
+            text-align: center;
+        }
+        #upload-label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-input input[type="file"] {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #00796b;
+            color: white;
+        }
+        .collapse {
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #00796b;
+        }
+        .content {
+            display: none;
+        }
+        .fileDisplayArea {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            height: 40px; /* Chiều cao đồng bộ cho tất cả */
+        }
+        button:hover {
+            background-color: #005b4f;
+        }
+        .highlight {
+            background-color: #e0f7fa;
+        }
+        .error {
+            background-color: #ffccbc;
+        }
+        .summary {
+            margin-top: 20px;
+        }
+        .meaning {
+            max-width: 200px;
+            word-wrap: break-word;
+        }
+        .loading {
+            font-weight: bold;
+            color: red;
+        }
+        .content-container {
+            margin-top: 20px;
+        }
+        .content-box {
+            background-color: #f4f7f6;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .content-box textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+        }
+        .content-box button {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-group button {
+            flex: 1;
+            margin-right: 5px;
+        }
+        .button-group button:last-child {
+            margin-right: 0;
+        }
+        .row-0 {
+            background-color: #e0f7fa;
+        }
+        .row-1 {
+            background-color: #e0ffe0;
+        }
+        .row-2 {
+            background-color: #fff0e0;
+        }
+        .notification {
+            display: none;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Tải lên các tệp LaTeX</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="file-input">
+                <div>
+                    <label for="upload">Chọn Kho Tex:</label>
+                    <label id="upload-label" for="upload">Chọn Thư Mục</label>
+                    <input type="file" id="upload" webkitdirectory directory multiple>
+                </div>
+                <div>
+                    <label for="loadMoreButton">Load thêm:</label>
+                    <button id="loadMoreButton">Load thêm</button>
+                </div>
+                <div>
+                    <label for="numFiles">Số đề:</label>
+                    <input type="number" id="numFiles" min="1" value="1">
+                </div>
+                <div>
+                    <label for="generateButton">Tạo đề:</label>
+                    <button id="generateButton">Tạo đề</button>
+                </div>
+                <div>
+                    <label for="downloadAllButton">Tải xuống tất cả:</label>
+                    <button id="downloadAllButton">Tải xuống tất cả</button>
+                </div>
+            </div>
+            <div id="loadingMessage" class="loading" style="display:none;">Đang xử lý...</div>
+            <div id="notification" class="notification">Đã tạo đề xong!</div>
+        </div>
+        
+        <div class="container fileDisplayArea" id="choiceArea">
+            <h2 class="collapse">Đóng - Mở Bảng Câu Hỏi Trắc Nghiệm</h2>
+            <div class="content">
+                <div class="collapse">Lớp 10</div>
+                <div class="content">
+                    <div class="collapse">Lớp 10 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTable10_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTable10_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTable10_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 11</div>
+                <div class="content">
+                    <div class="collapse">Lớp 11 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTable11_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTable11_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTable11_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 12</div>
+                <div class="content">
+                    <div class="collapse">Lớp 12 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTable12_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTable12_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTable12_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container fileDisplayArea" id="choiceTFArea">
+            <h2 class="collapse">Đóng - Mở Bảng Câu Hỏi Đúng Sai</h2>
+            <div class="content">
+                <div class="collapse">Lớp 10</div>
+                <div class="content">
+                    <div class="collapse">Lớp 10 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTFTable10_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTFTable10_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTFTable10_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 11</div>
+                <div class="content">
+                    <div class="collapse">Lớp 11 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTFTable11_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTFTable11_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTFTable11_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 12</div>
+                <div class="content">
+                    <div class="collapse">Lớp 12 - Nhóm D</div>
+                    <div class="content">
+                        <table id="choiceTFTable12_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm H</div>
+                    <div class="content">
+                        <table id="choiceTFTable12_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm X</div>
+                    <div class="content">
+                        <table id="choiceTFTable12_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container fileDisplayArea" id="othersArea">
+            <h2 class="collapse">Đóng - Mở Bảng Câu Hỏi Tự Luận</h2>
+            <div class="content">
+                <div class="collapse">Lớp 10</div>
+                <div class="content">
+                    <div class="collapse">Lớp 10 - Nhóm D</div>
+                    <div class="content">
+                        <table id="othersTable10_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm H</div>
+                    <div class="content">
+                        <table id="othersTable10_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 10 - Nhóm X</div>
+                    <div class="content">
+                        <table id="othersTable10_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 11</div>
+                <div class="content">
+                    <div class="collapse">Lớp 11 - Nhóm D</div>
+                    <div class="content">
+                        <table id="othersTable11_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm H</div>
+                    <div class="content">
+                        <table id="othersTable11_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 11 - Nhóm X</div>
+                    <div class="content">
+                        <table id="othersTable11_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="collapse">Lớp 12</div>
+                <div class="content">
+                    <div class="collapse">Lớp 12 - Nhóm D</div>
+                    <div class="content">
+                        <table id="othersTable12_D">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm H</div>
+                    <div class="content">
+                        <table id="othersTable12_H">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="collapse">Lớp 12 - Nhóm X</div>
+                    <div class="content">
+                        <table id="othersTable12_X">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>N</th>
+                                    <th>H</th>
+                                    <th>V</th>
+                                    <th>C</th>
+                                    <th>Total</th>
+                                    <th>Ý nghĩa ID</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container summary">
+            <h2>Thống Kê Ma Trận</h2>
+            <table id="summaryTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ý nghĩa</th>
+                        <th>Tổng số</th>
+                        <th>Trắc Nghiệm</th>
+                        <th>Đúng Sai</th>
+                        <th>Tự Luận</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="container content-container" id="contentContainer">
+            <h2>Kết Quả</h2>
+        </div>
+    </main>
+<script>
+    document.querySelectorAll('.collapse').forEach(header => {
+        header.addEventListener('click', () => {
+            header.classList.toggle('collapsed');
+            header.nextElementSibling.classList.toggle('content');
+        });
+    });
+
+    let idCount = {};
+    let idMeanings = {};
+
+    fetch('ynghiaID.json')
+        .then(response => response.json())
+        .then(data => {
+            idMeanings = data;
+        })
+        .catch(error => console.error('Error loading ID meanings:', error));
+
+    document.getElementById('upload').addEventListener('change', handleFileUpload);
+    document.getElementById('loadMoreButton').addEventListener('click', () => {
+        document.getElementById('upload').click();
+    });
+
+    function handleFileUpload(e) {
+        var loadingMessage = document.getElementById('loadingMessage');
+        loadingMessage.style.display = 'block';
+
+        var files = e.target.files;
+
+        function readFile(file) {
+            return new Promise((resolve, reject) => {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var content = e.target.result;
+                    content = content.replace(/{bt}/g, '{ex}');
+                    var matches = content.match(/\\begin{ex}[\s\S]*?\\end{ex}/g) || [];
+                    matches.forEach(match => {
+                        var idMatches = match.match(/[0-9][A-Z][0-9][NHVC][0-9A-Z]-[0-9A-Z]/g) || [];
+                        idMatches.forEach(id => {
+                            var genericId = id.slice(0, 3) + '?' + id.slice(4);
+                            if (!idCount[genericId]) {
+                                idCount[genericId] = { N: 0, H: 0, V: 0, C: 0, total: 0, choice: 0, choiceTF: 0, others: 0, matches: [] };
+                            }
+                            idCount[genericId].total += 1;
+                            if (id.includes('N')) idCount[genericId].N += 1;
+                            if (id.includes('H')) idCount[genericId].H += 1;
+                            if (id.includes('V')) idCount[genericId].V += 1;
+                            if (id.includes('C')) idCount[genericId].C += 1;
+                            
+                            idCount[genericId].matches.push({ id: id, content: match });
+
+                            if (match.includes("\\choice") && !match.includes("\\choiceTF")) {
+                                idCount[genericId].choice += 1;
+                            } else if (match.includes("\\choiceTF")) {
+                                idCount[genericId].choiceTF += 1;
+                            } else {
+                                idCount[genericId].others += 1;
+                            }
+                        });
+                    });
+                    resolve();
+                };
+                reader.onerror = function(e) {
+                    reject(e);
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        async function processFiles() {
+            for (var i = 0; i < files.length; i++) {
+                if (files[i].name.endsWith(".tex")) {
+                    await readFile(files[i]);
+                }
+            }
+            displayResults(idCount);
+            loadingMessage.style.display = 'none';
+        }
+
+        processFiles();
+    }
+
+    function createRow(genericId, countData, type) {
+        var row = document.createElement('tr');
+
+        var idCell = document.createElement('td');
+        idCell.textContent = genericId;
+        row.appendChild(idCell);
+
+        ['N', 'H', 'V', 'C'].forEach(type => {
+            var cell = document.createElement('td');
+            cell.textContent = countData[type];
+
+            var input = document.createElement('input');
+            input.type = 'number';
+            input.min = 0;
+            input.max = countData[type];
+            input.value = 0;
+            input.addEventListener('input', function() {
+                if (this.value > 0) {
+                    cell.classList.add('highlight');
+                } else {
+                    cell.classList.remove('highlight');
+                }
+            });
+            cell.appendChild(document.createElement('br'));
+            cell.appendChild(input);
+
+            row.appendChild(cell);
+        });
+
+        var totalCell = document.createElement('td');
+        totalCell.textContent = countData.total;
+        row.appendChild(totalCell);
+
+        var meaningCell = document.createElement('td');
+        meaningCell.classList.add('meaning');
+        meaningCell.textContent = idMeanings[genericId] || 'Không có ý nghĩa';
+        row.appendChild(meaningCell);
+
+        // Add row class for highlighting based on first character of genericId
+        if (genericId.charAt(0) === '0') {
+            row.classList.add('row-0');
+        } else if (genericId.charAt(0) === '1') {
+            row.classList.add('row-1');
+        } else if (genericId.charAt(0) === '2') {
+            row.classList.add('row-2');
+        }
+
+        return row;
+    }
+
+    function displayResults(idCount) {
+        var choiceTableBodies = {
+            '10_D': document.querySelector('#choiceTable10_D tbody'),
+            '10_H': document.querySelector('#choiceTable10_H tbody'),
+            '10_X': document.querySelector('#choiceTable10_X tbody'),
+            '11_D': document.querySelector('#choiceTable11_D tbody'),
+            '11_H': document.querySelector('#choiceTable11_H tbody'),
+            '11_X': document.querySelector('#choiceTable11_X tbody'),
+            '12_D': document.querySelector('#choiceTable12_D tbody'),
+            '12_H': document.querySelector('#choiceTable12_H tbody'),
+            '12_X': document.querySelector('#choiceTable12_X tbody')
+        };
+        var choiceTFTableBodies = {
+            '10_D': document.querySelector('#choiceTFTable10_D tbody'),
+            '10_H': document.querySelector('#choiceTFTable10_H tbody'),
+            '10_X': document.querySelector('#choiceTFTable10_X tbody'),
+            '11_D': document.querySelector('#choiceTFTable11_D tbody'),
+            '11_H': document.querySelector('#choiceTFTable11_H tbody'),
+            '11_X': document.querySelector('#choiceTFTable11_X tbody'),
+            '12_D': document.querySelector('#choiceTFTable12_D tbody'),
+            '12_H': document.querySelector('#choiceTFTable12_H tbody'),
+            '12_X': document.querySelector('#choiceTFTable12_X tbody')
+        };
+        var othersTableBodies = {
+            '10_D': document.querySelector('#othersTable10_D tbody'),
+            '10_H': document.querySelector('#othersTable10_H tbody'),
+            '10_X': document.querySelector('#othersTable10_X tbody'),
+            '11_D': document.querySelector('#othersTable11_D tbody'),
+            '11_H': document.querySelector('#othersTable11_H tbody'),
+            '11_X': document.querySelector('#othersTable11_X tbody'),
+            '12_D': document.querySelector('#othersTable12_D tbody'),
+            '12_H': document.querySelector('#othersTable12_H tbody'),
+            '12_X': document.querySelector('#othersTable12_X tbody')
+        };
+        Object.keys(choiceTableBodies).forEach(key => choiceTableBodies[key].innerHTML = '');
+        Object.keys(choiceTFTableBodies).forEach(key => choiceTFTableBodies[key].innerHTML = '');
+        Object.keys(othersTableBodies).forEach(key => othersTableBodies[key].innerHTML = '');
+
+        Object.keys(idCount).sort().forEach(genericId => {
+            var countData = idCount[genericId];
+            var level = genericId.charAt(0);
+            var group = genericId.charAt(1);
+
+            var row = createRow(genericId, countData);
+
+            if (countData.choice > 0) {
+                if (level === '0') {
+                    if (group === 'D') choiceTableBodies['10_D'].appendChild(row);
+                    else if (group === 'H') choiceTableBodies['10_H'].appendChild(row);
+                    else if (group === 'X') choiceTableBodies['10_X'].appendChild(row);
+                } else if (level === '1') {
+                    if (group === 'D') choiceTableBodies['11_D'].appendChild(row);
+                    else if (group === 'H') choiceTableBodies['11_H'].appendChild(row);
+                    else if (group === 'X') choiceTableBodies['11_X'].appendChild(row);
+                } else if (level === '2') {
+                    if (group === 'D') choiceTableBodies['12_D'].appendChild(row);
+                    else if (group === 'H') choiceTableBodies['12_H'].appendChild(row);
+                    else if (group === 'X') choiceTableBodies['12_X'].appendChild(row);
+                }
+            } else if (countData.choiceTF > 0) {
+                if (level === '0') {
+                    if (group === 'D') choiceTFTableBodies['10_D'].appendChild(row);
+                    else if (group === 'H') choiceTFTableBodies['10_H'].appendChild(row);
+                    else if (group === 'X') choiceTFTableBodies['10_X'].appendChild(row);
+                } else if (level === '1') {
+                    if (group === 'D') choiceTFTableBodies['11_D'].appendChild(row);
+                    else if (group === 'H') choiceTFTableBodies['11_H'].appendChild(row);
+                    else if (group === 'X') choiceTFTableBodies['11_X'].appendChild(row);
+                } else if (level === '2') {
+                    if (group === 'D') choiceTFTableBodies['12_D'].appendChild(row);
+                    else if (group === 'H') choiceTFTableBodies['12_H'].appendChild(row);
+                    else if (group === 'X') choiceTFTableBodies['12_X'].appendChild(row);
+                }
+            } else {
+                if (level === '0') {
+                    if (group === 'D') othersTableBodies['10_D'].appendChild(row);
+                    else if (group === 'H') othersTableBodies['10_H'].appendChild(row);
+                    else if (group === 'X') othersTableBodies['10_X'].appendChild(row);
+                } else if (level === '1') {
+                    if (group === 'D') othersTableBodies['11_D'].appendChild(row);
+                    else if (group === 'H') othersTableBodies['11_H'].appendChild(row);
+                    else if (group === 'X') othersTableBodies['11_X'].appendChild(row);
+                } else if (level === '2') {
+                    if (group === 'D') othersTableBodies['12_D'].appendChild(row);
+                    else if (group === 'H') othersTableBodies['12_H'].appendChild(row);
+                    else if (group === 'X') othersTableBodies['12_X'].appendChild(row);
+                }
+            }
+        });
+    }
+
+    document.getElementById('generateButton').addEventListener('click', function() {
+        var numFiles = parseInt(document.getElementById('numFiles').value, 10);
+        var selectedIDs = {
+            choice: [],
+            choiceTF: [],
+            others: []
+        };
+
+        function getSelectedIDs(rows, type) {
+            rows.forEach(row => {
+                var genericId = row.cells[0].textContent;
+                var N = parseInt(row.cells[1].querySelector('input').value, 10);
+                var H = parseInt(row.cells[2].querySelector('input').value, 10);
+                var V = parseInt(row.cells[3].querySelector('input').value, 10);
+                var C = parseInt(row.cells[4].querySelector('input').value, 10);
+
+                if (N > 0 || H > 0 || V > 0 || C > 0) {
+                    selectedIDs[type].push({
+                        id: genericId,
+                        N: N,
+                        H: H,
+                        V: V,
+                        C: C
+                    });
+                }
+            });
+        }
+
+        getSelectedIDs(document.querySelectorAll('#choiceTable10_D tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable10_H tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable10_X tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable11_D tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable11_H tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable11_X tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable12_D tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable12_H tbody tr'), 'choice');
+        getSelectedIDs(document.querySelectorAll('#choiceTable12_X tbody tr'), 'choice');
+
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable10_D tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable10_H tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable10_X tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable11_D tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable11_H tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable11_X tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable12_D tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable12_H tbody tr'), 'choiceTF');
+        getSelectedIDs(document.querySelectorAll('#choiceTFTable12_X tbody tr'), 'choiceTF');
+
+        getSelectedIDs(document.querySelectorAll('#othersTable10_D tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable10_H tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable10_X tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable11_D tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable11_H tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable11_X tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable12_D tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable12_H tbody tr'), 'others');
+        getSelectedIDs(document.querySelectorAll('#othersTable12_X tbody tr'), 'others');
+
+        if (!validateSufficientQuestions(selectedIDs, numFiles)) {
+            alert('Không đủ câu hỏi để tạo đề thi. Vui lòng kiểm tra lại số lượng câu hỏi và số đề thi cần tạo.');
+            return;
+        }
+
+        displayContentInTextareas(selectedIDs, numFiles);
+        document.getElementById('notification').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('notification').style.display = 'none';
+        }, 3000);
+    });
+
+    function validateSufficientQuestions(selectedIDs, numFiles) {
+        for (let type in selectedIDs) {
+            for (let item of selectedIDs[type]) {
+                let totalNeeded = (item.N + item.H + item.V + item.C) * numFiles;
+                let countData = idCount[item.id];
+                let totalAvailable = countData.matches.length;
+                if (totalNeeded > totalAvailable) {
+                    alert(`Không đủ câu hỏi cho ID ${item.id}: cần ${totalNeeded} nhưng chỉ có ${totalAvailable}`);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    function displayContentInTextareas(selectedIDs, numFiles) {
+        var summaryTableBody = document.querySelector('#summaryTable tbody');
+        summaryTableBody.innerHTML = '';
+        var contentContainer = document.getElementById('contentContainer');
+        contentContainer.innerHTML = '';
+        var globalUsedMatches = new Set();
+
+        for (let i = 0; i < numFiles; i++) {
+            var content = '';
+            var usedMatches = {};
+
+            function appendContent(type) {
+                selectedIDs[type].forEach(item => {
+                    var genericId = item.id;
+                    var countData = idCount[genericId];
+                    var chosenMatches = countData.matches.filter(match => {
+                        if (!usedMatches[genericId]) {
+                            usedMatches[genericId] = [];
+                        }
+                        if (!globalUsedMatches.has(match.content)) {
+                            if (type === 'choice' && match.content.includes("\\choice") && !match.content.includes("\\choiceTF")) {
+                                return !usedMatches[genericId].includes(match.content);
+                            } else if (type === 'choiceTF' && match.content.includes("\\choiceTF")) {
+                                return !usedMatches[genericId].includes(match.content);
+                            } else if (type === 'others' && !match.content.includes("\\choice") && !match.content.includes("\\choiceTF")) {
+                                return !usedMatches[genericId].includes(match.content);
+                            }
+                        }
+                        return false;
+                    });
+
+                    var selectedMatches = chosenMatches.slice(0, item.N + item.H + item.V + item.C);
+                    selectedMatches.forEach(match => {
+                        content += `${match.content}\n\n`;
+                        usedMatches[genericId].push(match.content);
+                        globalUsedMatches.add(match.content);
+                    });
+
+                    // Update the summary table
+                    var summaryRow = document.createElement('tr');
+                    var summaryIdCell = document.createElement('td');
+                    summaryIdCell.textContent = genericId;
+                    summaryRow.appendChild(summaryIdCell);
+
+                    var summaryMeaningCell = document.createElement('td');
+                    summaryMeaningCell.classList.add('meaning');
+                    summaryMeaningCell.textContent = idMeanings[genericId] || 'Không có ý nghĩa';
+                    summaryRow.appendChild(summaryMeaningCell);
+
+                    var summaryTotalCell = document.createElement('td');
+                    summaryTotalCell.textContent = selectedMatches.length;
+                    summaryRow.appendChild(summaryTotalCell);
+
+                    var summaryChoiceCell = document.createElement('td');
+                    summaryChoiceCell.textContent = selectedMatches.filter(match => match.content.includes("\\choice") && !match.content.includes("\\choiceTF")).length;
+                    summaryRow.appendChild(summaryChoiceCell);
+
+                    var summaryChoiceTFCell = document.createElement('td');
+                    summaryChoiceTFCell.textContent = selectedMatches.filter(match => match.content.includes("\\choiceTF")).length;
+                    summaryRow.appendChild(summaryChoiceTFCell);
+
+                    var summaryOthersCell = document.createElement('td');
+                    summaryOthersCell.textContent = selectedMatches.filter(match => !match.content.includes("\\choice") && !match.content.includes("\\choiceTF")).length;
+                    summaryRow.appendChild(summaryOthersCell);
+
+                    summaryTableBody.appendChild(summaryRow);
+                });
+            }
+
+            appendContent('choice');
+            appendContent('choiceTF');
+            appendContent('others');
+
+            // Display content in the content container
+            var contentBox = document.createElement('div');
+            contentBox.classList.add('content-box');
+
+            var textarea = document.createElement('textarea');
+            textarea.value = content;
+            contentBox.appendChild(textarea);
+
+            var buttonGroup = document.createElement('div');
+            buttonGroup.classList.add('button-group');
+
+            var copyButton = document.createElement('button');
+            copyButton.textContent = 'Sao chép';
+            copyButton.addEventListener('click', () => {
+                textarea.select();
+                document.execCommand('copy');
+            });
+            buttonGroup.appendChild(copyButton);
+
+            var downloadButton = document.createElement('button');
+            downloadButton.textContent = 'Tải xuống';
+            downloadButton.addEventListener('click', () => {
+                var blob = new Blob([textarea.value], { type: 'text/plain;charset=utf-8' });
+                var link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `selected_files_${i + 1}.tex`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+            buttonGroup.appendChild(downloadButton);
+
+            contentBox.appendChild(buttonGroup);
+            contentContainer.appendChild(contentBox);
+        }
+    }
+
+    document.getElementById('downloadAllButton').addEventListener('click', function() {
+        var contentContainer = document.getElementById('contentContainer');
+        var textareas = contentContainer.querySelectorAll('textarea');
+        var zip = new JSZip();
+
+        textareas.forEach((textarea, index) => {
+            var content = textarea.value;
+            zip.file(`selected_files_${index + 1}.tex`, content);
+        });
+
+        zip.generateAsync({ type: 'blob' }).then(function(content) {
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = 'all_selected_files.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+</body>
+</html>
