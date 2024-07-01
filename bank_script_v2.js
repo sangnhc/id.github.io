@@ -445,3 +445,22 @@ window.onload = function() {
         });
     }
 };
+
+// Function to download all search results as a single file
+function downloadSearchResults() {
+    const searchResults = document.getElementById('searchResults');
+    const results = searchResults.getElementsByClassName('search-result');
+    if (results.length === 0) {
+        alert("Không có kết quả tìm kiếm để tải về.");
+        return;
+    }
+
+    let allContent = "";
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        allContent += result.textContent + "\n\n";
+    }
+
+    const blob = new Blob([allContent], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, "search_results.tex");
+}

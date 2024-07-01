@@ -194,6 +194,10 @@
         .menu a:hover, .dropbtn:hover {
             background-color: #555;
         }
+        .inline-buttons {
+            display: flex;
+            justify-content: flex-start;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -292,9 +296,12 @@
         </select>
         <label for="searchKeywords">Từ khóa (cách nhau bởi dấu phẩy):</label>
         <input type="text" id="searchKeywords" placeholder="Nhập từ khóa">
-        <button onclick="searchDatabase()">Tìm kiếm</button>
+        <div class="inline-buttons">
+            <button onclick="searchDatabase()">Tìm kiếm</button>
+            <button onclick="downloadSearchResults()">Tải về tất cả các kết quả</button>
+        </div>
     </div>
-
+    <div id="searchingMessage" style="display: none;">Đang tìm kiếm...</div>
     <h2>Kết quả tìm kiếm</h2>
     <div id="searchResults"></div>
 
