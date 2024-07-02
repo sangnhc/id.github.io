@@ -32,46 +32,30 @@ function checkAndProcessFile(file, callback) {
     request.onsuccess = function(event) {
         db = event.target.result;
         if (!db.objectStoreNames.contains(storeName)) {
-            console.error(`Object store "${storeName}" not found. Creating object store.`);
-            const versionRequest = db.setVersion(2);
-            versionRequest.onsuccess = function (event) {
-                createObjectStore(db, storeName);
-                processFile(file, callback);
-            };
-        } else {
-            processFile(file, callback);
+            console.error(`Object store "${storeName}" not found.`);
         }
+        const transaction = db.transaction([storeName], "readwrite");
+        const objectStore = transaction.objectStore(storeName);
+        const getRequest = objectStore.get(file.webkitRelativePath);
+
+        getRequest.onsuccess = function() {
+            if (getRequest.result) {
+                const overwrite = confirm(`File ${file.name} đã tồn tại. Bạn có muốn ghi đè không?`);
+                if (overwrite) {
+                    saveFileToIndexedDB(file, callback);
+                } else {
+                    callback();
+                }
+            } else {
+                saveFileToIndexedDB(file, callback);
+            }
+        };
     };
 
     request.onupgradeneeded = function(event) {
         const db = event.target.result;
-        createObjectStore(db, storeName);
-    };
-}
-
-function createObjectStore(db, storeName) {
-    if (!db.objectStoreNames.contains(storeName)) {
         const objectStore = db.createObjectStore(storeName, { keyPath: "fileName" });
         objectStore.createIndex("content", "content", { unique: false });
-    }
-}
-
-function processFile(file, callback) {
-    const transaction = db.transaction([storeName], "readwrite");
-    const objectStore = transaction.objectStore(storeName);
-    const getRequest = objectStore.get(file.webkitRelativePath);
-
-    getRequest.onsuccess = function() {
-        if (getRequest.result) {
-            const overwrite = confirm(`File ${file.name} đã tồn tại. Bạn có muốn ghi đè không?`);
-            if (overwrite) {
-                saveFileToIndexedDB(file, callback);
-            } else {
-                callback();
-            }
-        } else {
-            saveFileToIndexedDB(file, callback);
-        }
     };
 }
 
