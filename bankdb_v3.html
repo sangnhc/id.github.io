@@ -215,7 +215,21 @@
         <button onclick="downloadAllFiles('sql')">Tải toàn bộ kho (SQL)</button>
         <button onclick="clearDatabase()">Xóa tất cả tệp</button>
     </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
 
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function() {
+            checkLoginStatus();
+        };
+    </script>
     <div id="loadingMessage" style="display: none;">Đang xử lý...</div>
     <div id="searchingMessage" style="display: none;">Đang tìm kiếm...</div>
 
