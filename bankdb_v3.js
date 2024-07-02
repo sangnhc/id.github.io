@@ -32,12 +32,12 @@ function checkAndProcessFile(file, callback) {
     request.onsuccess = function(event) {
         db = event.target.result;
         if (!db.objectStoreNames.contains(storeName)) {
-            const transaction = db.transaction([storeName], "versionchange");
-            transaction.oncomplete = () => {
-                console.log(`Object store "${storeName}" created successfully.`);
+            console.error(`Object store "${storeName}" not found. Creating object store.`);
+            const versionRequest = db.setVersion(2);
+            versionRequest.onsuccess = function (event) {
+                createObjectStore(db, storeName);
                 processFile(file, callback);
             };
-            createObjectStore(db, storeName);
         } else {
             processFile(file, callback);
         }
