@@ -1,4 +1,4 @@
-import { convertNumberToMathMode } from './numberUtils.js';
+import { convertNumberToMathMode,thay_haicham_colon, themdolachoso,xoa_khoangtrong_trong_ngoac, them_dola_cho_so } from './numberUtils.js';
 import { replaceTextWithJson, convertArrayToHeva, convertArrayToHoac,removeSpacesInMathMode } from './replaceUtils.js';
 
 export function fixCode() {
@@ -9,7 +9,11 @@ export function fixCode() {
     inputCode = inputCode.replace(/}\s*{/g, '}{');
     inputCode = convertArrayToHeva(inputCode);
     inputCode = convertArrayToHoac(inputCode);
-    inputCode = removeSpacesInMathMode(inputCode);
+    //inputCode = removeSpacesInMathMode(inputCode);
+    inputCode = themdolachoso(inputCode);
+    inputCode = them_dola_cho_so(inputCode)
+    inputCode = xoa_khoangtrong_trong_ngoac(inputCode)
+    inputCode = thay_haicham_colon(inputCode)
     fetch('replace.json')
         .then(response => response.json())
         .then(data => {

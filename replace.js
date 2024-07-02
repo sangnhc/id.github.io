@@ -1,11 +1,27 @@
-function convertNumberToMathMode(text) {
+export function convertNumberToMathMode(text) {
+    // Biểu thức chính quy để tìm các số đứng giữa hai từ, nhưng không nằm trong đoạn $...$
     const pattern = /(\b\w+\b\s)(\d+)(\s\b\w+\b)/g;
-    return text.replace(pattern, (match, before, number, after) => {
-        if (/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after)) {
-            return `${before} $${number}$ ${after}`;
-        }
-        return match;
-    });
+    const mathModePattern = /\$.*?\$/g;
+    
+    // Chuyển đổi các số không nằm trong đoạn $...$
+    let segments = text.split(mathModePattern);
+    let matches = text.match(mathModePattern) || [];
+    
+    segments = segments.map(segment => 
+        segment.replace(pattern, (match, before, number, after) => {
+            if (/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after)) {
+                return `${before} $${number}$ ${after}`;
+            }
+            return match;
+        })
+    );
+    
+    // Ghép các đoạn đã xử lý và các đoạn $...$ lại với nhau
+    let result = segments.reduce((acc, segment, index) => {
+        return acc + segment + (matches[index] || '');
+    }, '');
+    
+    return result;
 }
 
 function processCurlyBraces(inputString) {

@@ -1,4 +1,4 @@
-import { convertNumberToMathMode } from './numberUtils.js';
+import { convertNumberToMathMode,xoa_2cham_sau_thila,thay_haicham_colon, themdolachoso, them_dola_cho_so,xoa_khoangtrong_trong_ngoac, removeLoiGiaiInEx} from './numberUtils.js';
 import { replaceTextWithJson } from './replaceUtils.js';
 import { convertArrayToHeva,convertArrayToHoac, removeSpacesInMathMode } from './replaceUtils.js';
 
@@ -63,7 +63,13 @@ export function word2tex() {
     //outputCode = outputCode.replace(/}\s*{/g, '}{');
      outputCode = convertArrayToHeva(outputCode);
      outputCode = convertArrayToHoac(outputCode);
-     outputCode = removeSpacesInMathMode(outputCode);
+     //outputCode = removeSpacesInMathMode(outputCode);
+     outputCode = themdolachoso(outputCode);
+     outputCode = them_dola_cho_so(outputCode)
+     outputCode =  removeLoiGiaiInEx(outputCode)
+     outputCode = xoa_khoangtrong_trong_ngoac(outputCode)
+     outputCode = thay_haicham_colon(outputCode)
+     outputCode = xoa_2cham_sau_thila(outputCode)
     fetch('replace.json')
         .then(response => response.json())
         .then(data => {

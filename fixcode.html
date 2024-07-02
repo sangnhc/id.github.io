@@ -87,17 +87,21 @@
 <body>
     <div class="menu">
         <a href="index.html">Home</a>
+        <a href="tron_de.html">Trộn Đề</a>
+        <a href="fixcode.html">Fix Code</a>
         <div class="dropdown">
             <span class="dropbtn">Tiện ích</span>
             <div class="dropdown-content">
+                <a href="find_latex.html">Tìm Kiếm</a>
                 <a href="Ve_hinh.html">Vẽ Hình</a>
+                <a href="menu_tree.html">Menu ID</a>
                 <a href="symbols.html">Mathtype Latex</a>
                 <a href="contact.html">Tác Giả</a>
                 <div class="dropdown-submenu">
-                    <a href="#" class="dropdown-toggle">Đang phát triển</a>
+                    <a href="#" class="dropdown-toggle">Menu ID</a>
                     <div class="dropdown-content">
-                        <a href="menu_tree.html">Đang phát triển</a>
-                        <a href="cay_giai_toan.html">Đang phát triển</a>
+                        <a href="menu_tree.html">Menu Tree</a>
+                        <a href="cay_giai_toan.html">Menu Details</a>
                     </div>
                 </div>
             </div>
@@ -123,9 +127,24 @@
             <div id="renderResult" class="border p-3"></div>
         </div>
     </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
 
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function() {
+            checkLoginStatus();
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js"></script>
+    
     <script type="module">
         import { wordtotex } from './wordtotex.js';
         import { word2tex } from './word2tex.js';
@@ -224,12 +243,30 @@
             }
             return content;
         }
+        function convertNumberToMathMode(text) {
+    // Biểu thức chính quy để thay thế } \end{ex} bằng <br>
+    const endExPattern = /\}\s\\end\{ex\}/g;
 
+    // Thay thế } \end{ex} bằng <br>
+    text = text.replace(endExPattern, '<br>');
+
+    // Thay thế \loigiai{ bằng Lời giải<br>
+    text = text.replace(/\\loigiai\{/g, 'Lời giải<br>');
+
+    // Thay thế \begin{ex} bằng <br>
+    text = text.replace(/\\begin\{ex\}/g, '<br>');
+
+    return text;
+}
         function processContent(content) {
             content = replaceHeva(content);
             content = replaceHoac(content);
             content = replaceChoice(content);
+            content = convertNumberToMathMode(content)
+           
+            
             content = content.replace(/\\\\/g, '<br>');
+
             return content;
         }
 

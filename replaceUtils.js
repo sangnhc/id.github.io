@@ -93,42 +93,50 @@ export function removeSpacesInMathMode(text) {
             return "''"; // Thay thế dấu nháy kép thứ hai trong cặp bằng ''
         }
     });
-    // Biểu thức chính quy để tìm các cụm từ trong dấu $
-    const regexDollarC = /\$([^$]+)\$/g;
-   // Thay thế các cụm từ tìm thấy
-   text = text.replace(regexDollarC, (match, content) => {
-    // Sử dụng biểu thức chính quy để tách nội dung, ngoại trừ trường hợp giữa các số
-    let parts = content.split(/(,\s*(?=\D)|(?<=\D),)/).filter(Boolean);
-
-    // Xử lý từng phần tử
-    parts = parts.map(part => {
-        // Loại bỏ khoảng trắng thừa
-        return part.replace(/\s+/g, '');
-    });
-
-    // Nối lại các phần tử với dấu $, $
-    content = parts.join('$, $');
-
-    // Thêm lại dấu $
-    return `$${content}$`;
-    });
+    
     text = text.replace(/\$,\$,/g,'')
     // Sử dụng biểu thức chính quy để tìm các số có đúng 4 ký tự trước và sau nó không chứa các ký tự đặc biệt và không có từ "Câu" trước số
     const regex = /(?<!Câu\s)(?<=([^\\${}()\-_=+]{4}))(\d+)(?=([^\\${}()\-_=+]{4}))/g;
     text = text.replace(regex, match => `$${match}$`);
     return text;
 }
-export function RegexTwo(text) {
-    // Xử lý các trường hợp có dấu $...$ DẠNG NÀY $A B C D \\cdot A' B' C' D'$
-    const regexB = /\$([A-Za-z\s'\\]+\\cdot[A-Za-z\s']+)\$/g;
-    text = text.replace(regexB, match => {
-        // Thay thế \cdot bằng .
-        let cleaned = match.replace(/\\cdot/g, '.');
-        // Loại bỏ các khoảng trắng giữa các chữ cái và dấu chấm
-        cleaned = cleaned.replace(/\s+/g, '');
-        return cleaned;
-    });
+export function processText(input) {
+    // Biểu thức chính quy để tìm các cụm $\left[...\right]$
+    const regexMathBrackets = /\$\left\[.*?\right\]\$/gs;
     
-    return text;
+    // Tìm và tạm thời thay thế các cụm $\left[...\right]$ bằng các mã giữ chỗ
+    let placeholders = [];
+    let placeholderIndex = 0;
+    input = input.replace(regexMathBrackets, match => {
+        placeholders.push(match);
+        return `__PLACEHOLDER_${placeholderIndex++}__`;
+    });
 
+    // Biểu thức chính quy để tìm các cụm từ trong dấu $
+    const regexDollarC = /\$([^$]+)\$/g;
+    
+    // Thay thế các cụm từ tìm thấy
+    input = input.replace(regexDollarC, (match, content) => {
+        // Sử dụng biểu thức chính quy để tách nội dung, ngoại trừ trường hợp giữa các số
+        let parts = content.split(/(,\s*(?=\D)|(?<=\D),)/).filter(Boolean);
+
+        // Xử lý từng phần tử
+        parts = parts.map(part => {
+            // Loại bỏ khoảng trắng thừa
+            return part.replace(/\s+/g, '');
+        });
+
+        // Nối lại các phần tử với dấu $, $
+        content = parts.join('$, $');
+
+        // Thêm lại dấu $
+        return `$${content}$`;
+    });
+
+    // Khôi phục các cụm $\left[...\right]$ về lại vị trí ban đầu
+    placeholders.forEach((placeholder, index) => {
+        input = input.replace(`__PLACEHOLDER_${index}__`, placeholder);
+    });
+    input = input.replace(/\$,\$,/g, '');
+    return input;
 }
