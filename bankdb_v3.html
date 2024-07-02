@@ -206,16 +206,7 @@
     <div class="menu">
         <a href="index.html">Quay Lại Trang Chủ</a>
     </div>
-    <h1>Tải Kho LaTeX Tạo Bank</h1>
-    <h2>Nơi tạo kho dữ liệu, tìm kiếm và lọc dữ liệu</h2>
-    <div class="buttons-container">
-        <input type="file" id="fileInput" webkitdirectory multiple>
-        <!--<button onclick="processFiles()">Tải lên và phân tích</button>-->
-        <button onclick="downloadAllFiles('zip')">Tải toàn bộ kho (Zip)</button>
-        <button onclick="downloadAllFiles('sql')">Tải toàn bộ kho (SQL)</button>
-        <button onclick="clearDatabase()">Xóa tất cả tệp</button>
-    </div>
-    <script>
+     <script>
         function checkLoginStatus() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             const storedIdentifier = localStorage.getItem('identifier');
@@ -230,6 +221,16 @@
             checkLoginStatus();
         };
     </script>
+    <h1>Tải Kho LaTeX Tạo Bank</h1>
+    <h2>Nơi tạo kho dữ liệu, tìm kiếm và lọc dữ liệu</h2>
+    <div class="buttons-container">
+        <input type="file" id="fileInput" webkitdirectory multiple>
+        <!--<button onclick="processFiles()">Tải lên và phân tích</button>-->
+        <button onclick="downloadAllFiles('zip')">Tải toàn bộ kho (Zip)</button>
+        <button onclick="downloadAllFiles('sql')">Tải toàn bộ kho (SQL)</button>
+        <button onclick="clearDatabase()">Xóa tất cả tệp</button>
+    </div>
+   
     <div id="loadingMessage" style="display: none;">Đang xử lý...</div>
     <div id="searchingMessage" style="display: none;">Đang tìm kiếm...</div>
 
