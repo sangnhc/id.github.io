@@ -1,7 +1,6 @@
 const filesContent = {};
 let overwriteAll = false;
 let skipAll = false;
-
 function addFiles() {
     document.getElementById('fileInput').click();
 }
