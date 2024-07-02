@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoGebra API - Comprehensive Guide</title>
+    <script src="https://cdn.geogebra.org/apps/deployggb.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            height: 100vh;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007acc;
+            padding: 10px 0;
+            color: white;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+        #content {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 40px); /* Adjust height to exclude menu */
+        }
+        #ggb-container {
+            flex: 2;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-right: 2px solid #ddd; /* Border to separate two sections */
+        }
+        #instructions {
+            flex: 1;
+            padding: 10px;
+            background-color: #fff;
+            overflow-y: auto;
+            height: 100%;
+        }
+        #result {
+            margin-top: 10px;
+            background-color: #eef;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-line; /* To display the result in new lines */
+            font-family: 'Courier New', Courier, monospace;
+            color: #007acc;
+        }
+        h2, h3 {
+            margin-top: 20px;
+            color: #007acc;
+        }
+        p, ul, li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        code {
+            background-color: #eef;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #d63384;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="fixcode.html">Tiện Ích</a>
+    </div>
+    <div id="content">
+        <div id="ggb-container">
+            <div id="ggb-element" style="width: 100%; height: 600px; border-radius: 8px;"></div>
+            <div id="result"></div>
+        </div>
+        <div id="instructions">
+            <h2>Hướng dẫn Sử dụng GeoGebra</h2>
+
+            <h3>1. Giải phương trình</h3>
+            <ul>
+                <li><code>Solve[x^2+3x+2=0]</code></li>
+                <li><code>Solve[x^2+3x+y=0]</code></li>
+            </ul>
+
+            <h3>2. Giải hệ phương trình</h3>            
+            <ul>
+                <li><code>Solve[{x+y=3,x-y=1}]</code></li>
+                <li><code>Solve[{x^2+y^2=1,x-y=0}]</code></li>
+            </ul>
+
+            <h3>3. Đại số và tổ hợp</h3>
+            <ul>
+                <li><code>Factor[x^3 - 6x^2 + 11x - 6]</code> - Phân tích đa thức thành nhân tử</li>
+                <li><code>Expand[(x + y)^5]</code> - Khai triển đa thức (x + y)^5</li>
+                <li><code>Binomial[5, 3]</code> - Tính tổ hợp chập 3 của 5</li>
+                <li><code>Permutations[5]</code> - Tính hoán vị của 5</li>
+                <li><code>Combinations[5, 3]</code> - Tính chỉnh hợp chập 3 của 5</li>
+            </ul>
+
+            <h3>4. Đạo hàm và tích phân</h3>
+            <ul>
+                <li><code>Derivative[sin(x)]</code> - Đạo hàm </li>
+                <li><code>Integral[sin(x), x]</code> - Nguyên hàm</li>
+                <li><code>Integral[sin(x), 0, π]</code> - Tích phân</li>
+            </ul>
+
+            <h3>5. Tính tổng và tích</h3>
+            <p>Để tính tổng và tích của một dãy số, sử dụng các lệnh sau:</p>
+            <ul>
+                <li><code>Sum[k^2, k, 1, 10]</code> - Tính tổng k^2 từ 1 đến 10</li>
+                <li><code>Product[k, k, 1, 5]</code> - Tính tích của k từ 1 đến 5</li>
+            </ul>
+
+            <h3>6. Vẽ đồ thị 2D</h3>
+            <ul>
+                <li><code>y = sin(x)</code> - Vẽ đồ thị hàm số sin(x)</li>
+                <li><code>Curve(sin(t),cos(t),0,t,0,2 π)</code> - Vẽ đồ thị tham số</li>
+                <li><code>r = 1 + sin(θ),0 < θ< 2pi</code> - Vẽ đồ thị tọa độ cực</li>
+                <li><code>y=x^2 (-1< x < 2)</code> - Vẽ đồ thị trong miền giới hạn của x</li>
+            </ul>
+
+            <h3>7. Vẽ đồ thị 3D</h3>
+            <p>Để vẽ đồ thị các hàm số 3D, cần mở khung 3D</p>
+            <ul>
+                <li><code>Plot3D[sin(x) * cos(y)]</code> - Vẽ đồ thị hàm số sin(x) * cos(y)</li>
+                <li><code>Surface[(x, y, x^2 + y^2)]</code> - Vẽ mặt phẳng (x, y, x^2 + y^2)</li>
+            </ul>
+
+            <h3>8. Hình học giải tích</h3>
+            <p>Để thực hiện các phép toán hình học giải tích, sử dụng các lệnh sau:</p>
+            <ul>
+                <li><code>Distance[(1, 2), (3, 4)]</code> - Tính khoảng cách giữa hai điểm</li>
+                <li><code>Midpoint[(1, 2), (3, 4)]</code> - Tìm trung điểm của đoạn thẳng nối hai điểm</li>
+                <li><code>OrthogonalProjection[(1, 2, 3), x + y + z + 1 = 0]</code> - Hình chiếu của điểm (1, 2, 3) lên mặt phẳng x + y + z + 1 = 0</li>
+            </ul>
+
+            <h3>9. Hình học 3D</h3>
+            <p>Để thực hiện các phép toán hình học 3D, sử dụng các lệnh sau:</p>
+            <ul>
+                <li><code>Line[(1, 2, 3), (4, 5, 6)]</code> - Đường thẳng qua hai điểm trong không gian 3D</li>
+                <li><code>Plane[(1, 2, 3), (4, 5, 6), (7, 8, 9)]</code> - Mặt phẳng đi qua ba điểm trong không gian 3D</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        var applet = new GGBApplet({
+            "width": 800,
+            "height": 540,
+            "showToolbar": true,
+            "showAlgebraInput": true,
+            "showMenuBar": true,
+            "enableShiftDragZoom": true,
+            "showGrid": true,
+            "showAxes": true
+        }, true);
+
+        window.addEventListener("load", function() {
+            applet.inject('ggb-element');
+
+            applet.registerAddListener(function() {
+                var ggbApplet = document.ggbApplet;
+
+                // Giải phương trình
+                var equation1 = 'x^2 + 3x + 2 = 0';
+                ggbApplet.evalCommand('sol1 = Solve[' + equation1 + ']');
+                var solution1 = ggbApplet.getValueString('sol1');
+
+                // Giải hệ phương trình
+                var systemEquations = '{x + y = 3, x - y = 1}';
+                ggbApplet.evalCommand('sol2 = Solve[' + systemEquations + ']');
+                var solution2 = ggbApplet.getValueString('sol2');
+
+                // Hiển thị kết quả
+                document.getElementById('result').innerText = "Solution for " + equation1 + ": " + solution1 + 
+                    "\nSolution for " + systemEquations + ": " + solution2;
+            });
+        });
+    </script>
+</body>
+</html>
