@@ -104,14 +104,14 @@
             "Hệ Số a,b,c,d thay đổi": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t\\def\\a{1}\t\\def\\b{1}\t\\def\\c{1}\t\\def\\d{-1}\n\t\\def\\tcn{\\a/\\c}\\def\\tcd{-\\d/\\c}\n\t\\draw[color=gray,dash pattern=on 1pt off 1pt,xstep=1.0cm,ystep=1.0cm] (-5.2,-5.2) grid (5.2,5.2);\n\t\\draw[->] (-5,0) -- (5,0) node[below] {$x$};\n\t\\draw[->] (0,-5) -- (0,5) node[left] {$y$};\n\t\\fill (0,0) circle (1pt) node[below left]{$O$};\n\t\\draw[thick,dashed,blue] (\\tcd,-5)--(\\tcd,5) (-5,\\tcn)--(5,\\tcn);\n\t\\clip (-5,-5)rectangle(5,5);\n\t\\pgfmathsetmacro{\\can}{-(\\d)/(\\c)}\n\t\\draw[magenta,thick,samples=150,smooth,domain=-5:{\\can-.1}] plot(\\x,{(\\a*\\x+(\\b))/(\\c*\\x+(\\d))});\n\t\\draw[magenta,thick,samples=150,smooth,domain={\\can+.1}:5] plot(\\x,{(\\a*\\x+(\\b))/(\\c*\\x+(\\d))}); \n\\end{tikzpicture}",
                 "image": "HinhTIKZ/hsbac1_1.png"
-            },
-            "Phân Thức Bậc Hai/Bậc Một": {
+            }
+        },
+        "Phân Thức Bậc Hai/Bậc Một": {
                 "Hệ Số a,b,c,d thay đổi": {
                     "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t% Định nghĩa các hệ số của hàm số\n\t\\def\\a{1}\t\\def\\b{0}\t\\def\\c{1}\t\\def\\d{2}\t\\def\\e{-1}\t\n\t% Xác định tiệm cận đứng\n\t\\pgfmathsetmacro{\\tcd}{-\\e/\\d}\t\n\t% Xác định hệ số tự do của tiệm cận xiên\n\t\\pgfmathsetmacro{\\intercept}{(\\b*\\d - \\e *\\a)/\\d^2}\t\n\t% Vẽ lưới và trục tọa độ\n\t\\draw[color=gray, dash pattern=on 1pt off 1pt, xstep=1.0cm, ystep=1.0cm] (-5.2, -5.2) grid (5.2, 5.2);\n\t\\draw[->] (-5, 0) -- (5, 0) node[below] {$x$};\n\t\\draw[->] (0, -5) -- (0, 5) node[left] {$y$};\n\t\\fill (0, 0) circle (1pt) node[below left]{$O$};\n\t% Vẽ các đường tiệm cận đứng\n\t\\draw[thick, dashed, blue] (\\tcd, -5) -- (\\tcd, 5) node[above] {$x=\\tcd$};\t\n\t% Vẽ tiệm cận xiên\n\t\\draw[thick, dashed, red] (-5, {(-5)*(\\a/\\d) + \\intercept}) -- (5, {5*(\\a/\\d) + \\intercept}) node[below right] {$y = \\dfrac{\\a}{\\d}x + \\intercept $};\n\t% Cắt đoạn đồ thị trong khung\n\t\\clip (-5, -5) rectangle (5, 5);\n\t% Vẽ đồ thị hàm số\n\t\\draw[magenta, thick, samples=150, smooth, domain=-5:{\\tcd-.1}] plot (\\x, {(\\a*\\x*\\x + \\b*\\x + \\c)/(\\d*\\x + \\e)});\n\t\\draw[magenta, thick, samples=150, smooth, domain={\\tcd+.1}:5] plot (\\x, {(\\a*\\x*\\x + \\b*\\x + \\c)/(\\d*\\x + \\e)});\n\t\n\\end{tikzpicture}",
                     "image": "HinhTIKZ/hsbac2tren1.png"
                 }
             }
-        }
     },
     "HHKG": {
             "Chóp Đáy Tam Giác": {
