@@ -104,14 +104,14 @@
             "Hệ Số a,b,c,d thay đổi": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t\\def\\a{1}\t\\def\\b{1}\t\\def\\c{1}\t\\def\\d{-1}\n\t\\def\\tcn{\\a/\\c}\\def\\tcd{-\\d/\\c}\n\t\\draw[color=gray,dash pattern=on 1pt off 1pt,xstep=1.0cm,ystep=1.0cm] (-5.2,-5.2) grid (5.2,5.2);\n\t\\draw[->] (-5,0) -- (5,0) node[below] {$x$};\n\t\\draw[->] (0,-5) -- (0,5) node[left] {$y$};\n\t\\fill (0,0) circle (1pt) node[below left]{$O$};\n\t\\draw[thick,dashed,blue] (\\tcd,-5)--(\\tcd,5) (-5,\\tcn)--(5,\\tcn);\n\t\\clip (-5,-5)rectangle(5,5);\n\t\\pgfmathsetmacro{\\can}{-(\\d)/(\\c)}\n\t\\draw[magenta,thick,samples=150,smooth,domain=-5:{\\can-.1}] plot(\\x,{(\\a*\\x+(\\b))/(\\c*\\x+(\\d))});\n\t\\draw[magenta,thick,samples=150,smooth,domain={\\can+.1}:5] plot(\\x,{(\\a*\\x+(\\b))/(\\c*\\x+(\\d))}); \n\\end{tikzpicture}",
                 "image": "HinhTIKZ/hsbac1_1.png"
-            }
-        },
-        "Phân Thức Bậc Hai/Bậc Một": {
+            },
+            "Phân Thức Bậc Hai/Bậc Một": {
                 "Hệ Số a,b,c,d thay đổi": {
                     "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t% Định nghĩa các hệ số của hàm số\n\t\\def\\a{1}\t\\def\\b{0}\t\\def\\c{1}\t\\def\\d{2}\t\\def\\e{-1}\t\n\t% Xác định tiệm cận đứng\n\t\\pgfmathsetmacro{\\tcd}{-\\e/\\d}\t\n\t% Xác định hệ số tự do của tiệm cận xiên\n\t\\pgfmathsetmacro{\\intercept}{(\\b*\\d - \\e *\\a)/\\d^2}\t\n\t% Vẽ lưới và trục tọa độ\n\t\\draw[color=gray, dash pattern=on 1pt off 1pt, xstep=1.0cm, ystep=1.0cm] (-5.2, -5.2) grid (5.2, 5.2);\n\t\\draw[->] (-5, 0) -- (5, 0) node[below] {$x$};\n\t\\draw[->] (0, -5) -- (0, 5) node[left] {$y$};\n\t\\fill (0, 0) circle (1pt) node[below left]{$O$};\n\t% Vẽ các đường tiệm cận đứng\n\t\\draw[thick, dashed, blue] (\\tcd, -5) -- (\\tcd, 5) node[above] {$x=\\tcd$};\t\n\t% Vẽ tiệm cận xiên\n\t\\draw[thick, dashed, red] (-5, {(-5)*(\\a/\\d) + \\intercept}) -- (5, {5*(\\a/\\d) + \\intercept}) node[below right] {$y = \\dfrac{\\a}{\\d}x + \\intercept $};\n\t% Cắt đoạn đồ thị trong khung\n\t\\clip (-5, -5) rectangle (5, 5);\n\t% Vẽ đồ thị hàm số\n\t\\draw[magenta, thick, samples=150, smooth, domain=-5:{\\tcd-.1}] plot (\\x, {(\\a*\\x*\\x + \\b*\\x + \\c)/(\\d*\\x + \\e)});\n\t\\draw[magenta, thick, samples=150, smooth, domain={\\tcd+.1}:5] plot (\\x, {(\\a*\\x*\\x + \\b*\\x + \\c)/(\\d*\\x + \\e)});\n\t\n\\end{tikzpicture}",
                     "image": "HinhTIKZ/hsbac2tren1.png"
                 }
             }
+        }
     },
     "HHKG": {
             "Chóp Đáy Tam Giác": {
@@ -200,5 +200,287 @@
                     "image": "HinhTIKZ/cot1.png"
                 }
             }
+        },
+    "Khối Tròn Xoay": {
+        "Khối Nón": {
+            "Nón Cơ Bản": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3} % Bán kính trụ lớn\n\\pgfmathsetmacro{\\y}{\\x/4} % Bán kính trục bé\n\\def\\h{5} % Chiều cao\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A$] (A) at (\\x,0);\n\\coordinate[label=above:$S$] (S) at (0,\\h);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--(S)--cycle;\n\\draw[dashed] (S)--(O)--(A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,S,O} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
+                "image": "non1.png"
+            },
+            "Khối Nón Có Khoảng Cách Từ Tâm": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3}\n\\pgfmathsetmacro{\\y}{\\x/4}\n\\def\\h{5}\n\\def\\goc{120}\n\\coordinate (A1) at (\\x,0);\n\\coordinate[label=below left:$O$] (O) at (0,0);\n\\coordinate[label=above left:$S$] (S) at (0,\\h);\n\\coordinate[label=right:$B$] (A) at (0:{\\x} and {\\y});\n\\coordinate[label=below:$A$] (B) at ({\\goc+180}:{\\x} and {\\y});\n\\coordinate[label=below right:$I$] (I) at ($(A)!1/2!(B)$);\n\\coordinate[label=right:$H$] (H) at ($(S)!1/2!(I)$);\n\\draw (B)--(S) (A1) arc (0:-180:{\\x} and {\\y})--(S)--cycle;\n\\draw[dashed] (B)--(A)--(S)--(O)--(I)--(S) (O)--(H) (A1) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,S,O,I,H,B} \\fill (\\diem) circle (1pt);\n\\newcommand{\\gocv}[4][black]{\\draw[#1] ($(#3)!5pt!(#2)$)--($(#3)!2!($($(#3)!5pt!(#2)$)!.5!($(#3)!5pt!(#4)$)$)$)--($(#3)!5pt!(#4)$);}\n\\gocv{O}{H}{I}\\gocv{O}{I}{A}\n\\end{tikzpicture}",
+                "image": "non2.png"
+            },
+            "Sợi dây quanh nón": {
+                "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{tikz,tikz-3dplot,tkz-tab,tkz-linknodes}\n\\usepackage{xcolor}\n\\begin{document}\n\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3}\n\\pgfmathsetmacro{\\y}{\\x/4}\n\\def\\h{6}\n\\coordinate (O) at (0,0);\n\\coordinate(A) at (\\x,0);\n\\coordinate[label=above:$S$] (S) at (0,\\h);\n\\coordinate (I) at ($(0,0)+(235:\\x cm and \\y cm)$);\n\\fill (I) circle (1.5pt) node[below left]{$A$};\n\\coordinate (J) at ($(0,0)+(180:\\x cm and \\y cm)$);\n\\coordinate (P) at ($(S)!3.65/4!(J)$);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--(S)--cycle (S)--(I);\n\\draw[dashed] (A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {S,I,O,J} \\fill (\\diem) circle (1pt);\n\\draw[red] (I) to[out=-200,in=-100] (P);\n\\begin{scope}[shift={(0+0.15,1.5)}, scale=.813,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0+0.1,3)}, scale=.54,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0.05,4.5)}, scale=.27,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0.025,5.85)}, scale=.025,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\draw[blue,dashed] (A) arc (0:180:{\\x} and {\\y});\n\\begin{scope}[shift={(-0.15,.85)}, scale=.85,rotate=8]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(-0.235,2.3)}, scale=.635,rotate=14]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/1.2});\n\\end{scope}\n\\begin{scope}[shift={(-0.3,3.85)}, scale=.435,rotate=30,xscale=0.94]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/1.2});\n\\end{scope}\n\\begin{scope}[shift={(-0.32,5.2)}, scale=.25,rotate=60,xscale=0.94]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/3});\n\\end{scope}\n\\foreach \\x/\\k in {D/1,C/2,B/3} {\n\\coordinate (P\\k) at ($(S)!\\k/4.13!(I)$);\n\\fill (P\\k) circle (1pt) node[below left]{$\\x$};}\n\\end{tikzpicture}\n\\end{document}",
+                "image": "non3.png"
+            }
+        },
+        "Khối Trụ": {
+            "Khối Trụ": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{2.5} % Bán kính trụ lớn\n\\pgfmathsetmacro{\\y}{\\x/4} % Bán kính trục bé\n\\def\\h{5} % Chiều cao\n\\coordinate[label=right:$A$] (A) at (\\x,0);\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A'$] (A') at ($(A)+(90:\\h)$);\n\\coordinate[label=left:$O'$] (O') at ($(O)+(90:\\h)$);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--($(A')!2!(O')$) arc (180:0:{\\x} and {\\y}) arc (0:-180:{\\x} and {\\y}) (A)--(A')--(O');\n\\draw[dashed] (O')--(O)--(A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,A',O,O'} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
+                "image": "tru1.png"
+            }
+        },
+        "Khối Cầu": {
+            "Khối Cầu": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\R{2.5} % Bán kính\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A$] (A) at (\\R,0);\n\\draw (O) circle (\\R) (A) arc (0:-180: {\\R} and {\\R/3});\n\\draw[dashed] (O)--(A) arc (0:180: {\\R} and {\\R/3});\n\\foreach \\diem in {A,O} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
+                "image": "cau1.png"
+            },
+            "Mặt phẳng không cắt mặt cầu": {
+                "content": "\\begin{tikzpicture}[line join=round, line cap=round,thick]\n\\def\\R{5}\n\\def\\h{2}\n\\pgfmathsetmacro\\a{sqrt(\\R^2-\\h^2)}\n\\def\\b{0.6}\n\\coordinate (O) at (0,0);\n\\coordinate (I) at ($(O)-(0,\\h)$);\n\\coordinate (A) at ($(I)-(\\a,0)$);\n\\draw[dashed,thin] (A) arc (180:0:\\a cm and \\b cm) (O)--(I);\n\\draw (O) circle (\\R cm)\n(A) arc (-180:0:\\a cm and \\b cm);\n\\foreach \\i/\\g in {I/-90,O/90}{\\draw[fill=white](\\i) circle (1.5pt) ($(\\i)+(\\g:3mm)$) node[scale=1]{$\\i$};}\n\\end{tikzpicture}",
+                "image": "cau2.png"
+            },
+            "Mặt phẳng tiếp xúc mặt cầu": {
+                "content": "\\begin{tikzpicture}[declare function={%\nR=2;lambda=0;theta=65;\na=117.5;x(\\a)=r*cos(\\a);y(\\a)=r*sin(\\a);\nr=R*cos(lambda);h=-R*sin(lambda);\nz=asin(h/r*cot(theta));},\nfont=\\small,line join=round,scale=0.8]\n\\tdplotsetmaincoords{theta}{0}\n\\draw(0,0) coordinate(O) circle(R);\n\\begin{scope}[smooth,tdplot_main_coords]\n\\draw[dashed] \n(0,0,0) coordinate(O)\n({x(a)},{y(a)},h) coordinate(A)\n({-x(a)},{-y(a)},h) coordinate(B)\nplot[rotate=102,domain=z:180-z]({x(\\x)},{y(\\x)},h)\nplot[domain=z:180-z]({x(\\x)},{y(\\x)},h);\n\\draw plot[rotate=102,domain=z:-180-z]({x(\\x)},{y(\\x)},h)\nplot[domain=z:-180-z]({x(\\x)},{y(\\x)},h);\n\\end{scope}\n\\foreach \\t/\\g in{O/50}{\n\\shade[ball color=black](\\t) circle(1.5pt) node[shift={(\\g:8pt)}]{$\\t$};}\n\\path(-R,-0.55*R) coordinate(m)\n(R+0.8,-0.55*R) coordinate(n)\n(R,-1.3*R) coordinate(p)\n($(m)+(p)-(n)$) coordinate(q);\n\\path[name path=aaa](O) circle(R);\n\\path[name path=bbb](m)--(n);\n\\path[name intersections={of=aaa and bbb}]\ncoordinate(i) at(intersection-1)\ncoordinate(j) at(intersection-2);\n\\begin{scope}[smooth,tdplot_main_coords]\n\\draw(0,0,-R) coordinate(H)\n(m)--(i)(j)--(n)--(p)--(q)--(m);\n\\draw[dashed](H)--(O)(i)--(j);\n\\path(q) pic[draw,angle radius=14]{angle=p--q--m}node[shift={(29:9pt)}]{$P$};\n\\end{scope}\n\\shade[ball color=black](H) circle(1.5pt) node[shift={(30:8pt)}]{$H$};\n%\node at(H)[below=1cm]{\\textit{có $1$ điểm chung}};\n\\end{tikzpicture}",
+                "image": "cau3.png"
+            },
+            "Mặt phẳng cắt mặt cầu": {
+                "content": "\\begin{tikzpicture}[scale=1,line width=0.5pt, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\draw[fill=black](0,0)coordinate(I) circle(1pt) node[above left]{$O$};\n\\draw[fill=black](0,-0.9)coordinate(H) circle(1pt);\n\\node at(0,-0.9)[left]{$H$};\n\\draw[dashed](0,0)--(0,-0.9)--(1,-1.3)coordinate(M)--(0,0);\n\\node at(0.83,-0.7){$R$};\n\\node at(0.4,-1.23){$r$};\n\\draw(1.61,-1.01) arc[radius=1.9, start angle=-32.1, end angle=212];\n\\draw(-1.164,-1.5) arc[radius=1.9, start angle=-127.9, end angle=-52];\n\\draw[dashed](-1.61,-1.01) arc[radius=1.9, start angle=212, end angle=232.1];\n\\draw[dashed](1.61,-1.01) arc[radius=1.9, start angle=-32.1, end angle=-52];\n\\coordinate(A) at(-2.7,-1.5);\n\\coordinate(B) at(-1.7,-0.3);\n\\coordinate(C) at(2.6,-0.3);\n\\coordinate(D) at($(A)+(C)-(B)$);\n\\draw(-1.84,-0.47)--(A)--(D)--(C)--(1.87,-0.3);\n\\draw[dashed](-1.84,-0.47)--(B)--(1.87,-0.3);\n\\draw[dashed](-1.64,-0.9)..controls(-1.57,-0.2) and(1.57,-0.2)..(1.64,-0.9);\n\\draw(-1.64,-0.9)..controls(-1.57,-1.6) and(1.57,-1.6)..(1.64,-0.9);\n\\node at(-2.25,-1.3){$P$};\n\\node at(-1.9,1.3){$(S)$};\n\\draw(-2.1,-1.5)..controls(-1.95,-1.1)..(-2.34,-1.05);\n%\node at(H)[below=1.2cm]{\\textit{có vô số điểm chung}};\n\\end{tikzpicture}",
+                "image": "cau4.png"
+            },
+            "2 Elip trong cầu": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\R{2.5}\n\\coordinate(O) at (0,0);\n\\coordinate(A) at (\\R,0);\n\\draw (O) circle (\\R) (A) arc (0:-180: {\\R} and {\\R/3});\n\\draw[dashed] (O)--(A)node[midway,above]{$5$ dm} arc (0:180: {\\R} and {\\R/3});\n\\coordinate (C) at ($(0,0)+(90:\\R cm)$);\n\\coordinate (D) at ($(0,0)+(-90:\\R cm)$);\n\\fill (0,1.76) circle (1pt);\n\\fill (0,-1.76) circle (1pt);\n\\draw[dashed] (O)--(0,1.76)node[midway,above left]{$3$ dm}--(C);\n\\draw[dashed] (O)--(0,-1.76)node[midway,above left]{$3$ dm}--(D);\n\\coordinate (M) at ($(0,0)+(45:\\R cm)$);\n\\draw[dashed] (M) arc (0:180:1.76cm and .125cm);\n\\draw (M) arc (0:-180:1.76cm and .125cm);\n\\coordinate (K) at ($(0,0)+(-45:\\R cm)$);\n\\draw[dashed] (K) arc (0:180:1.76cm and .125cm);\n\\draw (K) arc (0:-180:1.76cm and .125cm);\n\\foreach \\diem in {A,M,O,C,D} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
+                "image": "cau5.png"
+            }
         }
+    },
+    "Các lệnh cơ bản": {
+        "Các loại điểm": {
+            "Fill 1 điểm": {
+                "content": "\\fill (0,0) circle (1pt) node[above]{$O$}; % Vẽ một điểm tại tọa độ (0,0) với kích thước nhỏ (1pt) và gắn nhãn 'O' phía trên điểm.",
+                "image": " "
+            },
+            "Fill nhiều điểm": {
+                "content": "\\foreach \\x in {-3,...,10} \\fill (\\x,0) node[above]{\\x} circle (1pt); % Vẽ nhiều điểm trên trục x từ -3 đến 10, mỗi điểm có nhãn phía trên.",
+                "image": " "
+            },
+            "Patch điểm có vòng tròn ngoài": {
+                "content": "\\path (-1,0) node[circle,draw,inner sep=2pt] (S1) {$ S_1 $}; % Vẽ một điểm tại tọa độ (-1,0) với vòng tròn bao quanh và gắn nhãn 'S1'.",
+                "image": " "
+            },
+            "Điểm vị tự": {
+                "content": "\\coordinate (M) at ($(A)!0.5!(B)$); % Định nghĩa điểm M là trung điểm của đoạn thẳng AB.",
+                "image": " "
+            },
+            "Điểm vị tự và quay": {
+                "content": "\\coordinate (B1) at ($(A)!1!60:(B)$); % Định nghĩa điểm B1 là điểm quay của B quanh A một góc 60 độ.",
+                "image": " "
+            },
+            "Điểm thuộc Elip": {
+                "content": "\\coordinate (A) at ($(0,0)+(30:3cm and 1cm)$); % Định nghĩa điểm A trên elip với bán kính ngang 3cm và bán kính dọc 1cm, góc 30 độ từ tâm.",
+                "image": " "
+            },
+            "Điểm thuộc đường tròn": {
+                "content": "\\coordinate (A) at ($(0,0)+(30:3cm)$); % Định nghĩa điểm A trên đường tròn bán kính 3cm, góc 30 độ từ tâm.",
+                "image": " "
+            },
+            "Định nghĩa điểm": {
+                "content": "\\coordinate[label=below left:$A$] (A) at (0,0); % Định nghĩa điểm A tại tọa độ (0,0) với nhãn phía dưới bên trái.",
+                "image": " "
+            },
+            "Điểm có đường kính lớn": {
+                "content": "\\fill (1,1) circle (3pt) node[below]{$B$}; % Vẽ một điểm tại tọa độ (1,1) với kích thước lớn hơn (3pt) và gắn nhãn 'B' phía dưới điểm.",
+                "image": " "
+            },
+            "Điểm trên đoạn thẳng chia đoạn tỉ lệ": {
+                "content": "\\coordinate (C) at ($(A)!0.3!(B)$); % Định nghĩa điểm C chia đoạn AB theo tỉ lệ 3:7.",
+                "image": " "
+            },
+            "Điểm ở góc phần tư": {
+                "content": "\\coordinate (D) at (2,2); % Định nghĩa điểm D tại tọa độ (2,2) trong góc phần tư thứ nhất.",
+                "image": " "
+            },
+            "Điểm có nhãn nghiêng": {
+                "content": "\\node[above right,rotate=45] at (3,3) {E}; % Định nghĩa điểm E tại tọa độ (3,3) với nhãn nghiêng 45 độ.",
+                "image": " "
+            },
+            "Điểm có màu sắc": {
+                "content": "\\fill[red] (4,4) circle (2pt) node[below]{$F$}; % Vẽ một điểm tại tọa độ (4,4) với kích thước 2pt, màu đỏ và gắn nhãn 'F' phía dưới điểm.",
+                "image": " "
+            },
+            "Điểm di chuyển được": {
+                "content": "\\node[draw,circle,inner sep=1pt] (G) at (5,5) {G}; % Vẽ một điểm tại tọa độ (5,5) với vòng tròn bao quanh và gắn nhãn 'G'.",
+                "image": " "
+            },
+            "Điểm dạng mũi tên": {
+                "content": "\\draw[->] (0,0) -- (6,6) node[above]{$H$}; % Vẽ một mũi tên từ gốc tọa độ (0,0) đến điểm (6,6) và gắn nhãn 'H' phía trên.",
+                "image": " "
+            }
+        },
+        "Các loại đường cong": {
+        "Đường thẳng": {
+            "content": "\\draw (0,0) -- (2,2); % Vẽ một đường thẳng từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        },
+        "Đường gấp khúc": {
+            "content": "\\draw (0,0) -- (1,2) -- (2,0); % Vẽ một đường gấp khúc đi qua các điểm (0,0), (1,2) và (2,0).",
+            "image": " "
+        },
+        "Đường cong bậc hai (parabola)": {
+            "content": "\\draw (0,0) parabola (2,2); % Vẽ một đường cong parabol từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        },
+        "Đường cong Bezier": {
+            "content": "\\draw (0,0) .. controls (1,2) and (2,1) .. (3,3); % Vẽ một đường cong Bezier từ điểm (0,0) đến điểm (3,3) với các điểm kiểm soát (1,2) và (2,1).",
+            "image": " "
+        },
+        "Đường tròn": {
+            "content": "\\draw (0,0) circle (2cm); % Vẽ một đường tròn với tâm tại điểm (0,0) và bán kính 2cm.",
+            "image": " "
+        },
+        "Cung tròn": {
+            "content": "\\draw (0,0) arc (0:180:2cm); % Vẽ một cung tròn từ góc 0 độ đến 180 độ với bán kính 2cm.",
+            "image": " "
+        },
+        "Đường Elip": {
+            "content": "\\draw (0,0) ellipse (3cm and 1.5cm); % Vẽ một elip với bán trục ngang 3cm và bán trục dọc 1.5cm.",
+            "image": " "
+        },
+        "Elip nghiêng": {
+            "content": "\\draw[rotate around={30:(0,0)}] (0,0) ellipse (3cm and 1.5cm); % Vẽ một elip nghiêng với bán trục ngang 3cm và bán trục dọc 1.5cm, nghiêng 30 độ quanh tâm.",
+            "image": " "
+        },
+        "Đường cong bậc ba (cubic Bezier)": {
+            "content": "\\draw (0,0) .. controls (1,2) and (3,2) .. (4,0); % Vẽ một đường cong bậc ba từ điểm (0,0) đến điểm (4,0) với các điểm kiểm soát (1,2) và (3,2).",
+            "image": " "
+        },
+        "Đường cong bậc bốn (quartic Bezier)": {
+            "content": "\\draw (0,0) .. controls (1,2) and (2,2) .. (3,0) .. controls (4,-2) and (5,-2) .. (6,0); % Vẽ một đường cong bậc bốn từ điểm (0,0) đến điểm (6,0) với các điểm kiểm soát (1,2), (2,2), (4,-2) và (5,-2).",
+            "image": " "
+        },
+        "Đường cong đóng": {
+            "content": "\\draw (0,0) .. controls (1,2) and (2,2) .. (3,0) -- cycle; % Vẽ một đường cong đóng từ điểm (0,0) đến điểm (3,0) và quay lại điểm ban đầu.",
+            "image": " "
+        },
+        "Đường cong bẻ": {
+            "content": "\\draw (0,0) .. controls (1,2) and (2,2) .. (3,0) bend (4,2); % Vẽ một đường cong từ điểm (0,0) đến điểm (3,0) với điểm bẻ tại (4,2).",
+            "image": " "
+        },
+        "Đường đứt": {
+            "content": "\\draw[dashed] (0,0) -- (2,2); % Vẽ một đường thẳng đứt từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        },
+        "Đường liền": {
+            "content": "\\draw[solid] (0,0) -- (2,2); % Vẽ một đường thẳng liền từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        },
+        "Đường cong dạng parabol bẻ": {
+            "content": "\\draw (0,0) parabola bend (1,2) (2,0); % Vẽ một đường cong parabol từ điểm (0,0) bẻ tại (1,2) và đến điểm (2,0).",
+            "image": " "
+        },
+        "Bend left": {
+            "content": "\\draw (0,0) to[bend left] (2,2); % Vẽ một đường cong bẻ trái từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        },
+        "Bend right": {
+            "content": "\\draw (0,0) to[bend right] (2,2); % Vẽ một đường cong bẻ phải từ điểm (0,0) đến điểm (2,2).",
+            "image": " "
+        }
+    },
+        "Trục Số": {
+        "Gạch đứng": {
+            "content": "\\path[pattern=vertical lines] (-4,-3pt) rectangle (-2,3pt); % Tô màu vùng từ -4 đến -2 bằng các đường gạch đứng.",
+            "image": " "
+        },
+        "Trục Số": {
+            "content": "\\draw[->] (-4,0) -- (4,0); % Vẽ trục số đơn giản với mũi tên chỉ hướng từ -4 đến 4.",
+            "image": " "
+        },
+        "Gạch chéo phải": {
+            "content": "\\path[pattern=north east lines] (-4,-3pt) rectangle (-2,3pt); % Tô màu vùng từ -4 đến -2 bằng các đường gạch chéo hướng đông bắc.",
+            "image": " "
+        },
+        "Gạch chéo trái": {
+            "content": "\\path[pattern=north west lines] (1,-3pt) rectangle (4,3pt); % Tô màu vùng từ 1 đến 4 bằng các đường gạch chéo hướng tây bắc.",
+            "image": " "
+        },
+        "Trục Số với dấu )": {
+            "content": "\\draw[->] (-4,0) -- (4,0); % Vẽ trục số đơn giản với mũi tên chỉ hướng từ -4 đến 4.\n\\node at (4,0) [right] {)}; % Thêm dấu ) tại đầu mút phải.",
+            "image": " "
+        },
+        "Trục Số với dấu ]": {
+            "content": "\\draw[->] (-4,0) -- (4,0); % Vẽ trục số đơn giản với mũi tên chỉ hướng từ -4 đến 4.\n\\node at (4,0) [right] {]}; % Thêm dấu ] tại đầu mút phải.",
+            "image": " "
+        },
+        "Trục Số với dấu (": {
+            "content": "\\draw[->] (-4,0) -- (4,0); % Vẽ trục số đơn giản với mũi tên chỉ hướng từ -4 đến 4.\n\\node at (-4,0) [left] {(}; % Thêm dấu ( tại đầu mút trái.",
+            "image": " "
+        },
+        "Trục Số với dấu [": {
+            "content": "\\draw[->] (-4,0) -- (4,0); % Vẽ trục số đơn giản với mũi tên chỉ hướng từ -4 đến 4.\n\\node at (-4,0) [left] {[}; % Thêm dấu [ tại đầu mút trái.",
+            "image": " "
+        }
+    },
+        "Ký Hiệu Góc": {
+        "Đánh dấu góc theo clip": {
+            "content": "\\clip (A) -- (B) -- (C); % Cắt hình theo tam giác ABC.\n\\draw (B) circle (1cm); % Vẽ đường tròn bán kính 1cm với tâm tại điểm B.\n\\draw ($(B)+(0.25,0)$) node[above right]{$(P)$}; % Thêm ký hiệu P tại vị trí dịch từ điểm B.",
+            "image": " "
+        },
+        "Ký hiệu vuông theo hbh": {
+            "content": "\\def\\t{.15} \\def\\g{90} % Định nghĩa khoảng cách t và góc g.\n\\draw (H) -- ++(\\g:\\t) -- ++(0:\\t) -- ++(-\\g:\\t); % Vẽ ký hiệu góc vuông tại điểm H.",
+            "image": " "
+        },
+        "Vẽ góc vuông": {
+            "content": "\\newcommand{\\gocv}[4][black]{\\draw[#1] ($(#3)!5pt!(#2)$) -- ($(#3)!2!($($(#3)!5pt!(#2)$)!.5!($(#3)!5pt!(#4)$)$)$) -- ($(#3)!5pt!(#4)$);} % Định nghĩa lệnh vẽ góc vuông với màu sắc tùy chọn.\n\\gocv{B}{A}{C} % Sử dụng lệnh để vẽ góc vuông BAC.",
+            "image": " "
+        },
+        "Ký hiệu góc vuông AHD": {
+            "content": "\\coordinate (start) at ($(H)!5pt!(A)$); % Định nghĩa điểm bắt đầu tại H dịch 5pt về phía A.\n\\coordinate (middle) at ($(H)!2!($($(H)!5pt!(A)$)!.5!($(H)!5pt!(D)$)$)$); % Định nghĩa điểm giữa tại trung điểm của đoạn nối H đến D.\n\\coordinate (end) at ($(H)!5pt!(D)$); % Định nghĩa điểm kết thúc tại H dịch 5pt về phía D.\n\\draw[black] (start) -- (middle) -- (end); % Vẽ ký hiệu góc vuông AHD với ba đoạn thẳng từ start đến middle và end.",
+            "image": " "
+        }
+    }
+    },
+    "Các loại Bảng": {
+        "Bảng Tabular": {
+            "content": "\\begin{tabular}{|c|c|c|}\n\\hline\nA & B & C \\\\\n\\hline\n1 & 2 & 3 \\\\\n\\hline\n4 & 5 & 6 \\\\\n\\hline\n\\end{tabular} ",
+            "image": "taular.png"
+        },
+        "Bảng Tabularx-đều cột": {
+            "content": "\\begin{tabular}{|>{\\centering\\arraybackslash}p{2cm}|>{\\centering\\arraybackslash}p{2cm}|>{\\centering\\arraybackslash}p{2cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t1 & 2 & 3 \\\\\n\t\t\\hline\n\t\t4 & 5 & 6 \\\\\n\t\t\\hline\n\t\\end{tabular}",
+            "image": "taularX.png"
+        },
+        "Bảng Longtable-đều cột": {
+            "content": "\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t1 & 2 & 3456 \\\\\n\t\t4 & 5 & 6 \\\\\n\t\t7 & 8 & 9 \\\\\n\t\t\\hline\n\t\\end{longtable}",
+            "image": "longtable.png"
+        },
+        "Bảng với ghép dòng": {
+            "content": "\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t\\multirow{2}{*}{10} & 2 & 356 \\\\\n\t\t& 4 & 5 \\\\\n\t\t\\hline\n\t\t6 & 7 & 8 \\\\\n\t\t\\hline\n\t\\end{longtable}%\\multirow{2}{*}{10}: Gộp hai hàng (2 rows) trong cùng một ô và đặt giá trị 10",
+            "image": "longtableDeu.png"
+        },
+        "Bảng với ghép cột": {
+            "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{array} % Để sử dụng định dạng cột tùy chỉnh\n\\usepackage{longtable} % Sử dụng gói longtable để tạo bảng dài có thể kéo dài qua nhiều trang\n\\usepackage{multirow} % Sử dụng gói multirow để gộp các ô trong bảng\n\\usepackage{colortbl} % Sử dụng gói colortbl để tô màu các ô trong bảng\n\n\\begin{document}\n\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\\hline\n\t\\multicolumn{2}{|c|}{Ghép Cột} & C \\\\\n\t\\hline\n\t1 & 2 & 3 \\\\\n\t\\hline\n\t4 & 5 & 6 \\\\\n\t\\hline\n\\end{longtable}\n\\end{document}\n",
+            "image": "GhepCot.png"
+        },
+        "Bảng với Tô Màu Ô": {
+            "content": "\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\\hline\n\t\\cellcolor{red} A & B & C \\\\\n\t\\hline\n\t1 & \\cellcolor{blue} 2 & 3 \\\\\n\t\\hline\n\t4 & 5 & \\cellcolor{green} 6 \\\\\n\t\\hline\n\\end{longtable}",
+            "image": "colortable.png"
+        },
+        "Bảng với Caption": {
+            "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{array} % Để sử dụng định dạng cột tùy chỉnh\n\\usepackage{longtable} % Sử dụng gói longtable để tạo bảng dài có thể kéo dài qua nhiều trang\n\\usepackage{multirow} % Sử dụng gói multirow để gộp các ô trong bảng\n\\usepackage{colortbl} % Sử dụng gói colortbl để tô màu các ô trong bảng\n\\usepackage{xcolor} % Sử dụng gói xcolor để định nghĩa màu sắc\n\\usepackage{caption} % Để tùy chỉnh chú thích\n% Tùy chỉnh định dạng của chú thích\n\\captionsetup[table]{labelformat=empty, labelsep=none}\n\\begin{document}\n\t\n\t% Tạo bảng với cột có chiều rộng cố định và căn giữa nội dung\n\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\caption{Bảng 1: Ví dụ các số liệu} \\\\\n\t\t\\hline\n\t\t\\cellcolor{red} A & B & C \\\\\n\t\t\\hline\n\t\t1 & \\cellcolor{blue} 2 & 3 \\\\\n\t\t\\hline\n\t\t4 & 5 & \\cellcolor{green} 6 \\\\\n\t\t\\hline\n\t\\end{longtable}\n\t\n\\end{document}\n",
+            "image": "bang_ten.png"
+        }
+    },
+    "Các loại sơ đồ tư duy": {
+        "Tree diagam1": {
+            "content": "%\\usetikzlibrary{trees} %%thêm thư viện này\n\t\\begin{tikzpicture}\n\t\t[edge from parent fork down, sibling distance=8em, level distance=3em,\n\t\tevery node/.style={fill=blue!30, rounded corners},\n\t\tedge from parent/.style={draw, -latex}]\n\t\t\\node {Tư duy chính}\n\t\tchild {node {Ý tưởng 1}\n\t\t\tchild {node {Chi tiết 1.1}}\n\t\t\tchild {node {Chi tiết 1.2}}}\n\t\tchild {node {Ý tưởng 2}\n\t\t\tchild {node {Chi tiết 2.1}}\n\t\t\tchild {node {Chi tiết 2.2}}}\n\t\tchild {node {Ý tưởng 3}\n\t\t\tchild {node {Chi tiết 3.1}}\n\t\t\tchild {node {Chi tiết 3.2}}};\n\t\\end{tikzpicture}",
+            "image": "tree1.png"
+        },
+        "Tree diagam2": {
+            "content": "%\\usetikzlibrary{trees} %%thêm thư viện này\n\\begin{tikzpicture}\n\t[edge from parent fork down, sibling distance=8em, level distance=3em,\n\tevery node/.style={rounded corners},\n\tlevel 1/.style={every node/.style={fill=red!30}, edge from parent/.style={draw, -latex, thick, red!30}},\n\tlevel 2/.style={every node/.style={fill=blue!30}, edge from parent/.style={draw, -latex, thick, blue!30}},\n\tlevel 3/.style={every node/.style={fill=green!30}, edge from parent/.style={draw, -latex, thick, green!30}}]\n\t\\node[fill=orange!30] {Tư duy chính} % Màu cho node gốc\n\tchild {node {Ý tưởng 1}\n\t\tchild {node {Chi tiết 1.1}}\n\t\tchild {node {Chi tiết 1.2}}}\n\tchild {node {Ý tưởng 2}\n\t\tchild {node {Chi tiết 2.1}}\n\t\tchild {node {Chi tiết 2.2}}}\n\tchild {node {Ý tưởng 3}\n\t\tchild {node {Chi tiết 3.1}}\n\t\tchild {node {Chi tiết 3.2}}};\n\\end{tikzpicture}",
+            "image": "tree2.png"
+        },
+        "Tree diagam3": {
+            "content": "\\usetikzlibrary{trees, positioning}\n\\begin{tikzpicture}[\n\tevery node/.style={circle, draw, minimum size=1cm, fill=blue!30},\n\tlevel 1/.style={sibling distance=6cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 1\n\tlevel 2/.style={sibling distance=3cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 2\n\tedge from parent/.style={draw, -latex}]\n\t% Root node\n\t\\node[fill=red!30] (root) {Gốc}\n\t% First level nodes\n\tchild {node[fill=blue!30] (idea1) {A}\n\t\tchild {node[fill=green!30] {A.1}}\n\t\tchild {node[fill=green!30] {A.2}}}\n\tchild {node[fill=blue!30] (idea2) {B}\n\t\tchild {node[fill=green!30] {B.1}}\n\t\tchild {node[fill=green!30] {B.2}}};\n\\end{tikzpicture}",
+            "image": "tree3.png"
+        },
+         "Tree diagam4": {
+            "content": "%%\\usetikzlibrary{trees}\n\t\\begin{center}\n\t\\begin{tikzpicture}[scale=0.65,\n\t\tevery node/.style={circle, draw, minimum size=1cm, fill=blue!30},\n\t\tlevel 1/.style={sibling distance=12cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 1\n\t\tlevel 2/.style={sibling distance=6cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 2\n\t\tlevel 3/.style={sibling distance=3cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 3\n\t\tedge from parent/.style={draw, -latex}]\n\t\t% Root node\n\t\t\\node[fill=red!30] (root) {Gốc}\n\t\t% First level nodes\n\t\tchild {node[fill=blue!30] (idea1) {A}\n\t\t\tchild {node[fill=green!30] {A.1}\n\t\t\t\tchild {node[fill=yellow!30] {A.1.1}}\n\t\t\t\tchild {node[fill=yellow!30] {A.1.2}}}\n\t\t\tchild {node[fill=green!30] {A.2}\n\t\t\t\tchild {node[fill=yellow!30] {A.2.1}}\n\t\t\t\tchild {node[fill=yellow!30] {A.2.2}}}}\n\t\tchild {node[fill=blue!30] (idea2) {B}\n\t\t\tchild {node[fill=green!30] {B.1}\n\t\t\t\tchild {node[fill=yellow!30] {B.1.1}}\n\t\t\t\tchild {node[fill=yellow!30] {B.1.2}}}\n\t\t\tchild {node[fill=green!30] {B.2}\n\t\t\t\tchild {node[fill=yellow!30] {B.2.1}}\n\t\t\t\tchild {node[fill=yellow!30] {B.2.2}}}};\n\t\\end{tikzpicture}\n\t\\end{center}",
+            "image": "tree4.png"
+        },
+        "Tree diagam5": {
+            "content": "\\begin{tikzpicture}\n\t\t% Node styles\n\t\t\\tikzstyle{main node} = [circle, draw, fill=blue!30]\n\t\t\\tikzstyle{branch node} = [circle, draw, fill=green!30]\n\t\t\\tikzstyle{leaf node} = [circle, draw, fill=red!30]\n\t\t\n\t\t% Central node\n\t\t\\node[main node] (0) {Tư duy chính};\n\t\t\n\t\t% First level nodes\n\t\t\\foreach \\i in {1,2,3} {\n\t\t\t\\node[branch node] (a\\i) at (120*\\i-90:3cm) {Ý tưởng \\i};\n\t\t\t\\draw[->] (0) -- (a\\i);\n\t\t}\n\t\t\n\t\t% Second level nodes\n\t\t\\foreach \\i/\\j in {1/1,1/2,2/1,2/2,3/1,3/2} {\n\t\t\t\\node[leaf node] (b\\i\\j) at (120*\\i-90 + 40*\\j-20:5cm) {Chi tiết \\i.\\j};\n\t\t\t\\draw[->] (a\\i) -- (b\\i\\j);\n\t\t}\n\t\\end{tikzpicture}",
+            "image": "tree5.png"
+        }
+    }
 }
