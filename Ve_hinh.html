@@ -45,6 +45,7 @@
             width: 70%;
             padding: 20px;
             overflow-y: auto;
+            position: relative;
         }
         ul {
             list-style-type: none;
@@ -53,6 +54,7 @@
         li {
             cursor: pointer;
             margin: 5px 0;
+            position: relative;
         }
         li > ul {
             display: none;
@@ -77,17 +79,27 @@
         #latexContent {
             white-space: pre-wrap; /* Đảm bảo ngắt dòng đúng */
         }
+        .tooltip {
+            position: absolute;
+            display: none;
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip img {
+            max-width: 450px;
+            max-height: 450px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .tooltip img:hover {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
     <div class="menu">
         <a href="index.html">Home</a>
-        <a href="tron_de.html">Trộn Đề</a>
-        <a href="fixcode.html">Fix Code</a>
-        <a href="find_latex.html">Tìm Kiếm</a>
-        <a href="Ve_hinh.html">Vẽ Hình</a>
-        <a href="tuong_tu.html">Đề Tương Tự</a>
-        <a href="contact.html">Tác giả</a>
     </div>
     <div class="container">
         <div id="tree"></div>
@@ -98,6 +110,9 @@
                 <button onclick="decreaseFontSize()">Giảm kích thước chữ</button>
             </div>
             <pre id="latexContent"></pre>
+        </div>
+        <div class="tooltip" id="tooltip">
+            <img id="tooltipImg" src="" alt="Preview">
         </div>
     </div>
 
@@ -120,7 +135,7 @@
                     li.textContent = key;
                     ul.appendChild(li);
 
-                    if (typeof data[key] === 'object') {
+                    if (typeof data[key] === 'object' && !data[key].hasOwnProperty('content')) {
                         li.classList.add('parent');
                         li.onclick = function(event) {
                             event.stopPropagation();
@@ -128,7 +143,16 @@
                         };
                         buildTree(data[key], li);
                     } else {
-                        li.dataset.content = data[key];
+                        li.dataset.content = data[key].content;
+                        li.dataset.image = data[key].image;
+                        li.onmouseover = function(event) {
+                            event.stopPropagation();
+                            displayTooltip(event, this.dataset.image);
+                        };
+                        li.onmouseout = function(event) {
+                            event.stopPropagation();
+                            hideTooltip();
+                        };
                         li.onclick = function(event) {
                             event.stopPropagation();
                             displayContent(this.dataset.content);
@@ -144,10 +168,8 @@
         }
 
         function applySyntaxHighlighting(content) {
-            // Replace your custom syntax here, for example:
             content = content.replace(/\\begin{.*?}/g, '<span style="color: blue;">$&</span>');
             content = content.replace(/\\end{.*?}/g, '<span style="color: red;">$&</span>');
-            // Add more replacements as needed
             return content;
         }
 
@@ -168,6 +190,20 @@
         function decreaseFontSize() {
             currentFontSize = Math.max(12, currentFontSize - 2);
             document.getElementById('latexContent').style.fontSize = currentFontSize + 'px';
+        }
+
+        function displayTooltip(event, imageUrl) {
+            const tooltip = document.getElementById('tooltip');
+            const tooltipImg = document.getElementById('tooltipImg');
+            tooltipImg.src = imageUrl;
+            tooltip.style.left = event.pageX + 'px';
+            tooltip.style.top = event.pageY + 'px';
+            tooltip.style.display = 'block';
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.style.display = 'none';
         }
 
         fetchJson();
