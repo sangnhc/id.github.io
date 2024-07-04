@@ -205,43 +205,43 @@
         "Khối Nón": {
             "Nón Cơ Bản": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3} % Bán kính trụ lớn\n\\pgfmathsetmacro{\\y}{\\x/4} % Bán kính trục bé\n\\def\\h{5} % Chiều cao\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A$] (A) at (\\x,0);\n\\coordinate[label=above:$S$] (S) at (0,\\h);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--(S)--cycle;\n\\draw[dashed] (S)--(O)--(A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,S,O} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/non1.png"
+                "image": "non1.png"
             },
             "Khối Nón Có Khoảng Cách Từ Tâm": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3}\n\\pgfmathsetmacro{\\y}{\\x/4}\n\\def\\h{5}\n\\def\\goc{120}\n\\coordinate (A1) at (\\x,0);\n\\coordinate[label=below left:$O$] (O) at (0,0);\n\\coordinate[label=above left:$S$] (S) at (0,\\h);\n\\coordinate[label=right:$B$] (A) at (0:{\\x} and {\\y});\n\\coordinate[label=below:$A$] (B) at ({\\goc+180}:{\\x} and {\\y});\n\\coordinate[label=below right:$I$] (I) at ($(A)!1/2!(B)$);\n\\coordinate[label=right:$H$] (H) at ($(S)!1/2!(I)$);\n\\draw (B)--(S) (A1) arc (0:-180:{\\x} and {\\y})--(S)--cycle;\n\\draw[dashed] (B)--(A)--(S)--(O)--(I)--(S) (O)--(H) (A1) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,S,O,I,H,B} \\fill (\\diem) circle (1pt);\n\\newcommand{\\gocv}[4][black]{\\draw[#1] ($(#3)!5pt!(#2)$)--($(#3)!2!($($(#3)!5pt!(#2)$)!.5!($(#3)!5pt!(#4)$)$)$)--($(#3)!5pt!(#4)$);}\n\\gocv{O}{H}{I}\\gocv{O}{I}{A}\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/non2.png"
+                "image": "non2.png"
             },
             "Sợi dây quanh nón": {
                 "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{tikz,tikz-3dplot,tkz-tab,tkz-linknodes}\n\\usepackage{xcolor}\n\\begin{document}\n\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3}\n\\pgfmathsetmacro{\\y}{\\x/4}\n\\def\\h{6}\n\\coordinate (O) at (0,0);\n\\coordinate(A) at (\\x,0);\n\\coordinate[label=above:$S$] (S) at (0,\\h);\n\\coordinate (I) at ($(0,0)+(235:\\x cm and \\y cm)$);\n\\fill (I) circle (1.5pt) node[below left]{$A$};\n\\coordinate (J) at ($(0,0)+(180:\\x cm and \\y cm)$);\n\\coordinate (P) at ($(S)!3.65/4!(J)$);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--(S)--cycle (S)--(I);\n\\draw[dashed] (A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {S,I,O,J} \\fill (\\diem) circle (1pt);\n\\draw[red] (I) to[out=-200,in=-100] (P);\n\\begin{scope}[shift={(0+0.15,1.5)}, scale=.813,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0+0.1,3)}, scale=.54,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0.05,4.5)}, scale=.27,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(0.025,5.85)}, scale=.025,rotate=-8,xscale=0.93]\n\\draw[red] (\\x,0) arc (0:-180:{\\x} and {\\y});\n\\end{scope}\n\\draw[blue,dashed] (A) arc (0:180:{\\x} and {\\y});\n\\begin{scope}[shift={(-0.15,.85)}, scale=.85,rotate=8]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y});\n\\end{scope}\n\\begin{scope}[shift={(-0.235,2.3)}, scale=.635,rotate=14]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/1.2});\n\\end{scope}\n\\begin{scope}[shift={(-0.3,3.85)}, scale=.435,rotate=30,xscale=0.94]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/1.2});\n\\end{scope}\n\\begin{scope}[shift={(-0.32,5.2)}, scale=.25,rotate=60,xscale=0.94]\n\\draw[blue,dashed] (\\x,0) arc (0:180:{\\x} and {\\y/3});\n\\end{scope}\n\\foreach \\x/\\k in {D/1,C/2,B/3} {\n\\coordinate (P\\k) at ($(S)!\\k/4.13!(I)$);\n\\fill (P\\k) circle (1pt) node[below left]{$\\x$};}\n\\end{tikzpicture}\n\\end{document}",
-                "image": "HinhTIKZ/non3.png"
+                "image": "non3.png"
             }
         },
         "Khối Trụ": {
             "Khối Trụ": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{2.5} % Bán kính trụ lớn\n\\pgfmathsetmacro{\\y}{\\x/4} % Bán kính trục bé\n\\def\\h{5} % Chiều cao\n\\coordinate[label=right:$A$] (A) at (\\x,0);\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A'$] (A') at ($(A)+(90:\\h)$);\n\\coordinate[label=left:$O'$] (O') at ($(O)+(90:\\h)$);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--($(A')!2!(O')$) arc (180:0:{\\x} and {\\y}) arc (0:-180:{\\x} and {\\y}) (A)--(A')--(O');\n\\draw[dashed] (O')--(O)--(A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,A',O,O'} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/tru1.png"
+                "image": "tru1.png"
             }
         },
         "Khối Cầu": {
             "Khối Cầu": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\R{2.5} % Bán kính\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A$] (A) at (\\R,0);\n\\draw (O) circle (\\R) (A) arc (0:-180: {\\R} and {\\R/3});\n\\draw[dashed] (O)--(A) arc (0:180: {\\R} and {\\R/3});\n\\foreach \\diem in {A,O} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/cau1.png"
+                "image": "cau1.png"
             },
             "Mặt phẳng không cắt mặt cầu": {
                 "content": "\\begin{tikzpicture}[line join=round, line cap=round,thick]\n\\def\\R{5}\n\\def\\h{2}\n\\pgfmathsetmacro\\a{sqrt(\\R^2-\\h^2)}\n\\def\\b{0.6}\n\\coordinate (O) at (0,0);\n\\coordinate (I) at ($(O)-(0,\\h)$);\n\\coordinate (A) at ($(I)-(\\a,0)$);\n\\draw[dashed,thin] (A) arc (180:0:\\a cm and \\b cm) (O)--(I);\n\\draw (O) circle (\\R cm)\n(A) arc (-180:0:\\a cm and \\b cm);\n\\foreach \\i/\\g in {I/-90,O/90}{\\draw[fill=white](\\i) circle (1.5pt) ($(\\i)+(\\g:3mm)$) node[scale=1]{$\\i$};}\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/cau2.png"
+                "image": "cau2.png"
             },
             "Mặt phẳng tiếp xúc mặt cầu": {
                 "content": "\\begin{tikzpicture}[declare function={%\nR=2;lambda=0;theta=65;\na=117.5;x(\\a)=r*cos(\\a);y(\\a)=r*sin(\\a);\nr=R*cos(lambda);h=-R*sin(lambda);\nz=asin(h/r*cot(theta));},\nfont=\\small,line join=round,scale=0.8]\n\\tdplotsetmaincoords{theta}{0}\n\\draw(0,0) coordinate(O) circle(R);\n\\begin{scope}[smooth,tdplot_main_coords]\n\\draw[dashed] \n(0,0,0) coordinate(O)\n({x(a)},{y(a)},h) coordinate(A)\n({-x(a)},{-y(a)},h) coordinate(B)\nplot[rotate=102,domain=z:180-z]({x(\\x)},{y(\\x)},h)\nplot[domain=z:180-z]({x(\\x)},{y(\\x)},h);\n\\draw plot[rotate=102,domain=z:-180-z]({x(\\x)},{y(\\x)},h)\nplot[domain=z:-180-z]({x(\\x)},{y(\\x)},h);\n\\end{scope}\n\\foreach \\t/\\g in{O/50}{\n\\shade[ball color=black](\\t) circle(1.5pt) node[shift={(\\g:8pt)}]{$\\t$};}\n\\path(-R,-0.55*R) coordinate(m)\n(R+0.8,-0.55*R) coordinate(n)\n(R,-1.3*R) coordinate(p)\n($(m)+(p)-(n)$) coordinate(q);\n\\path[name path=aaa](O) circle(R);\n\\path[name path=bbb](m)--(n);\n\\path[name intersections={of=aaa and bbb}]\ncoordinate(i) at(intersection-1)\ncoordinate(j) at(intersection-2);\n\\begin{scope}[smooth,tdplot_main_coords]\n\\draw(0,0,-R) coordinate(H)\n(m)--(i)(j)--(n)--(p)--(q)--(m);\n\\draw[dashed](H)--(O)(i)--(j);\n\\path(q) pic[draw,angle radius=14]{angle=p--q--m}node[shift={(29:9pt)}]{$P$};\n\\end{scope}\n\\shade[ball color=black](H) circle(1.5pt) node[shift={(30:8pt)}]{$H$};\n%\node at(H)[below=1cm]{\\textit{có $1$ điểm chung}};\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/cau3.png"
+                "image": "cau3.png"
             },
             "Mặt phẳng cắt mặt cầu": {
                 "content": "\\begin{tikzpicture}[scale=1,line width=0.5pt, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\draw[fill=black](0,0)coordinate(I) circle(1pt) node[above left]{$O$};\n\\draw[fill=black](0,-0.9)coordinate(H) circle(1pt);\n\\node at(0,-0.9)[left]{$H$};\n\\draw[dashed](0,0)--(0,-0.9)--(1,-1.3)coordinate(M)--(0,0);\n\\node at(0.83,-0.7){$R$};\n\\node at(0.4,-1.23){$r$};\n\\draw(1.61,-1.01) arc[radius=1.9, start angle=-32.1, end angle=212];\n\\draw(-1.164,-1.5) arc[radius=1.9, start angle=-127.9, end angle=-52];\n\\draw[dashed](-1.61,-1.01) arc[radius=1.9, start angle=212, end angle=232.1];\n\\draw[dashed](1.61,-1.01) arc[radius=1.9, start angle=-32.1, end angle=-52];\n\\coordinate(A) at(-2.7,-1.5);\n\\coordinate(B) at(-1.7,-0.3);\n\\coordinate(C) at(2.6,-0.3);\n\\coordinate(D) at($(A)+(C)-(B)$);\n\\draw(-1.84,-0.47)--(A)--(D)--(C)--(1.87,-0.3);\n\\draw[dashed](-1.84,-0.47)--(B)--(1.87,-0.3);\n\\draw[dashed](-1.64,-0.9)..controls(-1.57,-0.2) and(1.57,-0.2)..(1.64,-0.9);\n\\draw(-1.64,-0.9)..controls(-1.57,-1.6) and(1.57,-1.6)..(1.64,-0.9);\n\\node at(-2.25,-1.3){$P$};\n\\node at(-1.9,1.3){$(S)$};\n\\draw(-2.1,-1.5)..controls(-1.95,-1.1)..(-2.34,-1.05);\n%\node at(H)[below=1.2cm]{\\textit{có vô số điểm chung}};\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/cau4.png"
+                "image": "cau4.png"
             },
             "2 Elip trong cầu": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\R{2.5}\n\\coordinate(O) at (0,0);\n\\coordinate(A) at (\\R,0);\n\\draw (O) circle (\\R) (A) arc (0:-180: {\\R} and {\\R/3});\n\\draw[dashed] (O)--(A)node[midway,above]{$5$ dm} arc (0:180: {\\R} and {\\R/3});\n\\coordinate (C) at ($(0,0)+(90:\\R cm)$);\n\\coordinate (D) at ($(0,0)+(-90:\\R cm)$);\n\\fill (0,1.76) circle (1pt);\n\\fill (0,-1.76) circle (1pt);\n\\draw[dashed] (O)--(0,1.76)node[midway,above left]{$3$ dm}--(C);\n\\draw[dashed] (O)--(0,-1.76)node[midway,above left]{$3$ dm}--(D);\n\\coordinate (M) at ($(0,0)+(45:\\R cm)$);\n\\draw[dashed] (M) arc (0:180:1.76cm and .125cm);\n\\draw (M) arc (0:-180:1.76cm and .125cm);\n\\coordinate (K) at ($(0,0)+(-45:\\R cm)$);\n\\draw[dashed] (K) arc (0:180:1.76cm and .125cm);\n\\draw (K) arc (0:-180:1.76cm and .125cm);\n\\foreach \\diem in {A,M,O,C,D} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
-                "image": "HinhTIKZ/cau5.png"
+                "image": "cau5.png"
             }
         }
     },
@@ -434,53 +434,62 @@
     "Các loại Bảng": {
         "Bảng Tabular": {
             "content": "\\begin{tabular}{|c|c|c|}\n\\hline\nA & B & C \\\\\n\\hline\n1 & 2 & 3 \\\\\n\\hline\n4 & 5 & 6 \\\\\n\\hline\n\\end{tabular} ",
-            "image": "HinhTIKZ/taular.png"
+            "image": "taular.png"
         },
         "Bảng Tabularx-đều cột": {
             "content": "\\begin{tabular}{|>{\\centering\\arraybackslash}p{2cm}|>{\\centering\\arraybackslash}p{2cm}|>{\\centering\\arraybackslash}p{2cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t1 & 2 & 3 \\\\\n\t\t\\hline\n\t\t4 & 5 & 6 \\\\\n\t\t\\hline\n\t\\end{tabular}",
-            "image": "HinhTIKZ/taularX.png"
+            "image": "taularX.png"
         },
         "Bảng Longtable-đều cột": {
             "content": "\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t1 & 2 & 3456 \\\\\n\t\t4 & 5 & 6 \\\\\n\t\t7 & 8 & 9 \\\\\n\t\t\\hline\n\t\\end{longtable}",
-            "image": "HinhTIKZ/longtable.png"
+            "image": "longtable.png"
         },
         "Bảng với ghép dòng": {
             "content": "\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t\\multirow{2}{*}{10} & 2 & 356 \\\\\n\t\t& 4 & 5 \\\\\n\t\t\\hline\n\t\t6 & 7 & 8 \\\\\n\t\t\\hline\n\t\\end{longtable}%\\multirow{2}{*}{10}: Gộp hai hàng (2 rows) trong cùng một ô và đặt giá trị 10",
-            "image": "HinhTIKZ/longtableDEU.png"
+            "image": "longtableDeu.png"
         },
         "Bảng với ghép cột": {
             "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{array} % Để sử dụng định dạng cột tùy chỉnh\n\\usepackage{longtable} % Sử dụng gói longtable để tạo bảng dài có thể kéo dài qua nhiều trang\n\\usepackage{multirow} % Sử dụng gói multirow để gộp các ô trong bảng\n\\usepackage{colortbl} % Sử dụng gói colortbl để tô màu các ô trong bảng\n\n\\begin{document}\n\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\\hline\n\t\\multicolumn{2}{|c|}{Ghép Cột} & C \\\\\n\t\\hline\n\t1 & 2 & 3 \\\\\n\t\\hline\n\t4 & 5 & 6 \\\\\n\t\\hline\n\\end{longtable}\n\\end{document}\n",
-            "image": "HinhTIKZ/GhepCot.png"
+            "image": "GhepCot.png"
         },
         "Bảng với Tô Màu Ô": {
             "content": "\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\\hline\n\t\\cellcolor{red} A & B & C \\\\\n\t\\hline\n\t1 & \\cellcolor{blue} 2 & 3 \\\\\n\t\\hline\n\t4 & 5 & \\cellcolor{green} 6 \\\\\n\t\\hline\n\\end{longtable}",
-            "image": "HinhTIKZ/colortable.png"
+            "image": "colortable.png"
         },
         "Bảng với Caption": {
             "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{array} % Để sử dụng định dạng cột tùy chỉnh\n\\usepackage{longtable} % Sử dụng gói longtable để tạo bảng dài có thể kéo dài qua nhiều trang\n\\usepackage{multirow} % Sử dụng gói multirow để gộp các ô trong bảng\n\\usepackage{colortbl} % Sử dụng gói colortbl để tô màu các ô trong bảng\n\\usepackage{xcolor} % Sử dụng gói xcolor để định nghĩa màu sắc\n\\usepackage{caption} % Để tùy chỉnh chú thích\n% Tùy chỉnh định dạng của chú thích\n\\captionsetup[table]{labelformat=empty, labelsep=none}\n\\begin{document}\n\t\n\t% Tạo bảng với cột có chiều rộng cố định và căn giữa nội dung\n\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\caption{Bảng 1: Ví dụ các số liệu} \\\\\n\t\t\\hline\n\t\t\\cellcolor{red} A & B & C \\\\\n\t\t\\hline\n\t\t1 & \\cellcolor{blue} 2 & 3 \\\\\n\t\t\\hline\n\t\t4 & 5 & \\cellcolor{green} 6 \\\\\n\t\t\\hline\n\t\\end{longtable}\n\t\n\\end{document}\n",
-            "image": "HinhTIKZ/bang_ten.png"
+            "image": "bang_ten.png"
         }
     },
     "Các loại sơ đồ tư duy": {
-        "Sơ Đồ 1": {
-            "content": "%\\usetikzlibrary{trees} %%thêm thư viện này\n\t\\begin{tikzpicture}\n\t\t[edge from parent fork down, sibling distance=8em, level distance=3em,\n\t\tevery node/.style={fill=blue!30, rounded corners},\n\t\tedge from parent/.style={draw, -latex}]\n\t\t\\node {Tư duy chính}\n\t\tchild {node {Ý tưởng 1}\n\t\t\tchild {node {Chi tiết 1.1}}\n\t\t\tchild {node {Chi tiết 1.2}}}\n\t\tchild {node {Ý tưởng 2}\n\t\t\tchild {node {Chi tiết 2.1}}\n\t\t\tchild {node {Chi tiết 2.2}}}\n\t\tchild {node {Ý tưởng 3}\n\t\t\tchild {node {Chi tiết 3.1}}\n\t\t\tchild {node {Chi tiết 3.2}}};\n\t\\end{tikzpicture}",
-            "image": "HinhTIKZ/tree1.png"
+        "Tree diagam1": {
+            "content": "%\\usetikzlibrary{trees}\n\\begin{tikzpicture}\n\t\t[\n\t\tedge from parent fork down,\n\t\tlevel 1/.style={sibling distance=15em, level distance=3em},\n\t\tlevel 2/.style={sibling distance=10em, level distance=3em},\n\t\tevery node/.style={fill=blue!30, rounded corners},\n\t\tedge from parent/.style={draw, -latex}\n\t\t]\n\t\t\\node {Gốc}\n\t\tchild {node {A}\n\t\t\tchild {node {A.1}}\n\t\t\tchild {node {A.2} edge from parent[->, draw, bend left=15]} }\n\t\tchild {node {B}\n\t\t\tchild {node {B.1}}\n\t\t\tchild {node {B.2} edge from parent[->, draw, bend left=15]} }\n\t\tchild {node {C}\n\t\t\tchild {node {C.1}}\n\t\t\tchild {node {C.2} edge from parent[->, draw, bend left=15]} };\n\t\\end{tikzpicture}",
+            "image": "tree1.png"
         },
-        "Sơ Đồ 2": {
+        "Tree diagam2": {
             "content": "%\\usetikzlibrary{trees} %%thêm thư viện này\n\\begin{tikzpicture}\n\t[edge from parent fork down, sibling distance=8em, level distance=3em,\n\tevery node/.style={rounded corners},\n\tlevel 1/.style={every node/.style={fill=red!30}, edge from parent/.style={draw, -latex, thick, red!30}},\n\tlevel 2/.style={every node/.style={fill=blue!30}, edge from parent/.style={draw, -latex, thick, blue!30}},\n\tlevel 3/.style={every node/.style={fill=green!30}, edge from parent/.style={draw, -latex, thick, green!30}}]\n\t\\node[fill=orange!30] {Tư duy chính} % Màu cho node gốc\n\tchild {node {Ý tưởng 1}\n\t\tchild {node {Chi tiết 1.1}}\n\t\tchild {node {Chi tiết 1.2}}}\n\tchild {node {Ý tưởng 2}\n\t\tchild {node {Chi tiết 2.1}}\n\t\tchild {node {Chi tiết 2.2}}}\n\tchild {node {Ý tưởng 3}\n\t\tchild {node {Chi tiết 3.1}}\n\t\tchild {node {Chi tiết 3.2}}};\n\\end{tikzpicture}",
-            "image": "HinhTIKZ/tree2.png"
+            "image": "tree2.png"
         },
-        "Sơ Đồ 3": {
+        "Tree diagam3": {
             "content": "\\usetikzlibrary{trees, positioning}\n\\begin{tikzpicture}[\n\tevery node/.style={circle, draw, minimum size=1cm, fill=blue!30},\n\tlevel 1/.style={sibling distance=6cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 1\n\tlevel 2/.style={sibling distance=3cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 2\n\tedge from parent/.style={draw, -latex}]\n\t% Root node\n\t\\node[fill=red!30] (root) {Gốc}\n\t% First level nodes\n\tchild {node[fill=blue!30] (idea1) {A}\n\t\tchild {node[fill=green!30] {A.1}}\n\t\tchild {node[fill=green!30] {A.2}}}\n\tchild {node[fill=blue!30] (idea2) {B}\n\t\tchild {node[fill=green!30] {B.1}}\n\t\tchild {node[fill=green!30] {B.2}}};\n\\end{tikzpicture}",
-            "image": "HinhTIKZ/tree3.png"
+            "image": "tree3.png"
         },
-         "Sơ Đồ 4": {
+         "Tree diagam4": {
             "content": "%%\\usetikzlibrary{trees}\n\t\\begin{center}\n\t\\begin{tikzpicture}[scale=0.65,\n\t\tevery node/.style={circle, draw, minimum size=1cm, fill=blue!30},\n\t\tlevel 1/.style={sibling distance=12cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 1\n\t\tlevel 2/.style={sibling distance=6cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 2\n\t\tlevel 3/.style={sibling distance=3cm, level distance=3cm}, % Điều chỉnh khoảng cách cấp 3\n\t\tedge from parent/.style={draw, -latex}]\n\t\t% Root node\n\t\t\\node[fill=red!30] (root) {Gốc}\n\t\t% First level nodes\n\t\tchild {node[fill=blue!30] (idea1) {A}\n\t\t\tchild {node[fill=green!30] {A.1}\n\t\t\t\tchild {node[fill=yellow!30] {A.1.1}}\n\t\t\t\tchild {node[fill=yellow!30] {A.1.2}}}\n\t\t\tchild {node[fill=green!30] {A.2}\n\t\t\t\tchild {node[fill=yellow!30] {A.2.1}}\n\t\t\t\tchild {node[fill=yellow!30] {A.2.2}}}}\n\t\tchild {node[fill=blue!30] (idea2) {B}\n\t\t\tchild {node[fill=green!30] {B.1}\n\t\t\t\tchild {node[fill=yellow!30] {B.1.1}}\n\t\t\t\tchild {node[fill=yellow!30] {B.1.2}}}\n\t\t\tchild {node[fill=green!30] {B.2}\n\t\t\t\tchild {node[fill=yellow!30] {B.2.1}}\n\t\t\t\tchild {node[fill=yellow!30] {B.2.2}}}};\n\t\\end{tikzpicture}\n\t\\end{center}",
-            "image": "HinhTIKZ/tree4.png"
+            "image": "tree4.png"
         },
-        "Sơ Đồ 5": {
+        "Tree diagam5": {
             "content": "\\begin{tikzpicture}\n\t\t% Node styles\n\t\t\\tikzstyle{main node} = [circle, draw, fill=blue!30]\n\t\t\\tikzstyle{branch node} = [circle, draw, fill=green!30]\n\t\t\\tikzstyle{leaf node} = [circle, draw, fill=red!30]\n\t\t\n\t\t% Central node\n\t\t\\node[main node] (0) {Tư duy chính};\n\t\t\n\t\t% First level nodes\n\t\t\\foreach \\i in {1,2,3} {\n\t\t\t\\node[branch node] (a\\i) at (120*\\i-90:3cm) {Ý tưởng \\i};\n\t\t\t\\draw[->] (0) -- (a\\i);\n\t\t}\n\t\t\n\t\t% Second level nodes\n\t\t\\foreach \\i/\\j in {1/1,1/2,2/1,2/2,3/1,3/2} {\n\t\t\t\\node[leaf node] (b\\i\\j) at (120*\\i-90 + 40*\\j-20:5cm) {Chi tiết \\i.\\j};\n\t\t\t\\draw[->] (a\\i) -- (b\\i\\j);\n\t\t}\n\t\\end{tikzpicture}",
-            "image": "HinhTIKZ/tree5.png"
+            "image": "tree5.png"
+        },
+        "Tree diagam6": {
+            "content": "\\begin{tikzpicture}\n\t\t[\n\t\tgrow=south,\n\t\tlevel 1/.style={sibling distance=15em, level distance=10em},\n\t\tlevel 2/.style={sibling distance=10em, level distance=10em},\n\t\tlevel 3/.style={sibling distance=6em, level distance=8em},\n\t\tevery node/.style={fill=blue!30, rounded corners},\n\t\tedge from parent/.style={draw, -latex}\n\t\t]\n\t\t\\node {Gốc}\n\t\tchild {node {Gốc A}\n\t\t\tchild {node {A.1}}\n\t\t\tchild {node {A.2} edge from parent[->, draw, bend right=20]} }\n\t\tchild {node {Gốc B}\n\t\t\tchild {node {B.1}}\n\t\t\tchild {node {B.2} edge from parent[->, draw, bend right=20]} }\n\t\tchild {node {Gốc C}\n\t\t\tchild {node {C.1}}\n\t\t\tchild {node {C.2} edge from parent[->, draw, bend right=20]} };\n\t\\end{tikzpicture}",
+            "image": "tree6.png"
+        }
+        ,
+        "Tree diagam7": {
+            "content": "\\begin{tikzpicture}\n\t\t[\n\t\tgrow=east,\n\t\tlevel 1/.style={sibling distance=15em, level distance=10em},\n\t\tlevel 2/.style={sibling distance=10em, level distance=10em},\n\t\tlevel 3/.style={sibling distance=6em, level distance=8em},\n\t\tevery node/.style={fill=blue!30, rounded corners},\n\t\tedge from parent/.style={draw, -latex}\n\t\t]\n\t\t\\node {Gốc}\n\t\tchild {node {Gốc A}\n\t\t\tchild {node {A.1}}\n\t\t\tchild {node {A.2} edge from parent[->, draw, bend left=20]} }\n\t\tchild {node {Gốc B}\n\t\t\tchild {node {B.1}}\n\t\t\tchild {node {B.2} edge from parent[->, draw, bend left=20]} }\n\t\tchild {node {Gốc C}\n\t\t\tchild {node {C.1}}\n\t\t\tchild {node {C.2} edge from parent[->, draw, bend left=20]} };\n\t\\end{tikzpicture}",
+            "image": "tree7.png"
         }
     }
 }
