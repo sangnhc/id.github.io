@@ -105,22 +105,18 @@
             color: #fff;
             padding: 10px 0;
         }
-
         .menu a, .dropbtn {
             color: #fff;
             text-decoration: none;
             padding: 10px 20px;
             display: inline-block;
         }
-
         .menu a:hover, .dropbtn:hover {
             background-color: #555;
         }
-
         .dropdown {
             position: relative;
         }
-
         .dropdown-content {
             display: none;
             position: absolute;
@@ -129,26 +125,21 @@
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 3;
         }
-
         .dropdown-content a {
             color: black;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
         }
-
         .dropdown-content a:hover {
             background-color: #ddd;
         }
-
         .dropdown:hover .dropdown-content {
             display: block;
         }
-
         .dropdown-submenu {
             position: relative;
         }
-
         .dropdown-submenu .dropdown-content {
             display: none;
             position: absolute;
@@ -159,9 +150,13 @@
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 3;
         }
-
         .dropdown-submenu:hover .dropdown-content {
             display: block;
+        }
+        /* Đảm bảo thuộc tính text-emphasis-color có tiền tố -webkit- */
+        .element {
+            -webkit-text-emphasis-color: red; /* Hỗ trợ Chrome, Chrome Android, Edge */
+            text-emphasis-color: red; /* Hỗ trợ các trình duyệt khác */
         }
     </style>
 </head>
@@ -175,9 +170,10 @@
         <a href="bank_v3.html">Ma Trận</a>
         <a href="loc.html">Lọc-Search</a>
         <a href="bank_person.html">Cây ID</a>
+        <a href="hang_loat.html">Đề Hàng Loạt</a>
        <!-- <a href="https://sangtoan.github.io/toan12/#">THPT</a> Thêm dòng này -->
     </div>
-    <div id="main-content" class="container" style="display: block;">
+    <div id="main-content" class="container" style="display: none;">
         <div class="input">
             <select name="type" id="type">
                 <option value="png">png</option>
@@ -192,98 +188,126 @@
         <img id="img" />
         <iframe class="frame" id="frame"></iframe>
     </div>
-
+    <div id="login-container">
+        <button id="getIdentifier">Lấy chuỗi nhận dạng duy nhất</button>
+        <p id="identifier"></p>
+        <button id="copyIdentifier" style="display: none;">Copy Chuỗi Số Series</button>
+        <label for="key">Key:</label>
+        <input type="text" id="key">
+        <button id="verify">Kiểm tra key</button>
+        <div id="author-info">
+            <p>Tác giả: Nguyễn Văn Sang - GV THPT Nguyễn Hữu Cảnh - TP.HCM</p>
+            <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115</p>
+            <p>Liên hệ: <a href="https://www.facebook.com/nguyenvan.sang.92798072/" target="_blank">Facebook</a></p>
+        </div>
+        <button id="clearStorage">Xóa Trạng Thái Đăng Nhập</button>
+        <p id="result"></p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script>
-        let users = {};
+        document.getElementById('getIdentifier').addEventListener('click', getUniqueIdentifier);
+        document.getElementById('copyIdentifier').addEventListener('click', copyIdentifier);
+        document.getElementById('verify').addEventListener('click', verifyKey);
+        document.getElementById('clearStorage').addEventListener('click', clearLocalStorage);
 
-        fetch('tai_khoan.json')
-            .then(response => response.json())
-            .then(data => {
-                users = data;
-                // checkLoginStatus(); // Tạm thời không kiểm tra đăng nhập
-            })
-            .catch(error => {
-                console.error('Error loading user data:', error);
+        let uniqueIdentifier = '';
+
+        function getUniqueIdentifier() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            const screenPrint = `${screen.height}x${screen.width}x${screen.colorDepth}`;
+            uniqueIdentifier = CryptoJS.MD5(userAgent + platform + screenPrint).toString();
+            document.getElementById('identifier').textContent = `Số series máy: ${uniqueIdentifier}`;
+            document.getElementById('copyIdentifier').style.display = 'block';
+        }
+
+        function copyIdentifier() {
+            navigator.clipboard.writeText(uniqueIdentifier).then(() => {
+                alert('Đã sao chép chuỗi số series vào clipboard');
             });
+        }
+
+        function verifyKey() {
+            const key = document.getElementById('key').value;
+            const secret = 'my_random_secret_key_270187';
+
+            try {
+                const expectedSignature = getShortKey(CryptoJS.HmacSHA256(uniqueIdentifier, secret).toString());
+
+                if (key === expectedSignature) {
+                    document.getElementById('result').textContent = 'Key hợp lệ';
+                    // Lưu trạng thái đăng nhập vào localStorage
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('identifier', uniqueIdentifier);
+                    // Ẩn khung đăng nhập và hiện chức năng chính
+                    document.getElementById('login-container').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+
+                    // Mở khóa các menu
+                    const menuLinks = document.querySelectorAll('.menu a');
+                    menuLinks.forEach(link => {
+                        link.removeAttribute('onclick');
+                    });
+                } else {
+                    document.getElementById('result').textContent = 'Key không hợp lệ';
+                }
+            } catch (e) {
+                document.getElementById('result').textContent = 'Key không hợp lệ';
+            }
+        }
+
+        function getShortKey(jwt) {
+            const positions = [1, 3, 5, 7, 9, 10, 20, 30];
+            let shortKey = '';
+            for (let pos of positions) {
+                if (jwt[pos]) {
+                    shortKey += jwt[pos];
+                }
+            }
+            return shortKey;
+        }
 
         function checkLoginStatus() {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn) {
+            const storedIdentifier = localStorage.getItem('identifier');
+            console.log('Check login status: ', isLoggedIn, storedIdentifier);
+            if (isLoggedIn === 'true' && storedIdentifier === uniqueIdentifier) {
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('main-content').style.display = 'block';
-            }
-        }
 
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            if (users[username] && users[username] === password) {
-                localStorage.setItem('isLoggedIn', true);
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
+                // Mở khóa các menu
+                const menuLinks = document.querySelectorAll('.menu a');
+                menuLinks.forEach(link => {
+                    link.removeAttribute('onclick');
+                });
             } else {
-                alert('Incorrect username or password.');
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('main-content').style.display = 'none';
             }
         }
 
-        function find() {
-            const val = document.getElementById("search").value;
-            const type = document.getElementById("type").value;
-            const text = val.toString();
-            let n = 55; // số lượng thư mục image
-            let found = false; // biến kiểm tra xem ảnh có được tìm thấy không
-
-            function checkImage(url) {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.src = url;
-                    img.onload = () => resolve(url);
-                    img.onerror = () => reject(url);
-                });
-            }
-
-            if (['png', 'jpg', 'svg'].includes(type)) {
-                frame.style.display = "none";
-                img.style.display = "none"; // ẩn ảnh trước đó nếu có
-
-                const sources = [
-                    `./image`,
-                    `https://sangnhc.id.github.io/image`
-                ];
-
-                sources.forEach(source => {
-                    for (let i = 1; i <= n; i++) {
-                        const url = `${source}${i}/${text}.${type}`;
-                        checkImage(url)
-                            .then(foundUrl => {
-                                if (!found) {
-                                    found = true;
-                                    img.src = foundUrl;
-                                    img.style.width = "100%";
-                                    img.style.marginTop = "10px";
-                                    img.style.display = "block";
-                                }
-                            })
-                            .catch(errorUrl => {
-                                console.log(`Image not found: ${errorUrl}`);
-                            });
-                    }
-                });
-            } else if (type === "pdf") {
-                img.style.display = "none";
-                const index = text.split("_")[0];
-                frame.src = `./pdf${index}/${text}.pdf`;
-                frame.style.display = "block";
+        function checkAccess(event) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            console.log('Check access: ', isLoggedIn);
+            if (isLoggedIn !== 'true') {
+                event.preventDefault();
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index - Copy.html'; // Chuyển hướng về trang đăng nhập
             }
         }
 
-        function clearImage() {
-            img.src = "";
-            img.style.display = "none";
-            frame.src = "";
-            frame.style.display = "none";
+        function clearLocalStorage() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('identifier');
+            alert('Đã xóa trạng thái đăng nhập.');
+            location.reload(); // Reload the page to apply changes
         }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function() {
+            getUniqueIdentifier();
+            checkLoginStatus();
+        };
     </script>
 </body>
 </html>
