@@ -1,0 +1,326 @@
+{
+    "Part": [
+        {
+            "name": "Câu Trắc Nghiệm",
+            "K12": [
+                {
+                    "name": "K12-1",
+                    "Chương": [
+                        {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1",
+                                    "baitoan": [
+                                        {
+                                            "name": "Bài toán 1",
+                                            "content": "y = {a}x^2 + {b}"
+                                        },
+                                        {
+                                            "name": "Bài toán 2",
+                                            "content": "def({a} + {A}*2)"
+                                        },
+                                        {
+                                            "name": "Bài toán 3",
+                                            "content": "math.pow({a}, {A})"
+                                        },
+                                        {
+                                            "name": "Bài toán với Algebrite",
+                                            "content": "alg(integrate(x^2, x))"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Câu Đúng Sai",
+            "K12": [
+                {
+                    "name": "K12-1",
+                    "Chương": [
+                        {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1",
+                                    "baitoan": [
+                                        {
+                                            "name": "Bài toán 1",
+                                            "content": "y = {a}x^2 + {b}"
+                                        },
+                                        {
+                                            "name": "Bài toán 2",
+                                            "content": "def({a} + {A}*2)"
+                                        },
+                                        {
+                                            "name": "Bài toán 3",
+                                            "content": "math.pow({a}, {A})"
+                                        },
+                                        {
+                                            "name": "Bài toán với Algebrite",
+                                            "content": "alg(integrate(x^2, x))"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Câu Tự Luận",
+            "K12": [
+                {
+                    "name": "K12-1",
+                    "Chương": [
+                        {
+                            "name": "Chương HH Oxyz",
+                            "Bài": [
+                                {
+                                    "name": "Bài 2: Nhóm 1-Toạ Độ Vectơ",
+                                    "baitoan": [
+                                        {
+                                            "name": "Cho A,B tính vecto AB",
+                                            "content": "${tinh_vecto_AB({a},{b},{c},{d},{e},{f})}"
+                                        },
+                                        {
+                                            "name": "Tìm trọng tâm ABC",
+                                            "content": "${tinh_trongtam({a},{b},{c},{d},{e},{f},{g},{h},{i})}"
+                                        },
+                                        {
+                                            "name": "Tìm trọng tâm tứ diện",
+                                            "content": "${tinh_trongtam_tudien(0,0,0,{a},{d},{c},{k},{e},{l},{d},{h},{l})}"
+                                        },
+                                        {
+                                            "name": "Tìm D để ABCD là hbh",
+                                            "content": "${tinh_toado_D({a},{c},{e},{d},{a},{f},{g},{b},{i})}"
+                                        },
+                                        {
+                                            "name": "phân tích vecto",
+                                            "content": "${phan_tich_vector({a},{c},{e},{d},{a},{f},{g},{b},{d},{a},{f},{i})}"
+                                        },
+                                        {
+                                            "name": "Tìm x,y để ABC th.hàng",
+                                            "content": "${tinh_xy_ABCthanghang({f},{c},{a},{d},{h},{i},{e},{d},{k})}"
+                                        },
+                                        {
+                                            "name": "Tìm M trên Ox cách đều AB",
+                                            "content": "${tinh_M_cachdeu_AB({c},{a},{d},{h},{i},{e})}"
+                                        },
+                                        {
+                                            "name": "Tìm B trong hhcn",
+                                            "content": "${tinh_B_trongHHCN({d},{g},{k},{h},{c},{a},{d},{f},{i},{e},{i},{l})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: Nhóm 2-Tích Vô Hướng",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm m 2 vecto vuông góc",
+                                            "content": "${tinh_m_vec_ab_vuong({b},{f},{g},{k},{n})}"
+                                        },
+                                        {
+                                            "name": "Tính |vec{a}-vec{b}|",
+                                            "content": "${tinh_do_dai_a_tru_b({A+}, {B+}, {gocduong})}"
+                                        },
+                                        {
+                                            "name": "Tìm vecto b cùng hướng vecto a",
+                                            "content": "${tinh_vecB_bang_k_vecA({a},{d},{c},{k+})}"
+                                        },
+                                        {
+                                            "name": "Tìm vecto b cùng phương vecto a",
+                                            "content": "${tinh_vecB_cungphuong_vecA({f},{k},{a},{h+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m tam giác vuông",
+                                            "content": "${tim_m_tamgiacvuong({e}, {a-}, {f}, {k}, {b+}, {l}, {d},{s},{d})}"
+                                        },
+                                        {
+                                            "name": "Tìm M trên Ox để tam giác vuông",
+                                            "content": "${tim_M_trenOX_tgvuong({a+}, {g}, {k}, {c-}, {h}, {n})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: Nhóm 3-Tích Có Hướng",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tính diện tích tam giác ABC",
+                                            "content": "${tinhDienTichTamGiac({b}, {a-}, {c}, {d}, {b+}, {l}, {e},{g},{h})}"
+                                        },
+                                        {
+                                            "name": "Tính đường cao AH",
+                                            "content": "${tinhDuongCaoAH({a}, {c}, {b}, {e}, {g}, {k}, {b},{f},{h})}"
+                                        },
+                                        {
+                                             "name": "Tính diện tích hbh ABCD",
+                                            "content": "${tinhDienTichHBH({a}, {e}, {g}, {d}, {b}, {l}, {c},{e},{d})}"
+                                        },
+                                        {
+                                             "name": "Tính thể tích tứ diện",
+                                            "content": "${tinhTheTichTuDien({a},{g}, {e}, {b}, {e}, {g}, {d}, {b}, {l}, {c},{e},{d})}"
+                                        },
+                                        {
+                                            "name": "Tính đường cao AH trong td A.BCD",
+                                            "content": "${tinhDuongCaoTuDien({e},{b+}, {l}, {d},{a-}, {f}, {k}, {b+}, {l}, {d},{s},{d})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để 3 vecto đồng phẳng",
+                                            "content": "${tim_m_3vecto_dphang({a},{g}, {k}, {b}, {e}, {g}, {d}, {b}, {l})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để 4 điểm đồng phẳng",
+                                            "content": "${tim_m_4_diem_dphang({a+},{g},{l},{b-},{e},{g},{d},{s},{t},{m},{b},{l})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: Nhóm 4-Các điểm đặc biệt trong tam giác",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm trực tâm",
+                                            "content": "${timTrucTam({b}, {a-}, {k}, {m}, {b+}, {l}, {s},{g},{b})}"
+                                        },
+                                        {
+                                            "name": "Tìm chân đường cao đỉnh A",
+                                            "content": "${tinhChanDuongCao({e}, {g}, {a}, {b}, {c}, {h}, {b},{d},{m})}"
+                                        },
+                                        {
+                                             "name": "Tìm tâm ngoại tiếp ABC",
+                                            "content": "${tinhTamDuongTronNgoaiTiep({b}, {f}, {g}, {i}, {b}, {e}, {c},{g},{s})}"
+                                        },
+                                        {
+                                             "name": "Tìm chân đường phân giác trong góc A",
+                                            "content": "${tinhChanDuongPhanGiac({b},{e}, {a}, {c}, {a}, {d}, {g}, {b}, {m})}"
+                                        },
+                                        {
+                                            "name": "Tìm chân đường phân giác ngoài góc A",
+                                            "content": "${tinhChanDuongPhanGiacNgoai({b},{e}, {c}, {a}, {b}, {g}, {d}, {c}, {b})}"
+                                        },
+                                        {
+                                            "name": "Tìm tâm nội tiếp ABC",
+                                            "content": "${tinhTamDuongTronNoiTiep({a},{g}, {k}, {b}, {e}, {g}, {d}, {b}, {l})}"
+                                        }
+                                    ]
+                                }
+                                ,
+                                {
+                                    "name": "Bài 2: Nhóm 5- Min,Max",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm M để tổng bình phương min",
+                                            "content": "${Tim_M_min({b}, {a-}, {k}, {m}, {b+}, {l}, {s},{g},{b},{o+})}"
+                                        },
+                                        {
+                                            "name": "Tìm chân đường cao đỉnh A",
+                                            "content": "${tinhChanDuongCao({e}, {g}, {a}, {b}, {c}, {h}, {b},{d},{m})}"
+                                        },
+                                        {
+                                             "name": "Tìm tâm ngoại tiếp ABC",
+                                            "content": "${tinhTamDuongTronNgoaiTiep({b}, {f}, {g}, {i}, {b}, {e}, {c},{g},{s})}"
+                                        },
+                                        {
+                                             "name": "Tìm chân đường phân giác trong góc A",
+                                            "content": "${tinhChanDuongPhanGiac({b},{e}, {a}, {c}, {a}, {d}, {g}, {b}, {m})}"
+                                        },
+                                        {
+                                            "name": "Tìm chân đường phân giác ngoài góc A",
+                                            "content": "${tinhChanDuongPhanGiacNgoai({b},{e}, {c}, {a}, {b}, {g}, {d}, {c}, {b})}"
+                                        },
+                                        {
+                                            "name": "Tìm tâm nội tiếp ABC",
+                                            "content": "${tinhTamDuongTronNoiTiep({a},{g}, {k}, {b}, {e}, {g}, {d}, {b}, {l})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                "name": "Bài 3: Nhóm 1-PTMP Cơ Bản",
+                                    "baitoan": [
+                                        {
+                                            "name": "MP qua điểm,vtpt",
+                                            "content": "${mp_diem_vtpt({d},{e},{f},{a},{b},{c})}"
+                                        },
+                                        {
+                                            "name": "MP qua điểm,//mp 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_quadiem_songsong({c},{e},{a},{A},{G},{K},1)}"
+                                        },
+                                        {
+                                            "name": "MP qua A,vuông MN 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_quaA_vuonggocmn({b},{f},{a},{G},{H},{I},{K},{L},{M},1)}"
+                                        },
+                                        {
+                                            "name": "MP trung trực 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_trungtruc({G},{J},{H},{N},{L},{M},1)}"
+                                        },
+                                        {
+                                            "name": "MP vuông AB tại A 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_vuonggoc_AB_taiA({N},{M},{K},{I},{J},{H},1)}"
+                                        }
+                                    ]
+                                }
+                                ,
+                                {
+                                "name": "Bài 3: Nhóm 2-PTMP Dùng Tích Hướng",
+                                    "baitoan": [
+                                        {
+                                            "name": "MP qua 3 điểm M,N,P",
+                                            "content": "${mp_quaMNP({d},{e},{f},{a},{b},{c},{H},{I},{K})}"
+                                        },
+                                        {
+                                            "name": "MP M vuông (P), (Q)",
+                                            "content": "${mp_vuonggoc_2mp({c},{e},{a},{A},{G},{K},{C},{B},{A})}"
+                                        },
+                                        {
+                                            "name": "MP qua A,B, // CD",
+                                            "content": "${mp_qua_2_diem_song_song({b},{a},{A},{G},{f},{a},{G},{H},{I},{K},{L},{M})}"
+                                        },
+                                        {
+                                            "name": "MP qua A,B, vuông (P) ",
+                                            "content": "${mp_qua_2_diem_vuonggoc_mp({G},{J},{H},{N},{L},{M},{a},{A},{G},{f})}"
+                                        },
+                                        {
+                                            "name": "MP qua A chứa trục A 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_quaM_chua_truc({c},{a},{d},1)}"
+                                        }
+                                    ]
+                                },
+                                {
+                                "name": "Bài 3: Nhóm 3-PTMP Liên Quan Khoảng Cách",
+                                    "baitoan": [
+                                        {
+                                            "name": "MP song song (Q) cách A một khoảng k",
+                                            "content": "${mp_songsongP_cachA({S},{T},{U},{A},{G},{K},{X+})}"
+                                        },
+                                        {
+                                            "name": "MP song song và cách (Q) khoảng K",
+                                            "content": "${mp_songsongQ_cachQ({c},{e},{a},{A},{S+})}"
+                                        },
+                                        {
+                                            "name": "MP qua A,B, // CD",
+                                            "content": "${mp_qua_2_diem_song_song({b},{a},{A},{G},{f},{a},{G},{H},{I},{K},{L},{M})}"
+                                        },
+                                        {
+                                            "name": "MP qua A,B, vuông (P) ",
+                                            "content": "${mp_qua_2_diem_vuonggoc_mp({G},{J},{H},{N},{L},{M},{a},{A},{G},{f})}"
+                                        },
+                                        {
+                                            "name": "MP qua A chứa trục A 1:Ox,2:Oy;3:Oz",
+                                            "content": "${mp_quaM_chua_truc({c},{a},{d},1)}"
+                                        }
+                                    ]
+                                }
+
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
