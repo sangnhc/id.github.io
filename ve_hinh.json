@@ -446,7 +446,7 @@
         },
         "Bảng với ghép dòng": {
             "content": "\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\t\\hline\n\t\tA & B & C \\\\\n\t\t\\hline\n\t\t\\multirow{2}{*}{10} & 2 & 356 \\\\\n\t\t& 4 & 5 \\\\\n\t\t\\hline\n\t\t6 & 7 & 8 \\\\\n\t\t\\hline\n\t\\end{longtable}%\\multirow{2}{*}{10}: Gộp hai hàng (2 rows) trong cùng một ô và đặt giá trị 10",
-            "image": "HinhTIKZ/longtableDeu.png"
+            "image": "HinhTIKZ/longtableDEU.png"
         },
         "Bảng với ghép cột": {
             "content": "\\documentclass[11pt,a4paper,openany]{extbook}\n\\usepackage[utf8]{vietnam}\n\\usepackage{array} % Để sử dụng định dạng cột tùy chỉnh\n\\usepackage{longtable} % Sử dụng gói longtable để tạo bảng dài có thể kéo dài qua nhiều trang\n\\usepackage{multirow} % Sử dụng gói multirow để gộp các ô trong bảng\n\\usepackage{colortbl} % Sử dụng gói colortbl để tô màu các ô trong bảng\n\n\\begin{document}\n\t\\begin{longtable}{|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|>{\\centering\\arraybackslash}p{1cm}|}\n\t\\hline\n\t\\multicolumn{2}{|c|}{Ghép Cột} & C \\\\\n\t\\hline\n\t1 & 2 & 3 \\\\\n\t\\hline\n\t4 & 5 & 6 \\\\\n\t\\hline\n\\end{longtable}\n\\end{document}\n",
