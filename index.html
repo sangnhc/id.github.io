@@ -197,7 +197,7 @@
         <button id="verify">Kiểm tra key</button>
         <div id="author-info">
             <p>Tác giả: Nguyễn Văn Sang - GV THPT Nguyễn Hữu Cảnh - TP.HCM</p>
-            <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115 với phí 100k/ 1 năm.</p>
+            <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115</p>
             <p>Liên hệ: <a href="https://www.facebook.com/nguyenvan.sang.92798072/" target="_blank">Facebook</a></p>
         </div>
         <button id="clearStorage">Xóa Trạng Thái Đăng Nhập</button>
@@ -206,7 +206,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.23/jsrsasign-all-min.js"></script>
     <script>
-        
         document.getElementById('getIdentifier').addEventListener('click', getUniqueIdentifier);
         document.getElementById('copyIdentifier').addEventListener('click', copyIdentifier);
         document.getElementById('verify').addEventListener('click', verifyKey);
@@ -219,7 +218,8 @@
             if (localStorage.getItem('identifier') === null) {
                 const userAgent = navigator.userAgent;
                 const platform = navigator.platform;
-                uniqueIdentifier = CryptoJS.MD5(userAgent + platform).toString();
+                const randomString = Math.random().toString(36).substring(2, 15);
+                uniqueIdentifier = CryptoJS.MD5(userAgent + platform + randomString).toString();
                 localStorage.setItem('identifier', uniqueIdentifier);
                 console.log('Generated new identifier:', uniqueIdentifier);
             } else {
