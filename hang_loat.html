@@ -448,7 +448,7 @@
             return str.replace(/\+-|-\+/g, '-').replace(/--/g, '+');
         }
 
-        function generateRandomFunctions() {
+        function generateRandomFunctionsG() {
             const functionInput = document.getElementById('function-input').value;
             const numberOfFunctions = parseInt(document.getElementById('number-of-functions').value);
             const resultsContainer = document.getElementById('results');
@@ -471,12 +471,44 @@
             }
         }
 
-        function copyToClipboard(button) {
+        function copyToClipboardG(button) {
             const textarea = button.previousElementSibling;
             textarea.select();
             document.execCommand('copy');
             alert('Đã sao chép');
         }
+  function generateRandomFunctions() {
+    const functionInput = document.getElementById('function-input').value;
+    const numberOfFunctions = parseInt(document.getElementById('number-of-functions').value);
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    const lines = functionInput.split('\n'); // Split input into lines
+    for (let i = 0; i < numberOfFunctions; i++) {
+        let variables = {};
+        let replacedVariables = lines.map(line => replaceVariablesWithValues(line, variables)).join('\n');
+        let evaluatedExpression = evaluateExpressions(replacedVariables, variables);
+
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+        resultItem.innerHTML = `
+            <textarea rows="2">${evaluatedExpression}</textarea>
+            <button onclick="copyToClipboard(this)">Copy</button>
+        `;
+        resultsContainer.appendChild(resultItem);
+    }
+}
+
+        function copyToClipboard(button) {
+    const textarea = button.parentElement.querySelector('textarea');
+    if (textarea) {
+        textarea.select();
+        document.execCommand('copy');
+        alert('Đã sao chép');
+    } else {
+        console.error('Textarea element not found');
+    }
+}
 
         function downloadResults() {
             const resultsContainer = document.getElementById('results');
