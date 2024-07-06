@@ -2513,12 +2513,628 @@ ${problemStatement.trim()}
 
     return latexOutput;
 }
+function tim_m_hs_ng_trenR(g) {
+    // Sinh ngẫu nhiên các hệ số a, b, c, d, e
+    let aValues = [-1, -2, -3];
+    let a = aValues[Math.floor(Math.random() * aValues.length)]; // a là -1, -2 hoặc -3
+    let b = Math.floor(Math.random() * 11) - 5; // b từ -5 đến 5
+    // Sinh ngẫu nhiên c từ -5 đến 5, bỏ qua giá trị 0
+    let c;
+    do {c = Math.floor(Math.random() * 11) - 5;} while (c === 0);
+    let d = Math.floor(Math.random() * 21) - 10; // d từ -10 đến 10
+    let e = Math.floor(Math.random() * 10) + 30; // e từ 20 đến 30
+   
+ 
+   // Tạo biểu thức hàm số
+   let equation = `${a}x^3 ${b < 0 ? '-' : '+'} ${Math.abs(b)}x^2 ${(c < 0 ? '-' : '+')} (m ${c < 0 ? '-' : '+'} ${Math.abs(c)})x ${d < 0 ? '-' : '+'} ${Math.abs(d)}`;
 
-// Ví dụ sử dụng hàm
-const latexOutput = mp_songsongQ_cachQ(6, -2, 3, 1, 1);
-console.log(latexOutput);
+    // Tính đạo hàm của hàm số
+    let derivative = `${3 * a}x^2 ${2 * b < 0 ? '-' : '+'} ${Math.abs(2 * b)}x + m ${c < 0 ? '-' : '+'} ${Math.abs(c)}`;
+
+    // Tính delta của đạo hàm
+    let delta = (2 * b) ** 2;
+  // Giải phương trình delta để tìm m
+    let mm = ((4*b**2)/(12 * a)-c).toFixed(2);
+    if (mm % 1 === 0) {
+        mm = Math.round(mm);
+    }
+    // Giải phương trình delta để tìm m
+    let mUpper = Math.floor((4*b**2)/(12 * a)-c);
+     // Tính điều kiện để hàm số nghịch biến
+    let condition = `$\\begin{aligned}
+    &\\Delta = b^2 - 4ac\\leq 0 \\\\
+    \\Leftrightarrow &${delta} - 4(${3 * a})(m + ${c}) \\leq 0 \\\\
+    \\Leftrightarrow &${delta} + ${-12 * a}m ${-12 * a * c < 0 ? '-' : '+'} ${Math.abs(12 * a * c)} \\leq 0 \\\\
+    \\Leftrightarrow &${-12 * a}m \\leq -${delta} ${-12 * a * c < 0 ? '+' : '-'} ${Math.abs(12 * a * c)} \\\\
+    \\Leftrightarrow &m\\leq ${mm}.
+    \\end{aligned}$`;   // Tìm các giá trị nguyên của m trong đoạn [-e+10, e+10] thoả điều kiện
+    let lowerBound = -e+g ;
+    let upperBound = e;
+    let count = 0;
+    let validMs = [];
+  
+    for (let m = lowerBound; m <= upperBound; m++) {
+        if (m <= mUpper) {
+            count++;
+            validMs.push(m);
+        }
+    }
+    // Tạo lời giải
+    let explanation = `Tập xác định $\\mathbb{R}$.\\\\
+        $y'=${derivative}$.\\\\
+        Hàm số nghịch biến trên $(-\\infty; +\\infty)$ khi và chỉ khi $\\Delta \\leq 0$.\\\\
+        ${condition}.\\\\
+        Số giá trị nguyên của $m$ trong đoạn $[${lowerBound}, ${upperBound}]$ thoả điều kiện là $${count}$.   `;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1V1-3]
+    Cho hàm số $y=${equation}$ với $m$ là tham số. Có bao nhiêu giá trị nguyên của $m$ trong đoạn $[${lowerBound}, ${upperBound}]$ để hàm số nghịch biến trên $(-\\infty; +\\infty)$?
+    \\shortans{$${count}$}
+    \\loigiai{
+        ${explanation}
+    }
+\\end{ex}`;
+  question = question.replace('leq --','leq ')
+  question = cleanUpOutput(question)
+    return question;
+}
+function tim_m_hs_db_trenR(g){
+    // Sinh ngẫu nhiên các hệ số a, b, c, d, e
+    let aValues = [1, 2, 3];
+    let a = aValues[Math.floor(Math.random() * aValues.length)]; // a là 1, 2 hoặc 3
+    let b = Math.floor(Math.random() * 11) - 5; // b từ -5 đến 5
+    // Sinh ngẫu nhiên c từ -5 đến 5, bỏ qua giá trị 0
+    let c;
+    do {
+        c = Math.floor(Math.random() * 11) - 5;
+    } while (c === 0);
+    let d = Math.floor(Math.random() * 21) - 10; // d từ -10 đến 10
+    let e = Math.floor(Math.random() * 10) + 30; // e từ 30 đến 39
+
+    // Tạo biểu thức hàm số
+    let equation = `${a}x^3 ${b < 0 ? '-' : '+'} ${Math.abs(b)}x^2 ${(c < 0 ? '-' : '+')} (m ${c < 0 ? '-' : '+'} ${Math.abs(c)})x ${d < 0 ? '-' : '+'} ${Math.abs(d)}`;
+
+    // Tính đạo hàm của hàm số
+    let derivative = `${3 * a}x^2 ${2 * b < 0 ? '-' : '+'} ${Math.abs(2 * b)}x + m ${c < 0 ? '-' : '+'} ${Math.abs(c)}`;
+
+    // Tính delta của đạo hàm
+    let delta = (2 * b) ** 2;
+
+    // Giải phương trình delta để tìm m
+    let mm = ((4 * b ** 2) / (12 * a) - c).toFixed(2);
+    if (mm % 1 === 0) {
+        mm = Math.round(mm);
+    }
+    let mUpper = Math.ceil((4 * b ** 2) / (12 * a) - c);
+
+    // Tính điều kiện để hàm số nghịch biến
+    let condition = `\\begin{aligned}
+    &\\Delta = b^2 - 4ac \\leq 0 \\\\
+    \\Leftrightarrow &${delta} - 4(${3 * a})(m + ${c}) \\leq 0 \\\\
+    \\Leftrightarrow &${delta} + ${-12 * a}m ${-12 * a * c < 0 ? '-' : '+'} ${Math.abs(12 * a * c)} \\leq 0 \\\\
+    \\Leftrightarrow &${-12 * a}m \\leq -${delta} ${-12 * a * c < 0 ? '+' : '-'} ${Math.abs(12 * a * c)} \\\\
+    \\Leftrightarrow &m \\geq ${mm}
+    \\end{aligned}`;
+
+    // Tìm các giá trị nguyên của m trong đoạn [-e + g, e] thoả điều kiện
+    let lowerBound = -e + g;
+    let upperBound = e;
+    let count = 0;
+    let validMs = [];
+
+    for (let m = lowerBound; m <= upperBound; m++) {
+        if (m >= mUpper) {
+            count++;
+            validMs.push(m);
+        }
+    }
 
 
+
+    // Tạo lời giải
+    let explanation = `Tập xác định $\\mathbb{R}$.\\\\
+        $y'=${derivative}$.\\\\
+        Hàm số đồng biến trên $(-\\infty; +\\infty)$ khi và chỉ khi $\\Delta \\leq 0$.\\\\
+        ${condition}.\\\\
+        Số giá trị nguyên của $m$ trong đoạn $[${lowerBound}, ${upperBound}]$ thoả điều kiện là $${count}$.`;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1V1-3]
+    Cho hàm số $y=${equation}$ với $m$ là tham số. Có bao nhiêu giá trị nguyên của $m$ trong đoạn [${lowerBound}, ${upperBound}] để hàm số đồng biến trên $(-\\infty; +\\infty)$?
+    \\shortans{${count}}
+    \\loigiai{
+        ${explanation}
+    }
+\\end{ex}`;
+
+    question = question.replace('geq --', 'leq ');
+    question = question.replace('leq --','leq ')
+    question = cleanUpOutput(question)
+    return question;
+}
+
+function tim_mn_hsbac3_nhan_A_lam_cuctri(a, b, c, e, f) {
+    // Tạo biểu thức hàm số
+    let equation = `${a}x^3 ${b < 0 ? '-' : '+'} ${Math.abs(b)}x^2 ${c < 0 ? '-' : '+'} ${Math.abs(c)}mx + n`;
+
+    // Tính đạo hàm của hàm số
+    let derivative = `${3 * a}x^2 ${2 * b < 0 ? '-' : '+'} ${Math.abs(2 * b)}x + ${c < 0 ? '-' : '+'} ${Math.abs(c)}m`;
+
+    // Hệ phương trình với điểm cực tiểu A(e, f)
+    // 1. \(a e^3 + b e^2 + c e m + n = f\)
+    // 2. \(3 a e^2 + 2 b e + c m = 0\)
+
+    // Hệ số của hệ phương trình
+    let A = [
+        [c * e, 1],
+        [c, 0]
+    ];
+    let B = [
+        [f - (a * e ** 3 + b * e ** 2)],
+        [- (3 * a * e ** 2 + 2 * b * e)]
+    ];
+
+    // Định thức của ma trận A
+    let detA = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+
+    // Định thức của ma trận A với cột đầu tiên được thay bởi B
+    let detA1 = B[0][0] * A[1][1] - B[1][0] * A[0][1];
+
+    // Định thức của ma trận A với cột thứ hai được thay bởi B
+    let detA2 = A[0][0] * B[1][0] - A[1][0] * B[0][0];
+
+    // Giá trị của m và n
+    let mValue = detA1 / detA;
+    let nValue = detA2 / detA;
+
+    // Tính m + n
+    let mPlusN = (mValue + nValue).toFixed(1);
+    if (mPlusN % 1 === 0) {
+        mPlusN = Math.round(mPlusN);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1V1-3]
+    Đồ thị hàm số $y=${equation}$ có điểm cực tiểu $A(${e};${f})$. Khi đó $m+n$ bằng bao nhiêu? (làm tròn một chữ số thập phân nếu có).
+    \\shortans{$${mPlusN}$}
+    \\loigiai{
+        $y'=${derivative}$.\\\\
+        Ta có hệ phương trình\\\\
+       $\\heva{&${a * e ** 3} + ${b * e ** 2} + ${c * e}m + n = ${f} \\\\
+        &${3 * a}.(${e})^2 + ${2 * b}.(${e}) + ${c}m = 0}\\Rightarrow \\heva{&m=${mValue} \\ &n=${nValue}.}$\\\\
+        Vậy $m+n = ${mPlusN}$.
+    }
+\\end{ex}`;
+    question = cleanUpOutput(question)
+    return question;
+}
+function tim_abcd_biet_hs_co_2cutri(xa, ya, xb, yb) {
+    // Thiết lập hệ phương trình
+    // Đạo hàm y' = 3ax^2 + 2bx + c
+    // Tại điểm cực trị, đạo hàm y' = 0
+
+    // y'(xa) = 0 => 3a * xa^2 + 2b * xa + c = 0
+    // y'(xb) = 0 => 3a * xb^2 + 2b * xb + c = 0
+    // y(xa) = ya => a * xa^3 + b * xa^2 + c * xa + d = ya
+    // y(xb) = yb => a * xb^3 + b * xb^2 + c * xb + d = yb
+
+    let A = [
+        [3 * xa ** 2, 2 * xa, 1, 0],
+        [3 * xb ** 2, 2 * xb, 1, 0],
+        [xa ** 3, xa ** 2, xa, 1],
+        [xb ** 3, xb ** 2, xb, 1]
+    ];
+    let B = [0, 0, ya, yb];
+
+    // Phương pháp Gauss để giải hệ phương trình
+    function gaussianElimination(A, B) {
+        let n = B.length;
+
+        for (let i = 0; i < n; i++) {
+            // Tìm giá trị lớn nhất trong cột hiện tại
+            let maxRow = i;
+            for (let k = i + 1; k < n; k++) {
+                if (Math.abs(A[k][i]) > Math.abs(A[maxRow][i])) {
+                    maxRow = k;
+                }
+            }
+
+            // Hoán đổi hàng tối đa với hàng hiện tại (hàng i)
+            [A[i], A[maxRow]] = [A[maxRow], A[i]];
+            [B[i], B[maxRow]] = [B[maxRow], B[i]];
+
+            // Khử
+            for (let k = i + 1; k < n; k++) {
+                let factor = A[k][i] / A[i][i];
+                B[k] -= factor * B[i];
+                for (let j = i; j < n; j++) {
+                    A[k][j] -= factor * A[i][j];
+                }
+            }
+        }
+
+        // Giải ngược
+        let x = new Array(n);
+        for (let i = n - 1; i >= 0; i--) {
+            x[i] = B[i] / A[i][i];
+            for (let k = i - 1; k >= 0; k--) {
+                B[k] -= A[k][i] * x[i];
+            }
+        }
+        return x;
+    }
+
+    let [a, b, c, d] = gaussianElimination(A, B);
+
+    // Làm tròn các hệ số và tổng
+    a = a.toFixed(2);
+    b = b.toFixed(2);
+    c = c.toFixed(2);
+    d = d.toFixed(2);
+    let mPlusN = (parseFloat(a) + parseFloat(b) + parseFloat(c) + parseFloat(d)).toFixed(1);
+    if (mPlusN %1===0){
+      mPlusN=Math.round(mPlusN)
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1V1-3]
+    Biết hàm số $y=ax^3+bx^2+cx+d$ có hai điểm cực trị là $A(${xa};${ya})$ và $B(${xb};${yb})$. Khi đó $a+b+c+d$ bằng bao nhiêu? (làm tròn một chữ số thập phân).
+    \\shortans{$${mPlusN}$}
+    \\loigiai{
+        $\\begin{aligned}
+        &y' = 3ax^2 + 2bx + c\\\\
+        &y'(${xa}) = 0 \\Rightarrow 3a(${xa})^2 + 2b(${xa}) + c = 0\\\\
+        &y'(${xb}) = 0 \\Rightarrow 3a(${xb})^2 + 2b(${xb}) + c = 0\\\\
+        &y(${xa}) = ${ya} \\Rightarrow a(${xa})^3 + b(${xa})^2 + c(${xa}) + d = ${ya}\\\\
+        &y(${xb}) = ${yb} \\Rightarrow a(${xb})^3 + b(${xb})^2 + c(${xb}) + d = ${yb}\\\\
+        &a = ${a}, b = ${b}, c = ${c}, d = ${d}.      
+        \\end{aligned}$\\\\
+        Vậy $a+b+c+d = ${mPlusN}$.
+    }
+\\end{ex}`;
+    question = cleanUpOutput(question)
+    return question;
+}
+
+function ham_phuc_thuc_ngb_tren_ab(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+             
+    let c = getRandomInt(10, 20+e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let a = getRandomInt(-5, -1);
+    let b = getRandomInt(1, 5);
+    let alpha = getRandomInt(1, 5);
+    let beta = getRandomInt(7, 16);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let sqrt_cd = Math.sqrt(c * d);
+    let neg_bd = -b * d;
+    let neg_ad = -a * d;
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * m - c * d < 0 && (m < neg_ad || m > neg_bd)) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{mx+${c}}{${d}x+m}$, $m$ là tham số thực. Gọi $S$ là tập hợp các số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số nghịch biến trên khoảng $(${a};${b})$. Tìm số phần tử của $S$.
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m^2-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số nghịch biến trên khoảng $(${a};${b})$ khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m^2-${c}${d}< 0\\\\
+            &-\\dfrac{m}{${d}}\\notin (${a};${b})
+        }\\Leftrightarrow \\heva{
+            &-\\sqrt{${c}${d}}< m < \\sqrt{${c}${d}}\\\\
+            &\\text{và } m \\notin (${Math.min(neg_ad, neg_bd)};${Math.max(neg_ad, neg_bd)})
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function ham_phuc_thuc_db_tren_ab(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let c = getRandomInt(1, 10+e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let a = getRandomInt(-5, -1);
+    let b = getRandomInt(1, 5);
+    let alpha = getRandomInt(1, 5);
+    let beta = getRandomInt(7, 16);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let sqrt_cd = Math.sqrt(c * d);
+    let neg_bd = -b * d;
+    let neg_ad = -a * d;
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * m - c * d > 0 && (m < neg_ad || m > neg_bd)) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{mx+${c}}{${d}x+m}$, $m$ là tham số thực. Gọi $S$ là tập hợp các số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số đồng biến trên khoảng $(${a};${b})$. Tìm số phần tử của $S$.
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m^2-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số đồng biến trên khoảng $(${a};${b})$ khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m^2-${c}${d}> 0\\\\
+            &-\\dfrac{m}{${d}}\\notin (${a};${b})
+        }\\Leftrightarrow \\heva{
+            &m < -\\sqrt{${c}${d}} \\text{ hoặc } m > \\sqrt{${c}${d}}\\\\
+            &\\text{và } m \\notin (${Math.min(neg_ad, neg_bd)};${Math.max(neg_ad, neg_bd)})
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function ham_phuc_thuc_db_tren_tap_xac_dinh(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let c = getRandomInt(1, 10+e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let alpha = getRandomInt(1, 5);
+    let beta = getRandomInt(7, 16);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let sqrt_cd = Math.sqrt(c * d);
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * m - c * d > 0) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{mx+${c}}{${d}x+m}$, $m$ là tham số thực. Có bao nhiêu số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số đồng biến trên tập xác định của nó?
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m^2-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số đồng biến trên tập xác định của nó khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m^2-${c}${d}> 0
+        }\\Leftrightarrow \\heva{
+            &m < -\\sqrt{${c}${d}} \\text{ hoặc } m > \\sqrt{${c}${d}}
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function ham_phuc_thuc_ngb_tren_tap_xac_dinh(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let c = getRandomInt(5, 10 + e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let alpha = getRandomInt(1, 5);
+    let beta = getRandomInt(7, 16);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let sqrt_cd = Math.sqrt(c * d);
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * m - c * d < 0) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{mx+${c}}{${d}x+m}$, $m$ là tham số thực. Có bao nhiêu số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số nghịch biến trên tập xác định của nó?
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m^2-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số nghịch biến trên tập xác định của nó khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m^2-${c}${d}< 0
+        }\\Leftrightarrow \\heva{
+            &-\\sqrt{${c}${d}} < m < \\sqrt{${c}${d}}
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function ham_phuc_thuc_nb_tren_tap_xac_dinh(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let c = getRandomInt(10, 20 + e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let alpha = getRandomInt(-5, 1);
+    let beta = getRandomInt(2, 10);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let cd = c * d;
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * (m + e) - cd < 0) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{(m+${e})x+${c}}{${d}x+m}$, $m$ là tham số thực. Có bao nhiêu số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số nghịch biến trên tập xác định của nó?
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m(m+e)-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số nghịch biến trên tập xác định của nó khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m(m+${e})-${c}.${d}< 0
+        }\\Leftrightarrow \\heva{
+            &m^2 + ${e}m - ${cd} < 0
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function ham_phuc_thuc_db_tren_tkxd(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng -10, 10
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let c = getRandomInt(10, 20 + e);
+    let d = getRandomInt(2, 4);  // d khác 0
+    let alpha = getRandomInt(-5, 1);
+    let beta = getRandomInt(2, 10);
+
+    // Tính các giá trị để kiểm tra điều kiện
+    let cd = c * d;
+
+    // Tìm các giá trị của m thoả mãn điều kiện
+    let mValues = [];
+
+    for (let m = Math.ceil(alpha); m <= Math.floor(beta); m++) {
+        if (m * (m + e) - cd > 0) {
+            mValues.push(m);
+        }
+    }
+
+    // Số phần tử của tập S
+    let count = mValues.length;
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-3]
+    Cho hàm số $y=\\dfrac{(m+${e})x+${c}}{${d}x+m}$, $m$ là tham số thực. Có bao nhiêu số giá trị nguyên của $m$ trên đoạn $[${alpha};${beta}]$ để hàm số đồng biến trên tập xác định của nó?
+    \\shortans{$${count}$}
+    \\loigiai{
+        $y'=\\dfrac{m(m+${e})-${c}${d}}{(${d}x+m)^2}$.\\\\
+        Hàm số đồng biến trên tập xác định của nó khi và chỉ khi\\\\
+        \\[
+        \\heva{
+            &m(m+${e})-${c}${d}> 0
+        }\\Leftrightarrow \\heva{
+            &m^2 + ${e}m - ${cd} > 0
+        }
+        \\]
+        Vậy số phần tử của tập $S$ là $${count}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function hsb3_find_area(e) {
+    // Hệ số của hàm số
+    let a = Math.floor(Math.random() * 6) + 1;
+    let b = Math.floor(Math.random() * 10) -5;
+    let c = Math.floor(Math.random() * 6) + e;
+
+    // Tính đạo hàm của hàm số: y' = 3ax^2 + 2bx
+    // Giải phương trình y' = 0 để tìm các điểm cực trị
+    let delta = b ** 2 - 4 * a * 0; // delta của phương trình bậc 2: 3ax^2 + 2bx = 0
+
+    if (delta < 0) {
+        return "Phương trình không có nghiệm thực";
+    }
+
+    let x1 = 0; // Nghiệm thứ nhất
+    let x2 = -2 * b / (2 * 3 * a); // Nghiệm thứ hai
+
+    // Tính tọa độ các điểm cực trị
+    let y1 = a * x1 ** 3 + b * x1 ** 2 + c;
+    let y2 = a * x2 ** 3 + b * x2 ** 2 + c;
+
+    // Làm tròn các giá trị đến 1 chữ số thập phân
+    x1 = x1.toFixed(2);
+    y1 = y1.toFixed(2);
+    x2 = x2.toFixed(2);
+    y2 = y2.toFixed(2);
+
+    // Tính diện tích tam giác vuông OAB
+    let area = (0.5 * Math.abs(x1 * y2 - x2 * y1)).toFixed(1);
+    if (area %1===0){
+        area=Math.round(area)
+    }
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-1]
+    Gọi $A$, $B$ là hai điểm cực trị của đồ thị hàm số $y=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}$. Tính diện tích $S$ của tam giác $OAB$ với $O$ là gốc tọa độ, (làm tròn một chữ số thập phân).
+    \\shortans{$${area}$}
+    \\loigiai{
+        Ta có $y'=${3 * a}x^2${2 * b < 0 ? '' : '+'}${2 * b}x$ và $y'=0 \\Leftrightarrow x=${x1}$ hoặc $x=${x2}$.\\\\
+        Do đó hai điểm cực trị của đồ thị hàm số là $A(${x1};${y1}), B(${x2};${y2})$.\\\\
+        Diện tích tam giác vuông $OAB$ là $S_{\\triangle OAB}=\\dfrac{1}{2}|OA \\cdot OB|=${area}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+
+
+
+
+
+ 
 
 
 

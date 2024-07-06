@@ -40,21 +40,21 @@
             "name": "Câu Đúng Sai",
             "K12": [
                 {
-                    "name": "K12-1",
+                    "name": "Khối 12",
                     "Chương": [
                         {
                             "name": "Chương 1",
                             "Bài": [
                                 {
-                                    "name": "Bài 1",
+                                    "name": "Bài 1: Sự Biến Thiên Hàm Số",
                                     "baitoan": [
                                         {
-                                            "name": "Bài toán 1",
-                                            "content": "y = {a}x^2 + {b}"
+                                            "name": "Hs $y=f(x)=ax^3-bx^2+c$",
+                                            "content": "${ham_bac3_dondieu_cb1({d})}"
                                         },
                                         {
-                                            "name": "Bài toán 2",
-                                            "content": "def({a} + {A}*2)"
+                                            "name": "Hs $y=f(x)=ax^4-bx^2+c$",
+                                            "content": "${ham_bac4_dondieu_cb1({e})}"
                                         },
                                         {
                                             "name": "Bài toán 3",
@@ -76,8 +76,76 @@
             "name": "Câu Tự Luận",
             "K12": [
                 {
-                    "name": "K12-1",
+                    "name": "Khối 12",
                     "Chương": [
+                        {
+                            "name": "Chương 1: Hàm Số",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Hàm Bậc 3 Cực Trị Cơ Bản",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tính S_OAB với AB là 2 cực trị",
+                                            "content": "${hsb3_find_area({X+})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 1: Hàm Bậc 3-Có Tham Số m",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm m hàm bậc 3 nghịch trên R",
+                                            "content": "${tim_m_hs_ng_trenR({X+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m hàm bậc 3 đồng biến trên R",
+                                            "content": "${tim_m_hs_ng_trenR({Y+})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 1: Hàm bậc 3-Cực Trị có m",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm m,n hsbac3 nhận A làm cực tiểu",
+                                            "content": "${tim_mn_hsbac3_nhan_A_lam_cuctri({A+},{b},{C-},{X+},{Y})}"
+                                        },
+                                        {
+                                            "name": "Tìm a,b,c,d hsbac3 nhận A,B làm 2 cực trị",
+                                            "content": "${tim_abcd_biet_hs_co_2cutri({A},{C},{X},{Y})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 1: Hàm phân thức-Có Tham Số m",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm m hàm phân thức đồng biến trên TKXĐ-1",
+                                            "content": "${ham_phuc_thuc_db_tren_tap_xac_dinh({X+})}"
+                                        },{
+                                            "name": "Tìm m hàm phân thức đồng biến trên TKXĐ-2",
+                                            "content": "${ham_phuc_thuc_db_tren_tkxd({Y+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m hàm phân thức nghịch biến trên TKXĐ-1",
+                                            "content": "${ham_phuc_thuc_ngb_tren_tap_xac_dinh({X+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m hàm phân thức nghịch biến trên TKXĐ-2",
+                                            "content": "${ham_phuc_thuc_ngb_tren_tap_xac_dinh({X+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m hàm phân thức nghịch biến trên (a;b)",
+                                            "content": "${ham_phuc_thuc_ngb_tren_ab({X+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m hàm phân thức đồng biến trên (a;b)",
+                                            "content": "${ham_phuc_thuc_db_tren_ab({X+})}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
                         {
                             "name": "Chương HH Oxyz",
                             "Bài": [
