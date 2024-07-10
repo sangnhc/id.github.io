@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiểm Soát Lỗi LaTeX</title>
+    <style>
+        /* CSS for the menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        textarea {
+            width: 100%;
+            height: 200px; /* Chỉnh chiều cao của textarea */
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            resize: none;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            flex: 1;
+        }
+        td, th {
+            border: 1px solid #ccc;
+            padding: 5px;
+            vertical-align: top;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        th:nth-child(1) { width: 5%; } /* Chỉnh tỷ lệ cột STT */
+        th:nth-child(2) { width: 60%; } /* Chỉnh tỷ lệ cột Đoạn mã */
+        th:nth-child(3) { width: 17.5%; } /* Chỉnh tỷ lệ cột Lỗi */
+        th:nth-child(4) { width: 17.5%; } /* Chỉnh tỷ lệ cột Gợi ý sửa lỗi */
+        .toolbar {
+            padding: 10px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+        .error-message {
+            color: red;
+        }
+        .suggestion {
+            color: green;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            color: red;
+            font-weight: bold;
+        }
+        .fixed-size-textarea {
+            width: 100%;
+            height: 150px; /* Chỉnh chiều cao của textarea trong bảng */
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            resize: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            background: #fff;
+        }
+        #errorCount {
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+    </div>
+<div class="toolbar">
+    <button id="loadButton">Load File</button>
+    <button id="copyButton">Copy</button>
+    <button id="saveButton">Save</button>
+    <button id="beautifyButton">Làm đẹp code</button>
+    <input type="file" id="fileInput" accept=".tex" style="display: none;">
+</div>
+<div class="container">
+    <textarea id="inputText" placeholder="Dán mã LaTeX vào đây..."></textarea>
+    <table id="outputTable">
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Đoạn mã</th>
+                <th>Lỗi</th>
+                <th>Gợi ý sửa lỗi</th>
+            </tr>
+        </thead>
+        <tbody id="outputBody"></tbody>
+    </table>
+    <div id="errorCount">Số câu có lỗi cần xem lại: 0</div>
+</div>
+
+<script>
+    function layCacNgoacLon(text) {
+        let ngoacLon = [];
+        let demNgoac = 0;
+        let batDau = null;
+
+        for (let i = 0; i < text.length; i++) {
+            let kyTu = text[i];
+            if (kyTu === "{") {
+                if (demNgoac === 0) {
+                    batDau = i;
+                }
+                demNgoac += 1;
+            } else if (kyTu === "}") {
+                demNgoac -= 1;
+                if (demNgoac === 0 && batDau !== null) {
+                    let ketThuc = i;
+                    ngoacLon.push([batDau, ketThuc]);
+                    batDau = null;
+                }
+            }
+        }
+
+        return ngoacLon;
+    }
+
+    function highlightErrors(content) {
+        let sections = [];
+        let exPattern = /\\begin{(ex|bt|vd)}.*?\\end{\1}/gs;
+        let idPattern = /(\[[0-9]\]|[A-Z][0-9])([NHVC])[0-9]-[0-9]/;
+        let tikzPattern = /\\begin{tikzpicture}.*?\\end{tikzpicture}/gs;
+        let mathFunctionsPattern = /\b(sin|cos|tan|cot|log)\b/g;
+        let choicePattern = /\\choice\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}/gs;
+        let primePattern = /\bprime\b/gi;
+        let index = 1;
+        let exMatch;
+        let errorCount = 0;
+
+        while ((exMatch = exPattern.exec(content)) !== null) {
+            let exContent = exMatch[0];
+            let sectionErrors = [];
+            let suggestions = [];
+
+            // Kiểm tra lỗi số 1: Thiếu ID
+            if (!idPattern.test(exContent)) {
+                sectionErrors.push("Thiếu ID");
+                suggestions.push("Thêm ID vào \\begin{ex}, \\begin{bt}, hoặc \\begin{vd}");
+            }
+
+            // Kiểm tra lỗi số 2: TikZ khai báo thiếu
+            let tikzMatch;
+            while ((tikzMatch = tikzPattern.exec(exContent)) !== null) {
+                let tikzErrors = [];
+                let tikzSuggestions = [];
+                if (!/line join=round/.test(tikzMatch[0])) {
+                    tikzErrors.push("Thiếu 'line join=round'");
+                    tikzSuggestions.push("Thêm 'line join=round'");
+                }
+                if (!/line cap=round/.test(tikzMatch[0])) {
+                    tikzErrors.push("Thiếu 'line cap=round'");
+                    tikzSuggestions.push("Thêm 'line cap=round'");
+                }
+                if (!/>=stealth/.test(tikzMatch[0])) {
+                    tikzErrors.push("Thiếu '>=stealth'");
+                    tikzSuggestions.push("Thêm '>=stealth'");
+                }
+                if (!/font=\\footnotesize/.test(tikzMatch[0])) {
+                    tikzErrors.push("Thiếu 'font=\\footnotesize'");
+                    tikzSuggestions.push("Thêm 'font=\\footnotesize'");
+                }
+                if (tikzErrors.length) {
+                    sectionErrors.push(`Lỗi TikZ: ${tikzErrors.join(', ')}`);
+                    suggestions.push(tikzSuggestions.join(', '));
+                }
+            }
+
+            // Kiểm tra lỗi số 3: TikZ Euclide không hợp lệ
+            if (/\\tkz(?!T)/.test(exContent)) {
+                sectionErrors.push("Có tikz Euclide (không phải \\tkzTab)");
+                suggestions.push("Thay thế bằng \\tkzTab");
+            }
+
+            // Kiểm tra lỗi số 4: Đúng một lệnh \\True trong \choice (không phải \choiceTF)
+            let choiceMatch;
+            while ((choiceMatch = choicePattern.exec(exContent)) !== null) {
+                let choiceContent = choiceMatch[0];
+                let ngoacLon = layCacNgoacLon(choiceContent);
+                if (ngoacLon.length < 4) {
+                    sectionErrors.push("");
+                    suggestions.push("");
+                } else {
+                    let trueCount = 0;
+                    for (let i = 0; i < 4; i++) {
+                        let [start, end] = ngoacLon[i];
+                        if (choiceContent.slice(start + 1, end).includes("\\True")) { // Thêm +1 để bỏ qua dấu {
+                            trueCount++;
+                        }
+                    }
+                    if (trueCount !== 1) {
+                        sectionErrors.push("\\choice phải chứa duy nhất một từ khóa \\True");
+                        suggestions.push("Thêm một và chỉ một từ khóa \\True vào \\choice");
+                    }
+                }
+            }
+
+            // Kiểm tra lỗi số 5: Nếu không có \choice thì phải có \shortans hoặc \sh
+            if (!/\\choice/.test(exContent) && !/\\shortans|\\sh/.test(exContent)) {
+                sectionErrors.push("Thiếu \\shortans hoặc \\sh khi không có \\choice");
+                suggestions.push("Thêm \\shortans hoặc \\sh khi không có \\choice");
+            }
+
+            // Kiểm tra lỗi số 6: Dư dấu ':' sau 'thì', 'là', 'bằng'
+            let sentences = exContent.match(/(?:thì|là|bằng)\s*:\s*/g) || [];
+            sentences.forEach(sentence => {
+                if (/:/.test(sentence)) {
+                    sectionErrors.push(`Dư dấu ':' sau '${sentence.trim()}'`);
+                    suggestions.push("Loại bỏ dấu ':' dư thừa");
+                }
+            });
+
+            // Kiểm tra lỗi số 7: Hàm toán học thiếu dấu '\'
+            let mathEnvironmentsPattern = /(\$[^\$]*\$|\\\[.*?\\\])/g;
+            let mathEnvironments = [];
+            let match;
+
+            // Tìm tất cả các môi trường toán học
+            while ((match = mathEnvironmentsPattern.exec(exContent)) !== null) {
+                mathEnvironments.push({ start: match.index, end: match.index + match[0].length, content: match[0] });
+            }
+
+            // Kiểm tra các hàm toán học trong các môi trường toán học
+            mathEnvironments.forEach(env => {
+                while ((match = mathFunctionsPattern.exec(env.content)) !== null) {
+                    let funcMatch = match[0];
+                    // Kiểm tra nếu hàm toán học thiếu dấu '\'
+                    if (!env.content.slice(match.index - 1, match.index).includes("\\")) {
+                        sectionErrors.push(`Hàm toán học thiếu dấu '\\': ${funcMatch}`);
+                        suggestions.push(`Thêm '\\' trước hàm toán học: \\${funcMatch}`);
+                    }
+                }
+            });
+
+            // Kiểm tra lỗi số 8: Kiểm tra dấu "
+            let invalidQuotePattern = /[^yfg]"[^ygf]/;
+            if (invalidQuotePattern.test(exContent)) {
+                sectionErrors.push('Sử dụng dấu " không hợp lệ');
+                suggestions.push('Thay thế dấu " bằng \\lq\\lq...\\rq\\rq');
+            }
+
+            // Kiểm tra lỗi số 9: Kiểm tra \begin{array}
+            if (/\\begin{array}/.test(exContent)) {
+                sectionErrors.push('Sử dụng \\begin{array} không được phép');
+                suggestions.push('Thay thế \\begin{array} bằng cấu trúc khác');
+            }
+
+            // Kiểm tra lỗi số 10: Kiểm tra từ "prime"
+            if (primePattern.test(exContent)) {
+                sectionErrors.push('Sử dụng từ "prime" không được phép');
+                suggestions.push('Thay prime bằng ký tự đặc biệt hoặc cấu trúc khác');
+            }
+
+            // Kiểm tra lỗi số 11: Kiểm tra trong \shortans{...} mà phần ... thiếu dấu $
+            let shortansPattern = /\\shortans\s*{([^}]*)}/g;
+            let shortansMatch;
+            while ((shortansMatch = shortansPattern.exec(exContent)) !== null) {
+                let shortansContent = shortansMatch[1];
+                if (!shortansContent.includes('$')) {
+                    sectionErrors.push('Thiếu dấu $ trong \\shortans');
+                    suggestions.push('Thêm dấu $ vào nội dung của \\shortans');
+                }
+            }
+
+            if (sectionErrors.length > 0) {
+                errorCount++;
+            }
+
+            sections.push({ content: exContent, errors: sectionErrors, suggestions: suggestions, index: index++ });
+        }
+
+        document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${errorCount-1}`;
+
+        return sections;
+    }
+
+    function renderErrors(sections) {
+        let tbody = document.getElementById('outputBody');
+        tbody.innerHTML = '';
+        sections.forEach((section, idx) => {
+            let tr = document.createElement('tr');
+            let tdIndex = document.createElement('td');
+            let tdCode = document.createElement('td');
+            let tdErrors = document.createElement('td');
+            let tdSuggestions = document.createElement('td');
+
+            tdIndex.textContent = section.index;
+            tdCode.innerHTML = `<textarea class="fixed-size-textarea" data-index="${idx}" oninput="handleTextareaInput(event)">${section.content}</textarea>`;
+            tdErrors.innerHTML = section.errors.map(error => `<div class="error-message">${error}</div>`).join('');
+            tdSuggestions.innerHTML = section.suggestions.map(suggestion => `<div class="suggestion">${suggestion}</div>`).join('');
+
+            tr.appendChild(tdIndex);
+            tr.appendChild(tdCode);
+            tr.appendChild(tdErrors);
+            tr.appendChild(tdSuggestions);
+            tbody.appendChild(tr);
+        });
+    }
+
+    function handleTextareaInput(event) {
+        const index = event.target.getAttribute('data-index');
+        const updatedContent = event.target.value;
+
+        let sections = highlightErrors(updatedContent);
+        const section = sections[0];
+
+        const tdErrors = event.target.parentElement.nextElementSibling;
+        const tdSuggestions = tdErrors.nextElementSibling;
+
+        tdErrors.innerHTML = section.errors.map(error => `<div class="error-message">${error}</div>`).join('');
+        tdSuggestions.innerHTML = section.suggestions.map(suggestion => `<div class="suggestion">${suggestion}</div>`).join('');
+
+        event.target.value = section.content;
+
+        // Cập nhật số câu có lỗi
+        document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${sections.filter(s => s.errors.length > 0).length}`;
+    }
+
+    function beautifyCode(content) {
+        const indent = '    '; // Đặt 4 dấu cách làm indent
+        const subIndent = indent + indent; // Indent cho môi trường con
+        const lines = content.split('\n');
+        let beautifiedLines = [];
+        let inEnvironment = false;
+        let environmentName = '';
+        let subEnvironmentPattern = /\\begin{(tikzpicture|itemize|enumerate|cases|eqnarray)}/;
+        let subEnvironmentName = '';
+        let inSubEnvironment = false;
+
+        lines.forEach(line => {
+            line = line.trim();
+            if (line.startsWith('\\begin{') && (line.includes('{ex}') || line.includes('{bt}') || line.includes('{vd}'))) {
+                beautifiedLines.push(line);
+                inEnvironment = true;
+                environmentName = line.match(/\\begin{(.*?)}/)[1];
+            } else if (line.startsWith(`\\end{${environmentName}}`)) {
+                beautifiedLines.push(line);
+                inEnvironment = false;
+                environmentName = '';
+            } else if (inEnvironment && subEnvironmentPattern.test(line)) {
+                beautifiedLines.push(indent + line);
+                inSubEnvironment = true;
+                subEnvironmentName = line.match(/\\begin{(.*?)}/)[1];
+            } else if (inSubEnvironment && line.startsWith(`\\end{${subEnvironmentName}}`)) {
+                beautifiedLines.push(indent + line);
+                inSubEnvironment = false;
+                subEnvironmentName = '';
+            } else if (inSubEnvironment) {
+                beautifiedLines.push(subIndent + line);
+            } else if (inEnvironment) {
+                beautifiedLines.push(indent + line);
+            } else {
+                beautifiedLines.push(line);
+            }
+        });
+
+        return beautifiedLines.join('\n');
+    }
+
+    function saveContent() {
+        const textareas = document.querySelectorAll('.fixed-size-textarea');
+        const output = Array.from(textareas).map(el => el.value).join('\n\n');
+        const blob = new Blob([output], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'latex_content.txt';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.getElementById('inputText').addEventListener('input', function() {
+        const inputContent = this.value;
+        const sections = highlightErrors(inputContent);
+        renderErrors(sections);
+    });
+
+    document.getElementById('loadButton').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('inputText').value = e.target.result;
+                const sections = highlightErrors(e.target.result);
+                renderErrors(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const outputText = document.getElementById('outputBody').innerText;
+        navigator.clipboard.writeText(outputText).then(() => {
+            alert('Đã sao chép nội dung!');
+        }).catch(err => {
+            alert('Không thể sao chép nội dung!');
+        });
+    });
+
+    document.getElementById('saveButton').addEventListener('click', saveContent);
+
+    document.getElementById('beautifyButton').addEventListener('click', function() {
+        let inputContent = document.getElementById('inputText').value;
+        let beautifiedContent = beautifyCode(inputContent);
+        document.getElementById('inputText').value = beautifiedContent;
+        const sections = highlightErrors(beautifiedContent);
+        renderErrors(sections);
+    });
+</script>
+
+</body>
+</html>
