@@ -279,13 +279,13 @@
             // Kiểm tra lỗi số 9: Kiểm tra \begin{array}
             if (/\\begin{array}/.test(exContent)) {
                 sectionErrors.push('Sử dụng \\begin{array} không được phép');
-                suggestions.push('Thay thế \\begin{array} bằng cấu trúc khác');
+                suggestions.push('Thay thế \\begin{array} bằng heva, hoac, eqarray,...');
             }
 
             // Kiểm tra lỗi số 10: Kiểm tra từ "prime"
             if (primePattern.test(exContent)) {
                 sectionErrors.push('Sử dụng từ "prime" không được phép');
-                suggestions.push('Thay prime bằng ký tự đặc biệt hoặc cấu trúc khác');
+                suggestions.push('Thay prime bằng \' ');
             }
 
             // Kiểm tra lỗi số 11: Kiểm tra trong \shortans{...} mà phần ... thiếu dấu $
@@ -294,8 +294,8 @@
             while ((shortansMatch = shortansPattern.exec(exContent)) !== null) {
                 let shortansContent = shortansMatch[1];
                 if (!shortansContent.includes('$')) {
-                    sectionErrors.push('Thiếu dấu $ trong \\shortans');
-                    suggestions.push('Thêm dấu $ vào nội dung của \\shortans');
+                    sectionErrors.push('Lỗi đáp án tự luận');
+                    suggestions.push('Xem lại nội dung của \\shortans');
                 }
             }
 
@@ -423,7 +423,7 @@
             reader.onload = function(e) {
                 document.getElementById('inputText').value = e.target.result;
                 const sections = highlightErrors(e.target.result);
-                renderErrors(e.target.result);
+                renderErrors(sections);
             };
             reader.readAsText(file);
         }
