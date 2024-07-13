@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.2.0/math.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/algebrite/1.3.2/algebrite.min.js"></script>
     <script src="bank_functions.js"></script>
+    <script src="bank_func_forTF.js"></script>
     <style>
         body, html {
             margin: 0;
@@ -43,17 +44,31 @@
             width: 100%;
             height: calc(100% - 50px);
             margin-top: 50px;
+            overflow: hidden;
+            position: relative;
         }
         .sidebar {
-            width: 30%;
+            width: 55%; /* Thay đổi tỷ lệ kích thước ban đầu tại đây */
             background-color: #f4f4f4;
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
-            font-size: 14px; /* Kích thước chữ nhỏ hơn */
+            resize: horizontal;
+            overflow: auto;
+            min-width: 200px;
+        }
+        .resizer {
+            width: 5px;
+            cursor: ew-resize;
+            background-color: #007bff;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1;
         }
         .content {
-            width: 70%;
+            flex-grow: 1;
             padding: 20px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -71,7 +86,7 @@
             font-size: 16px;
             margin-bottom: 10px;
             resize: vertical;
-            height: 300px; /* Tăng chiều cao của textarea */
+            height: 300px;
         }
         .input-group {
             display: flex;
@@ -153,10 +168,10 @@
             cursor: pointer;
             position: relative;
             padding-left: 20px;
-            font-size: 14px; /* Kích thước chữ nhỏ hơn */
+            font-size: 14px;
         }
         .treeview ul li:before {
-            content: "\25B6"; /* Right-pointing triangle */
+            content: "\25B6";
             position: absolute;
             left: -20px;
             top: 50%;
@@ -164,7 +179,7 @@
             transition: transform 0.3s ease;
         }
         .treeview ul li.open:before {
-            transform: translateY(-50%) rotate(90deg); /* Down-pointing triangle */
+            transform: translateY(-50%) rotate(90deg);
         }
         .treeview ul li ul {
             display: none;
@@ -185,16 +200,14 @@
         .treeview ul li.level-4 {
             color: rgb(12, 150, 49);
         }
-        /* ... (existing CSS) ... */
-.no-triangle:before {
-    content: ""; /* Remove the triangle */
-    position: relative;
-    left: -20px; /* Adjust position to align text correctly */
-}
-.final-level {
-    color: rgb(108, 9, 154); /* Change color for final level items */
-}
-
+        .no-triangle:before {
+            content: "";
+            position: relative;
+            left: -20px;
+        }
+        .final-level {
+            color: rgb(108, 9, 154);
+        }
     </style>
 </head>
 <body>
@@ -202,23 +215,23 @@
         <a href="index.html">Home</a>
     </div>
     <script>
-    function checkLoginStatus() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const storedIdentifier = localStorage.getItem('identifier');
-        if (!isLoggedIn || !storedIdentifier) {
-            alert('Bạn chưa nhập key');
-            window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
         }
-    }
 
-    // Kiểm tra trạng thái đăng nhập khi tải trang
-    window.onload = function() {
-        checkLoginStatus();
-    };
-</script>
-
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
     <div class="container">
         <div class="sidebar">
+            <div class="resizer" id="resizer"></div>
             <div class="treeview" id="treeview">
                 <!-- Nội dung sẽ được tải từ menu.json -->
             </div>
@@ -247,10 +260,28 @@
                 <button onclick="toggleExact()">Chuyển đổi S<=>D</button>
             </div>
             <div class="results" id="results"></div>
-            <!--<button onclick="downloadResults()">Tải về kết quả</button> Đã đem lên trên-->
         </div>
     </div>
     <script>
+        const resizer = document.getElementById('resizer');
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+
+        resizer.addEventListener('mousedown', function(e) {
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        function resize(e) {
+            const newWidth = e.clientX - sidebar.getBoundingClientRect().left;
+            sidebar.style.width = newWidth + 'px';
+        }
+
+        function stopResize() {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
         let exactMode = false;
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -270,7 +301,8 @@
         function generateTreeviewHTML(data, level) {
             let htmlContent = '<ul>';
             data.forEach(item => {
-                htmlContent += `<li class="level-${level}">${item.name}`;
+                let isFinalLevel = !item.K12 && !item.Chương && !item.Bài && !item.baitoan;
+                htmlContent += `<li class="level-${level} ${isFinalLevel ? 'no-triangle final-level' : ''}">${item.name}`;
                 if (item.K12) {
                     htmlContent += generateTreeviewHTML(item.K12, level + 1);
                 }
@@ -283,7 +315,7 @@
                 if (item.baitoan) {
                     htmlContent += '<ul>';
                     item.baitoan.forEach(baitoan => {
-                        htmlContent += `<li class="level-${level + 1}" onclick="appendContent('${baitoan.content}')">${baitoan.name}</li>`;
+                        htmlContent += `<li class="level-${level + 1} no-triangle final-level" onclick="appendContent('${baitoan.content}')">${baitoan.name}</li>`;
                     });
                     htmlContent += '</ul>';
                 }
@@ -470,14 +502,7 @@
                 resultsContainer.appendChild(resultItem);
             }
         }
-
-        function copyToClipboardG(button) {
-            const textarea = button.previousElementSibling;
-            textarea.select();
-            document.execCommand('copy');
-            alert('Đã sao chép');
-        }
-  function generateRandomFunctions() {
+        function generateRandomFunctions() {
     const functionInput = document.getElementById('function-input').value;
     const numberOfFunctions = parseInt(document.getElementById('number-of-functions').value);
     const resultsContainer = document.getElementById('results');
@@ -493,7 +518,8 @@
         resultItem.className = 'result-item';
         resultItem.innerHTML = `
             <textarea rows="2">${evaluatedExpression}</textarea>
-            <button onclick="copyToClipboard(this)">Copy</button>
+            <h3>File ${i + 1}<br>
+            <button onclick="copyToClipboard(this)">Copy</button> </h3>
         `;
         resultsContainer.appendChild(resultItem);
     }
@@ -509,6 +535,13 @@
         console.error('Textarea element not found');
     }
 }
+
+        function copy1ToClipboard(button) {
+            const textarea = button.previousElementSibling;
+            textarea.select();
+            document.execCommand('copy');
+            alert('Đã sao chép');
+        }
 
         function downloadResults() {
             const resultsContainer = document.getElementById('results');
@@ -536,8 +569,7 @@
             exactMode = !exactMode;
             alert(exactMode ? "Chế độ chính xác đã được bật" : "Chế độ chính xác đã được tắt");
         }
-        ///////
-  
+
     /* ... (existing JavaScript) ... */
     function generateTreeviewHTML(data, level) {
         let htmlContent = '<ul>';
@@ -565,7 +597,6 @@
         htmlContent += '</ul>';
         return htmlContent;
     }
-
 
     </script>
 </body>
