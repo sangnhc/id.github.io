@@ -87,11 +87,23 @@
                                         {
                                             "name": "Tính S_OAB với AB là 2 cực trị",
                                             "content": "${hsb3_find_area({X+})}"
+                                        },
+                                        {
+                                            "name": "Tính S_OAB với AB là 2 cực trị",
+                                            "content": "${hsb3_find_area2({Y+})}"
+                                        },
+                                        {
+                                            "name": "Đường Thẳng Qua 2 Cực Trị-Đẹp",
+                                            "content": "${hsb3_dt_qua2_cuctri_dep({X+})}"
+                                        },
+                                        {
+                                            "name": "Đường Thẳng Qua 2 Cực Trị-Xấu",
+                                            "content": "${hsb3_dt_qua2_cuctri_xau({Y+})}"
                                         }
                                     ]
                                 },
                                 {
-                                    "name": "Bài 1: Hàm Bậc 3-Có Tham Số m",
+                                    "name": "Bài 1: Hàm Bậc 3 Đơn Điệu-Có Tham Số m",
                                     "baitoan": [
                                         {
                                             "name": "Tìm m hàm bậc 3 nghịch trên R",
@@ -141,6 +153,85 @@
                                         {
                                             "name": "Tìm m hàm phân thức đồng biến trên (a;b)",
                                             "content": "${ham_phuc_thuc_db_tren_ab({X+})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: GTLN-GTNN Của Hàm Số",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm min,max hàm phân thức cơ bản",
+                                            "content": "${min_max_phan_thuc_cb({S+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min,max hàm bậc 3 cơ bản nghiệm đẹp",
+                                            "content": "${min_max_hambac3_cb({K+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min,max hàm bậc 3 cơ bản nghiệm xấu",
+                                            "content": "${min_max_hambac3_cb_xau({L+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min,max hàm phân thức bậc 2/bậc 1",
+                                            "content": "${min_max_phanthuc_2tren1_cb({A+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min,max hàm bậc 4 cơ bản",
+                                            "content": "${min_max_hambac4_cb({K+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min, max căn(ax^2+bx+c)",
+                                            "content": "${min_max_sqrt_cb({Y+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min, max căn(a-bx)+căn(c-dx)",
+                                            "content": "${min_max_sqrt_sqrt({Y+})}"
+                                        },
+                                        {
+                                            "name": "Tìm min, max y=x.căn(a-x^2)",
+                                            "content": "${min_max_x_sqrt({S+})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: Tìm m để min,max bằng k",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tìm m để hs y= ax^3+bx^2+c+m đạt max=k",
+                                            "content": "${min_max_tim_m_bangK({S+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để hs y= ax+sqrt(b-cx)+m đạt max=k",
+                                            "content": "${min_max_ax_sqrt({K+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để hs y=(ax+b+m)/(cx+d) đạt max=k",
+                                            "content": "${min_max_phan_thuc_bacnhat({K+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để hs y=(ax-b-m^2)/(cx+d) đạt max=k",
+                                            "content": "${min_max_phan_thuc_bacnhat_duong({K+})}"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "Bài 2: Min Max Thực Tế Chủ Đề Kinh Tế",
+                                    "baitoan": [
+                                        {
+                                            "name": "Bài toán xuất khẩu gạo",
+                                            "content": "${thuc_te_xk_gao({S+})}"
+                                        },
+                                        {
+                                            "name": "Bài toán tối ưu hóa chi phí vận chuyển",
+                                            "content": "${thuc_te_chiphi_van_chuyen({K+})}"
+                                        },
+                                        {
+                                            "name": "Bài toán thuê căn hộ",
+                                            "content": "${thuc_te_thue_can_ho({K+})}"
+                                        },
+                                        {
+                                            "name": "Tìm m để hs y=(ax-b-m^2)/(cx+d) đạt max=k",
+                                            "content": "${min_max_phan_thuc_bacnhat_duong({K+})}"
                                         }
                                     ]
                                 }

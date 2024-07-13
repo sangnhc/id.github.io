@@ -9,6 +9,23 @@ function gcd(a, b) {
 function cleanUpOutput(output) {
     return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
 }
+function lamdeppm(expression) {
+    // Xóa các hệ số 1 và 0 cho bất kỳ biến nào
+    expression = expression.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
+    expression = expression.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
+    
+    // Xử lý các dấu ++, --, +-, -+
+    expression = expression.replace(/\+\+/g, '+'); // ++ -> +
+    expression = expression.replace(/--/g, '+'); // -- -> +
+    expression = expression.replace(/\+-/g, '-'); // +- -> -
+    expression = expression.replace(/-\+/g, '-'); // -+ -> -
+    
+    // Xóa các dấu + ở đầu biểu thức nếu có
+    expression = expression.replace(/^\+/, '');
+    
+    return expression;
+}
+
 
 // Hàm chuyển phân số ra LaTeX và tối giản phân số
 function formatFraction(numerator, denominator) {
@@ -3129,9 +3146,403 @@ function hsb3_find_area(e) {
 
     return question;
 }
+function hsb3_find_area2(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
+    let a = getRandomInt(1, 5); // a từ 1 đến 5
+    let b = getRandomInt(-10, 10); // b từ -10 đến 10
+    let c = getRandomInt(-5, -1); // c từ -5 đến -1
+    let d = getRandomInt(-10, 10+e); // d từ -10 đến 10
 
+    // Tính delta để giải phương trình bậc hai y' = 3ax^2 + 2bx + c = 0
+    let delta = 4 * b * b - 4 * 3 * a * c;
 
+    if (delta < 0) {
+        return "Phương trình không có nghiệm thực";
+    }
+
+    // Tìm các nghiệm của phương trình y' = 0
+    let x1 = (-2 * b + Math.sqrt(delta)) / (2 * 3 * a);
+    let x2 = (-2 * b - Math.sqrt(delta)) / (2 * 3 * a);
+
+    // Tính tọa độ các điểm cực trị
+    let y1 = a * x1 ** 3 + b * x1 ** 2 + c * x1 + d;
+    let y2 = a * x2 ** 3 + b * x2 ** 2 + c * x2 + d;
+
+    // Làm tròn các giá trị đến 1 chữ số thập phân
+    x1 = parseFloat(x1.toFixed(2));
+    y1 = parseFloat(y1.toFixed(2));
+    x2 = parseFloat(x2.toFixed(2));
+    y2 = parseFloat(y2.toFixed(2));
+
+    // Tính diện tích tam giác OAB sử dụng tích có hướng
+    let area = (0.5 * Math.abs(x1 * y2 - x2 * y1)).toFixed(1);
+  if (area %1===0){area=Math.round(area)}
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}%[2D1H1-1]
+    Gọi $A$, $B$ là hai điểm cực trị của đồ thị hàm số $y=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}x${d < 0 ? '' : '+'}${d}$. Tính diện tích $S$ của tam giác $OAB$ với $O$ là gốc tọa độ, (làm tròn một chữ số thập phân).
+    \\shortans{$${area}$}
+    \\loigiai{
+        Ta có $y'=${3 * a}x^2${2 * b < 0 ? '' : '+'}${2 * b}x${c < 0 ? '' : '+'}${c}$ và $y'=0 \\Leftrightarrow x=${x1}$ hoặc $x=${x2}$.\\\\
+        Do đó hai điểm cực trị của đồ thị hàm số là $A(${x1};${y1}), B(${x2};${y2})$.\\\\
+        Diện tích tam giác $OAB$ là $S_{\\triangle OAB}=\\dfrac{1}{2} |x_1 y_2 - x_2 y_1|=${area}$.
+    }
+\\end{ex}`;
+
+    return question;
+}
+function hsb3_dt_qua2_cuctri_dep(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(1, 5); // a từ 1 đến 5
+    let b;do { b = getRandomInt(-10, 10);} while (b === 0);
+    let c = getRandomInt(0, 0); // c từ -5 đến -1
+    let d = getRandomInt(-10, 10 + e); // d từ -10 đến 10 
+
+    // Tính delta để giải phương trình bậc hai y' = 3ax^2 + 2bx + c = 0
+    let delta = 4 * b * b - 4 * 3 * a * c;
+
+    if (delta < 0) {
+        return "Phương trình không có nghiệm thực";
+    }
+
+    // Tìm các nghiệm của phương trình y' = 0
+    let x1 = (-2 * b + Math.sqrt(delta)) / (2 * 3 * a);
+    let x2 = (-2 * b - Math.sqrt(delta)) / (2 * 3 * a);
+
+    // Tính tọa độ các điểm cực trị
+    let y1 = a * x1 ** 3 + b * x1 ** 2 + c * x1 + d;
+    let y2 = a * x2 ** 3 + b * x2 ** 2 + c * x2 + d;
+
+    // Làm tròn các giá trị đến 1 chữ số thập phân
+    x1 = parseFloat(x1.toFixed(2));
+    y1 = parseFloat(y1.toFixed(2));
+    x2 = parseFloat(x2.toFixed(2));
+    y2 = parseFloat(y2.toFixed(2));
+
+    // Tính các hệ số của đường thẳng y = ax + b
+    let slope = (y2 - y1) / (x2 - x1);
+    let intercept = y1 - slope * x1;
+
+    // Làm tròn hệ số của phương trình đường thẳng
+    slope = parseFloat(slope.toFixed(3));
+    intercept = parseFloat(intercept.toFixed(3));
+
+    // Tính tổng a + b
+    let sum_ab = (slope + intercept).toFixed(1);
+  if(sum_ab %1===0){
+    sum_ab=Math.round(sum_ab)
+  }
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Phương trình đường thẳng đi qua hai điểm cực trị của đồ thị hàm số $y=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}x${d < 0 ? '' : '+'}${d}$ có dạng $y=ax+b$. Tính $a+b$ làm tròn một chữ số thập phân
+    \\shortans{$${sum_ab}$}
+    \\loigiai{
+    }
+\\end{ex}`;
+    question = question.replace('+0x','')
+    return question;
+}
+function hsb3_dt_qua2_cuctri_xau(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(1, 5); // a từ 1 đến 5
+    let b = getRandomInt(-10, 10); // b từ -10 đến 10
+    let c = getRandomInt(-5, -1); // c từ -5 đến -1
+    let d = getRandomInt(-10, 10 + e); // d từ -10 đến 10 
+
+    // Tính delta để giải phương trình bậc hai y' = 3ax^2 + 2bx + c = 0
+    let delta = 4 * b * b - 4 * 3 * a * c;
+
+    if (delta < 0) {
+        return "Phương trình không có nghiệm thực";
+    }
+
+    // Tìm các nghiệm của phương trình y' = 0
+    let x1 = (-2 * b + Math.sqrt(delta)) / (2 * 3 * a);
+    let x2 = (-2 * b - Math.sqrt(delta)) / (2 * 3 * a);
+
+    // Tính tọa độ các điểm cực trị
+    let y1 = a * x1 ** 3 + b * x1 ** 2 + c * x1 + d;
+    let y2 = a * x2 ** 3 + b * x2 ** 2 + c * x2 + d;
+
+    // Làm tròn các giá trị đến 1 chữ số thập phân
+    x1 = parseFloat(x1.toFixed(2));
+    y1 = parseFloat(y1.toFixed(2));
+    x2 = parseFloat(x2.toFixed(2));
+    y2 = parseFloat(y2.toFixed(2));
+
+    // Tính các hệ số của đường thẳng y = ax + b
+    let slope = (y2 - y1) / (x2 - x1);
+    let intercept = y1 - slope * x1;
+
+    // Làm tròn hệ số của phương trình đường thẳng
+    slope = parseFloat(slope.toFixed(3));
+    intercept = parseFloat(intercept.toFixed(3));
+
+    // Tính tổng a + b
+    let sum_ab = (slope + intercept).toFixed(1);
+  if(sum_ab %1===0){
+    sum_ab=Math.round(sum_ab)
+  }
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Phương trình đường thẳng đi qua hai điểm cực trị của đồ thị hàm số $y=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}x${d < 0 ? '' : '+'}${d}$ có dạng $y=ax+b$. Tính $a+b$ làm tròn một chữ số thập phân
+    \\shortans{$${sum_ab}$}
+    \\loigiai{
+    }
+\\end{ex}`;
+
+    return question;
+}
+function min_max_phan_thuc_cb(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, d, alpha, beta, derivative_sign, critical_point;
+
+    do {
+       // Tạo các hệ số ngẫu nhiên và đảm bảo a và c khác 0
+       a = getRandomInt(-10, 10);
+       while (a === 0) {
+           a = getRandomInt(-10, 10);
+       }
+       
+       b = getRandomInt(-10, 10);
+       while (b === 0) {
+        b = getRandomInt(-10, 10);
+    }
+       c = getRandomInt(-10, 10);
+       while (c === 0) {
+           c = getRandomInt(-10, 10);
+       }
+        d = getRandomInt(-10, 10+e);
+        while (d === 0) {
+            d = getRandomInt(-10, 10);
+        }
+        // Tạo giá trị ngẫu nhiên cho alpha và beta
+        alpha = getRandomInt(-10, 10);
+        beta = getRandomInt(-10, 10);
+
+        // Đảm bảo alpha < beta
+        if (alpha > beta) {
+            let temp = alpha;
+            alpha = beta;
+            beta = temp;
+        }
+
+        // Tính giá trị đạo hàm của hàm số f(x) = (ax + b) / (cx + d)
+        derivative_sign = a * d - b * c;
+
+        // Tính điểm tới hạn -d/c
+        critical_point = -d / c;
+    } while (derivative_sign === 0 || (critical_point >= alpha && critical_point <= beta)); // Đảm bảo a * d - b * c khác 0 và -d/c không thuộc [alpha, beta]
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, d, x) {
+        return (a * x + b) / (c * x + d);
+    }
+
+    let f_alpha = f(a, b, c, d, alpha);
+    let f_beta = f(a, b, c, d, beta);
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên đoạn [alpha, beta]
+    let M = Math.max(f_alpha, f_beta);
+    let m = Math.min(f_alpha, f_beta);
+
+    // Tính tổng M + e * m
+    let sum = (M + e * m).toFixed(1);
+    if (sum %1===0){sum=Math.round(sum)}
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)=\\dfrac{${a}x${b < 0 ? '' : '+'}${b}}{${c}x${d < 0 ? '' : '+'}${d}}$ trên đoạn $\\left[${alpha},${beta}\\right]$. Tính $M+${e}\\cdot m$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+        Đạo hàm của hàm số $f(x)$ là $f'(x)=\\dfrac{${a * d - b * c}}{(${c}x${d < 0 ? '' : '+'}${d})^2}$.\\\\
+        Vì $a \\cdot d - b \\cdot c ${derivative_sign > 0 ? '>' : '<'} 0$ nên hàm số ${derivative_sign > 0 ? 'đồng biến' : 'nghịch biến'} trên đoạn $[${alpha}, ${beta}]$.\\\\
+        Do đó, $M = f(${f_alpha > f_beta ? alpha : beta}) = ${Math.max(f_alpha, f_beta).toFixed(2)}$ và $m = f(${f_alpha < f_beta ? alpha : beta}) = ${Math.min(f_alpha, f_beta).toFixed(2)}$.\\\\
+        Tổng $M + ${e}\\cdot m = ${sum}$.
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+function min_max_hambac3_cb(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, alpha, beta, critical_points;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo a khác 0
+        a = getRandomInt(-5, 5);
+        while (a === 0) {
+            a = getRandomInt(-10, 10);
+        }
+
+        b = getRandomInt(-10, 10);
+        while (b === 0) {
+            b = getRandomInt(-10, 10);
+        }
+        c = getRandomInt(-10, 10);
+        while (c === 0) {
+            c = getRandomInt(-10, 10);
+        }
+
+        // Tạo giá trị ngẫu nhiên cho alpha và beta
+        alpha = getRandomInt(-5, 0);
+        beta = getRandomInt(1, 5);
+  
+        // Đảm bảo alpha < beta
+        if (alpha > beta) {
+            let temp = alpha;
+            alpha = beta;
+            beta = temp;
+        }
+
+        // Tính đạo hàm của hàm số y = ax^3 + bx^2 + c
+        // y' = 3ax^2 + 2bx
+        // Tìm các nghiệm của phương trình y' = 0
+        let delta = b * b - 3 * a * 0;
+        let x1 = null, x2 = null;
+        if (delta >= 0) {
+            x1 = (-b + Math.sqrt(delta)) / (3 * a);
+            x2 = (-b - Math.sqrt(delta)) / (3 * a);
+        }
+
+        critical_points = [x1, x2].filter(point => point !== null && point >= alpha && point <= beta);
+    } while (critical_points.length === 0 && b * b - 3 * a * 0 < 0); // Đảm bảo có nghiệm trong đoạn [alpha, beta] hoặc đạo hàm không có nghiệm thực
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, x) {
+        return a * x ** 3 + b * x ** 2 + c;
+    }
+
+    let f_alpha = f(a, b, c, alpha);
+    let f_beta = f(a, b, c, beta);
+    let values = [f_alpha, f_beta];
+
+    critical_points.forEach(point => {
+        values.push(f(a, b, c, point));
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên đoạn [alpha, beta]
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + e * m
+    let sum = (M + e * m).toFixed(1);
+    if (sum %1===0){sum=Math.round(sum)}
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}$ trên đoạn $\\left[${alpha};${beta}\\right]$. Tính $M+${e}m$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+       
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+function min_max_hambac3_cb_xau(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, d, alpha, beta, critical_points;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo a khác 0
+        a = getRandomInt(-5, 5);
+        while (a === 0) {
+            a = getRandomInt(-5, 5);
+        }
+
+        b = getRandomInt(-10, 10);
+        while (b === 0) {
+            b = getRandomInt(-10, 10);
+        }
+
+        c = getRandomInt(-10, 10);
+        while (c === 0) {
+            c = getRandomInt(-10, 10);
+        }
+
+        d = getRandomInt(-10, 10);
+
+        // Tạo giá trị ngẫu nhiên cho alpha và beta
+        alpha = getRandomInt(-5, 0);
+        beta = getRandomInt(1, 5);
+
+        // Đảm bảo alpha < beta
+        if (alpha > beta) {
+            let temp = alpha;
+            alpha = beta;
+            beta = temp;
+        }
+
+        // Tính đạo hàm của hàm số y = ax^3 + bx^2 + cx + d
+        // y' = 3ax^2 + 2bx + c
+        // Tìm các nghiệm của phương trình y' = 0
+        let delta = b * b - 3 * a * c;
+        let x1 = null, x2 = null;
+        if (delta >= 0) {
+            x1 = (-b + Math.sqrt(delta)) / (3 * a);
+            x2 = (-b - Math.sqrt(delta)) / (3 * a);
+        }
+
+        critical_points = [x1, x2].filter(point => point !== null && point >= alpha && point <= beta);
+    } while (critical_points.length === 0); // Đảm bảo có nghiệm trong đoạn [alpha, beta]
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, d, x) {
+        return a * x ** 3 + b * x ** 2 + c * x + d;
+    }
+
+    let f_alpha = f(a, b, c, d, alpha);
+    let f_beta = f(a, b, c, d, beta);
+    let values = [f_alpha, f_beta];
+
+    critical_points.forEach(point => {
+        values.push(f(a, b, c, d, point));
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên đoạn [alpha, beta]
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + e * m
+    let sum = (M + e * m).toFixed(1);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)=${a}x^3${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}x${d < 0 ? '' : '+'}${d}$ trên đoạn $\\left[${alpha};${beta}\\right]$. Tính $M+${e}m$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+       
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
 
 
  
@@ -3197,3 +3608,904 @@ function executeFunction(fnName, params) {
         return `Hàm ${fnName} không tồn tại`;
     }
 }
+function min_max_phanthuc_2tren1_cb(factor) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, d, e_coeff, alpha, beta, critical_points, pole;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo a và d khác 0
+        a = getRandomInt(-5, 5);
+        while (a === 0) {
+            a = getRandomInt(-5, 5);
+        }
+
+        b = getRandomInt(-10, 10);
+        c = getRandomInt(-10, 10);
+
+        d = getRandomInt(-5, 5);
+        while (d === 0) {
+            d = getRandomInt(-5, 5);
+        }
+
+        e_coeff = getRandomInt(-10, 10);
+
+        // Tạo giá trị ngẫu nhiên cho alpha và beta
+        alpha = getRandomInt(-5, 0);
+        beta = getRandomInt(1, 5 + factor);
+
+        // Đảm bảo alpha < beta
+        if (alpha > beta) {
+            let temp = alpha;
+            alpha = beta;
+            beta = temp;
+        }
+
+        // Tính cực trị của hàm số
+        let A = a * d;
+        let B = 2 * a * e_coeff ;
+        let C = b * e_coeff - c * d;
+
+        let delta = B * B - 4 * A * C;
+        let x1 = null, x2 = null;
+        if (delta >= 0) {
+            x1 = (-B + Math.sqrt(delta)) / (2 * A);
+            x2 = (-B - Math.sqrt(delta)) / (2 * A);
+        }
+
+        critical_points = [x1, x2].filter(point => point !== null && point >= alpha && point <= beta);
+
+        // Tính vị trí phân kỳ (cực tiểu) của hàm số
+        pole = -e_coeff / d;
+
+    } while (critical_points.length === 0 || (pole >= alpha && pole <= beta)); // Đảm bảo có nghiệm trong đoạn [alpha, beta] và -e/d không thuộc đoạn [alpha, beta]
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, d, e_coeff, x) {
+        return (a * x ** 2 + b * x + c) / (d * x + e_coeff);
+    }
+
+    let f_alpha = f(a, b, c, d, e_coeff, alpha);
+    let f_beta = f(a, b, c, d, e_coeff, beta);
+    let values = [f_alpha, f_beta];
+
+    critical_points.forEach(point => {
+        values.push(f(a, b, c, d, e_coeff, point));
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên đoạn [alpha, beta]
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + factor * m
+    let sum = (M + factor * m).toFixed(0);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)=\\dfrac{${a}x^2${b < 0 ? '' : '+'}${b}x${c < 0 ? '' : '+'}${c}}{${d}x${e_coeff < 0 ? '' : '+'}${e_coeff}}$ trên đoạn $\\left[${alpha};${beta}\\right]$. Tính $M+${factor}m$, làm tròn đến phần nguyên.
+    \\shortans{$${sum}$}
+    \\loigiai{
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+function min_max_hambac4_cb(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, alpha, beta, critical_points;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo a khác 0
+        a = getRandomInt(-5, 5);
+        while (a === 0) {
+            a = getRandomInt(-5, 5);
+        }
+
+        b = getRandomInt(-10, 10);
+        while (b === 0) {
+            b = getRandomInt(-10, 10);
+        }
+
+        c = getRandomInt(-10, 10);
+
+        // Tạo giá trị ngẫu nhiên cho alpha và beta
+        alpha = getRandomInt(-5, 0);
+        beta = getRandomInt(1, 5 + e);
+
+        // Đảm bảo alpha < beta
+        if (alpha > beta) {
+            let temp = alpha;
+            alpha = beta;
+            beta = temp;
+        }
+
+        // Tính đạo hàm của hàm số y = ax^4 + bx^2 + c
+        // y' = 4ax^3 + 2bx
+        // Tìm các nghiệm của phương trình y' = 0
+        // 4ax^3 + 2bx = 0
+        // x(4ax^2 + 2b) = 0
+        // x = 0 hoặc 4ax^2 + 2b = 0
+        // 4ax^2 + 2b = 0
+        // x^2 = -b / (2a)
+        // x = ±sqrt(-b / (2a))
+        critical_points = [];
+
+        if (a != 0) {
+            let discriminant = -b / (2 * a);
+            if (discriminant >= 0) {
+                let x1 = Math.sqrt(discriminant);
+                let x2 = -Math.sqrt(discriminant);
+                critical_points.push(x1, x2);
+            }
+        }
+
+        // Lọc các nghiệm nằm trong đoạn [alpha, beta]
+        critical_points = critical_points.filter(point => point >= alpha && point <= beta);
+    } while (critical_points.length === 0); // Đảm bảo có nghiệm trong đoạn [alpha, beta]
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, x) {
+        return a * x ** 4 + b * x ** 2 + c;
+    }
+
+    let f_alpha = f(a, b, c, alpha);
+    let f_beta = f(a, b, c, beta);
+    let values = [f_alpha, f_beta];
+
+    critical_points.forEach(point => {
+        values.push(f(a, b, c, point));
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên đoạn [alpha, beta]
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + e * m
+    let sum = (M + e * m).toFixed(0);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)= ${a}x^4${b < 0 ? '' : '+'}${b}x^2${c < 0 ? '' : '+'}${c}$ trên đoạn $\\left[${alpha};${beta}\\right]$. Tính $M+${e}m$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+        
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+
+function min_max_sqrt_cb(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, x_critical, value_at_critical;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo a khác 0
+        a = getRandomInt(1, 5);  // Để đảm bảo a > 0
+        b = getRandomInt(-10, 10);
+        while (b === 0) {
+            b = getRandomInt(-10, 10);
+        }
+        c = getRandomInt(-5, 5 + e);
+        while (c === 0) {
+            c = getRandomInt(-5, 5 + e);
+        }
+
+        // Tìm nghiệm duy nhất x = b / (2a)
+        x_critical = b / (2 * a);
+
+        // Đảm bảo nghiệm x_critical làm cho biểu thức dưới căn không âm
+        value_at_critical = -a * x_critical ** 2 + b * x_critical + a * c ** 2 - b * c;
+
+    } while (value_at_critical < 0); // Đảm bảo giá trị tại x_critical không âm
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, x) {
+        let value = -a * x ** 2 + b * x + a * c ** 2 - b * c;
+        return Math.sqrt(value);
+    }
+
+    // Tính giá trị của hàm số tại điểm cực trị
+    let f_critical = f(a, b, c, x_critical);
+    let values = [f_critical];
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên tập xác định
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + e * m + e
+    let sum = (M + e * m + e).toFixed(1);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)= \\sqrt{-${a}x^2${b < 0 ? '' : '+'}${b}x${a * c ** 2 - b * c < 0 ? '' : '+'}${a * c ** 2 - b * c}}$ trên tập xác định của nó. Tính $M+${e}m+${e}$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+        
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    question=question.replace("+0}","")
+    return question;
+}
+function min_max_sqrt_sqrt(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo các số dương
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, b, c, d, alpha, beta;
+
+    do {
+        // Tạo các hệ số ngẫu nhiên và đảm bảo chúng là các số dương
+        a = getRandomInt(1, 10);  
+        b = getRandomInt(1, 10);
+        c = getRandomInt(1, 10);
+        d = getRandomInt(1, 10+e);
+
+        // Xác định tập xác định của hàm số: a - bx >= 0 và c + dx >= 0
+        // => alpha = -c/d và beta = a/b
+        alpha = -c / d;
+        beta = a / b;
+
+    } while (alpha >= beta); // Đảm bảo khoảng xác định hợp lệ
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, d, x) {
+        return Math.sqrt(a - b * x) + Math.sqrt(c + d * x);
+    }
+
+    // Tìm đạo hàm của hàm số y = sqrt(a - bx) + sqrt(c + dx)
+    // y' = -b / (2sqrt(a - bx)) + d / (2sqrt(c + dx))
+    let critical_points = [];
+
+    // Tìm nghiệm của phương trình y' = 0
+    // -b / (2sqrt(a - bx)) + d / (2sqrt(c + dx)) = 0
+    // => b / sqrt(a - bx) = d / sqrt(c + dx)
+    // => b^2 * (c + dx) = d^2 * (a - bx)
+    // => b^2 * c + b^2 * dx = d^2 * a - d^2 * bx
+    // => x = (d^2 * a - b^2 * c) / (b^2 * d + d^2 * b)
+
+    let x_critical = (d * d * a - b * b * c) / (b * b * d + d * d * b);
+    if (x_critical >= alpha && x_critical <= beta) {
+        critical_points.push(x_critical);
+    }
+
+    // Tính giá trị của hàm số tại các điểm biên và các điểm cực trị
+    let f_alpha = f(a, b, c, d, alpha);
+    let f_beta = f(a, b, c, d, beta);
+    let values = [f_alpha, f_beta];
+
+    critical_points.forEach(point => {
+        let value = f(a, b, c, d, point);
+        if (!isNaN(value)) {
+            values.push(value);
+        }
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên tập xác định
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M + e * m + e
+    let sum = (M**2 - e * m**2).toFixed(1);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)= \\sqrt{${a}-${b}x}+\\sqrt{${c}+${d}x}$ trên tập xác định của nó. Tính $M^2-${e}m^2$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+       
+    }
+\\end{ex}`;
+return question;
+}
+function min_max_x_sqrt(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo a là số dương
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a, alpha, beta;
+
+    // Tạo hệ số ngẫu nhiên a và đảm bảo nó là số dương
+    a = getRandomInt(1, 10 + e);
+
+    // Xác định tập xác định của hàm số: a - x^2 >= 0
+    // => -sqrt(a) <= x <= sqrt(a)
+    alpha = -Math.sqrt(a);
+    beta = Math.sqrt(a);
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, x) {
+        return x * Math.sqrt(a - x ** 2);
+    }
+
+    // Tìm đạo hàm của hàm số y = x sqrt(a - x^2)
+    // y' = sqrt(a - x^2) + x * (-x / sqrt(a - x^2))
+    // y' = sqrt(a - x^2) - x^2 / sqrt(a - x^2)
+    // y' = (a - x^2 - x^2) / sqrt(a - x^2)
+    // y' = (a - 2x^2) / sqrt(a - x^2)
+    let critical_points = [];
+
+    // Tìm nghiệm của phương trình y' = 0
+    // (a - 2x^2) / sqrt(a - x^2) = 0
+    // => a - 2x^2 = 0
+    // => x^2 = a / 2
+    // => x = sqrt(a / 2) hoặc x = -sqrt(a / 2)
+
+    let x_critical1 = Math.sqrt(a / 2);
+    let x_critical2 = -Math.sqrt(a / 2);
+
+    if (x_critical1 >= alpha && x_critical1 <= beta) {
+        critical_points.push(x_critical1);
+    }
+    if (x_critical2 >= alpha && x_critical2 <= beta) {
+        critical_points.push(x_critical2);
+    }
+
+    // Tính giá trị của hàm số tại các điểm biên và các điểm cực trị
+    let f_alpha = f(a, alpha);
+    let f_beta = f(a, beta);
+    let values = [];
+
+    if (!isNaN(f_alpha) && isFinite(f_alpha)) {
+        values.push(f_alpha);
+    }
+
+    if (!isNaN(f_beta) && isFinite(f_beta)) {
+        values.push(f_beta);
+    }
+
+    critical_points.forEach(point => {
+        let value = f(a, point);
+        if (!isNaN(value) && isFinite(value)) {
+            values.push(value);
+        }
+    });
+
+    // Tìm giá trị lớn nhất và nhỏ nhất trên tập xác định
+    let M = Math.max(...values);
+    let m = Math.min(...values);
+
+    // Tính tổng M^2 + e * m^2
+    let sum = (M ** 2 + e * m ** 2).toFixed(1);
+    if (sum % 1 === 0) {
+        sum = Math.round(sum);
+    }
+
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Gọi $M$, $m$ lần lượt là giá trị lớn nhất và giá trị nhỏ nhất của hàm số $f(x)= x \\sqrt{${a}-x^2}$ trên tập xác định của nó. Tính $M^2+${e}m^2$, làm tròn một chữ số thập phân.
+    \\shortans{$${sum}$}
+    \\loigiai{
+        
+    }
+\\end{ex}`;
+    question=lamdeppm(question)
+    return question;
+}
+function min_max_tim_m_bangK(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo alpha < beta
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(-5, 5);
+    while (a === 0) {
+        a = getRandomInt(-10, 10);
+    }
+    
+    let b = getRandomInt(-10, 10);
+    while (b === 0) {
+        b = getRandomInt(-10, 10);
+    }
+    let c = getRandomInt(-10, 10 + e);
+    let alpha = getRandomInt(-6, 0);
+    let beta = getRandomInt(1, 5);
+    let d = getRandomInt(10, 100);
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, m, x) {
+        return a * x ** 3 + b * x + m + c;
+    }
+
+    // Tìm đạo hàm của hàm số y = ax^3 + bx + m + c
+    // y' = 3ax^2 + b
+    function derivative(a, b, x) {
+        return 3 * a * x ** 2 + b;
+    }
+
+    // Tìm các điểm tới hạn
+    let critical_points = [];
+
+    // Tìm nghiệm của phương trình y' = 0
+    // 3ax^2 + b = 0
+    // => x^2 = -b / (3a)
+    // => x = sqrt(-b / (3a)) hoặc x = -sqrt(-b / (3a))
+    if (a !== 0) {
+        let discriminant = -b / (3 * a);
+        if (discriminant >= 0) {
+            let x_critical1 = Math.sqrt(discriminant);
+            let x_critical2 = -Math.sqrt(discriminant);
+
+            if (x_critical1 >= alpha && x_critical1 <= beta) {
+                critical_points.push(x_critical1);
+            }
+            if (x_critical2 >= alpha && x_critical2 <= beta) {
+                critical_points.push(x_critical2);
+            }
+        }
+    }
+
+    // Tính giá trị của hàm số tại các điểm biên và các điểm cực trị
+    let f_alpha = f(a, b, c, 0, alpha);  // Tạm thời cho m = 0 để tính
+    let f_beta = f(a, b, c, 0, beta);    // Tạm thời cho m = 0 để tính
+
+    let values = [{ x: alpha, value: f_alpha }, { x: beta, value: f_beta }];
+
+    critical_points.forEach(point => {
+        let value = f(a, b, c, 0, point);  // Tạm thời cho m = 0 để tính
+        values.push({ x: point, value: value });
+    });
+
+    // Tìm điểm x mà tại đó hàm số đạt giá trị lớn nhất
+    let max_value = Math.max(...values.map(item => item.value));
+    let max_point = values.find(item => item.value === max_value).x;
+
+    // Tính giá trị của m để hàm số đạt giá trị lớn nhất d tại điểm max_point
+    let m = (d - (a * max_point ** 3 + b * max_point + c)).toFixed(1);
+    if (m%1===0){m=Math.round(m)}
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Cho hàm số $f(x) = ${a}x^3+${b}x+m+${c}$ trên đoạn $[${alpha}; ${beta}]$. Biết rằng giá trị lớn nhất của hàm số trên đoạn này bằng $${d}$. Tính $m$, làm tròn một chữ số thập phân.
+    \\shortans{$${m}$}
+    \\loigiai{
+
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+
+function min_max_ax_sqrt(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo các số dương
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(1, 10);
+    let b = getRandomInt(1, 10);
+    let c = getRandomInt(1, 10);
+    let alpha = getRandomInt(-10, 0);
+    let beta = b / c;
+    let d = getRandomInt(-10, 10+e);
+    let beta_latex;
+    if (c === 1) {
+        beta_latex = `${b}`;
+    } else {
+        let divisor = gcd(b, c);
+        if (divisor === 1) {
+            beta_latex = `\\dfrac{${b}}{${c}}`;
+        } else {
+            beta_latex = `\\dfrac{${b / divisor}}{${c / divisor}}`;
+        }
+    }
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, m, x) {
+        return a * x + Math.sqrt(b - c * x) + m;
+    }
+
+    // Tìm đạo hàm của hàm số y = ax + sqrt(b - cx)
+    // y' = a - (c / (2 * sqrt(b - cx)))
+    function derivative(a, b, c, x) {
+        return a - (c / (2 * Math.sqrt(b - c * x)));
+    }
+
+    // Tìm các điểm tới hạn
+    let critical_points = [];
+
+    // Tìm nghiệm của phương trình y' = 0
+    // a - (c / (2 * sqrt(b - cx))) = 0
+    // => 2a * sqrt(b - cx) = c
+    // => 4a^2 * (b - cx) = c^2
+    // => 4a^2b - 4a^2cx = c^2
+    // => x = (4a^2b - c^2) / (4a^2c)
+    let numerator = 4 * a ** 2 * b - c ** 2;
+    let denominator = 4 * a ** 2 * c;
+    let x_critical = numerator / denominator;
+
+    if (x_critical >= alpha && x_critical <= beta) {
+        critical_points.push(x_critical);
+    }
+
+    // Tính giá trị của hàm số tại các điểm biên và các điểm cực trị
+    let f_alpha = f(a, b, c, 0, alpha);  // Tạm thời cho m = 0 để tính
+    let f_beta = f(a, b, c, 0, beta);    // Tạm thời cho m = 0 để tính
+
+    let values = [{ x: alpha, value: f_alpha }, { x: beta, value: f_beta }];
+
+    critical_points.forEach(point => {
+        let value = f(a, b, c, 0, point);  // Tạm thời cho m = 0 để tính
+        values.push({ x: point, value: value });
+    });
+
+    // Tìm điểm x mà tại đó hàm số đạt giá trị lớn nhất
+    let max_value = Math.max(...values.map(item => item.value));
+    let max_point = values.find(item => item.value === max_value).x;
+
+    // Tính giá trị của m để hàm số đạt giá trị lớn nhất d tại điểm max_point
+    let m = (d - (a * max_point + Math.sqrt(b - c * max_point))).toFixed(1);
+  if (m%1===0){m=Math.round(m)}
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Cho hàm số $f(x) = ${a}x + \\sqrt{${b} - ${c}x} + m$ trên đoạn $[${alpha}; ${beta_latex}]$. Biết rằng giá trị lớn nhất của hàm số trên đoạn này bằng $${d}$. Tính $m$, làm tròn một chữ số thập phân.
+    \\shortans{$${m}$}
+    \\loigiai{
+
+    }
+\\end{ex}`;
+    question = lamdeppm(question)
+    return question;
+}
+function min_max_phan_thuc_bacnhat(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo các số dương
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(1, 10);
+    let b = getRandomInt(1, 10);
+    let c = getRandomInt(1, 3);
+    let d = getRandomInt(1, 3);
+    let alpha = getRandomInt(0, 2);
+    let beta = getRandomInt(3, 4);
+    let max_value = getRandomInt(1, 10 + e);
+     
+    // Đảm bảo rằng đoạn [alpha, beta] không chứa -d/c
+    while (alpha <= -d / c && -d / c <= beta) {
+        alpha = getRandomInt(1, 5);
+        beta = getRandomInt(6, 10);
+    }
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, b, c, d, m, x) {
+        return (a * x + b + m) / (c * x + d);
+    }
+
+    // Tìm đạo hàm của hàm số y = (ax + b + m) / (cx + d)
+    // y' = (ad - c(b + m)) / (cx + d)^2
+    function derivative(a, b, c, d, m) {
+        return (a * d - c * (b + m));
+    }
+
+    // Tính giá trị đạo hàm tại một điểm để xác định xu hướng tăng giảm
+    let derivative_value = derivative(a, b, c, d, 0);
+
+    // Tìm các giá trị m thoả mãn điều kiện
+    let m_values = [];
+
+    // Nếu đạo hàm dương, giá trị lớn nhất nằm tại beta
+    if (derivative_value > 0) {
+        let m = max_value * (c * beta + d) - (a * beta + b);
+        m_values.push(m);
+    }
+    // Nếu đạo hàm âm, giá trị lớn nhất nằm tại alpha
+    else if (derivative_value < 0) {
+        let m = max_value * (c * alpha + d) - (a * alpha + b);
+        m_values.push(m);
+    }
+    // Nếu đạo hàm bằng 0, xét cả hai điểm biên
+    else {
+        let m1 = max_value * (c * alpha + d) - (a * alpha + b);
+        let m2 = max_value * (c * beta + d) - (a * beta + b);
+        m_values.push(m1);
+        m_values.push(m2);
+    }
+
+    // Tính tổng các phần tử của S
+    let sum_m = (m_values.reduce((acc, val) => acc + val, 0)).toFixed(1);
+    if (sum_m%1===0){sum_m=Math.round(sum_m)}
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Cho hàm số $f(x)=\\dfrac{${a}x+${b}+m}{${c}x+${d}}$ trên đoạn $[${alpha}; ${beta}]$. Biết rằng giá trị lớn nhất của hàm số trên đoạn này bằng $${max_value}$. Tính tổng các giá trị của $m$ thoả mãn, làm tròn một chữ số thập phân (nếu có).
+    \\shortans{$${sum_m}$}
+    \\loigiai{
+        
+    }
+\\end{ex}`;
+    question=lamdeppm(question)
+    return question;
+}
+
+function min_max_phan_thuc_bacnhat_duong(e) {
+    // Hàm số ngẫu nhiên với các hệ số trong khoảng nhất định và đảm bảo các số dương
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    let a = getRandomInt(2, 10);
+    let c = getRandomInt(1, 3);
+    let d = getRandomInt(1, 3);
+    let alpha = getRandomInt(1, 5);
+    let beta = getRandomInt(6, 10);
+    let max_value = getRandomInt(-1, -10 + e);
+
+    // Đảm bảo rằng đoạn [alpha, beta] không chứa -d/c
+    while (alpha <= -d / c && -d / c <= beta) {
+        alpha = getRandomInt(1, 5);
+        beta = getRandomInt(6, 10);
+    }
+
+    // Tìm giá trị của hàm số tại một điểm x
+    function f(a, c, d, m, x) {
+        return (a * x - m ** 2 - d) / (c * x + d);
+    }
+
+    // Tìm các giá trị m thoả mãn điều kiện giá trị lớn nhất tại beta
+    let m_squared = -(max_value * (c * beta + d) - a * beta + d);
+
+    // Kiểm tra tính hợp lý của m_squared 
+    let sum_m_squared;
+    if (m_squared >= 0) {
+        sum_m_squared = 2 * m_squared;
+        if (sum_m_squared%1===0){sum_m_squared=Math.round(sum_m_squared)}
+    } else {
+        sum_m_squared = 'vô nghiệm';
+    }
+                   
+    // Tạo chuỗi LaTeX cho phần câu hỏi
+    let question = `\\begin{ex}
+    Cho hàm số $f(x) = \\dfrac{${a}x-m^2-${d}}{${c}x+${d}}$ trên đoạn $[${alpha}; ${beta}]$. Biết rằng giá trị lớn nhất của hàm số trên đoạn này bằng $${max_value}$. Tính tổng bình phương các giá trị của $m$ thoả mãn, làm tròn đến phần nguyên.
+    \\shortans{$${sum_m_squared}$}
+    \\loigiai{
+        
+    }
+\\end{ex}`;
+    question=lamdeppm(question)
+    return question;
+}
+
+function solveMaxExport(a, b, coefficients) {
+    // Định nghĩa hàm S(t) từ các hệ số
+    function S(t) {
+        return coefficients.reduce((acc, coef, index) => acc + coef * Math.pow(t, coefficients.length - 1 - index), 0);
+    }
+
+    // Định nghĩa đạo hàm của S(t) từ các hệ số
+    function S_prime(t) {
+        return coefficients.slice(0, -1).reduce((acc, coef, index) => acc + coef * (coefficients.length - 1 - index) * Math.pow(t, coefficients.length - 2 - index), 0);
+    }
+
+    // Giải phương trình bậc hai để tìm các điểm tới hạn
+    function solveQuadratic(a, b, c) {
+        const discriminant = b * b - 4 * a * c;
+        if (discriminant < 0) {
+            return [];
+        } else if (discriminant === 0) {
+            return [-b / (2 * a)];
+        } else {
+            return [
+                (-b + Math.sqrt(discriminant)) / (2 * a),
+                (-b - Math.sqrt(discriminant)) / (2 * a)
+            ];
+        }
+    }
+
+    // Hệ số của phương trình bậc hai từ đạo hàm của S(t)
+    const a1 = coefficients[0] * 3;
+    const b1 = coefficients[1] * 2;
+    const c1 = coefficients[2];
+
+    const criticalPoints = solveQuadratic(a1, b1, c1).filter(x => x >= a && x <= b);
+
+    // Thêm các điểm biên của đoạn [a, b]
+    criticalPoints.push(a);
+    criticalPoints.push(b);
+
+    // Tính giá trị của S tại các điểm
+    let maxPoint = criticalPoints[0];
+    let maxValue = S(maxPoint);
+
+    for (let i = 1; i < criticalPoints.length; i++) {
+        const value = S(criticalPoints[i]);
+        if (value > maxValue) {
+            maxValue = value;
+            maxPoint = criticalPoints[i];
+        }
+    }
+
+    return {
+        maxPoint: maxPoint,
+        maxValue: maxValue
+    };
+}
+
+function thuc_te_xk_gao(e) {
+    // Tạo các hệ số gần giống với bộ hệ số đã cho
+    const coefficients = [
+        (2 / 6 + (Math.random() * 0.2 - 0.1)).toFixed(1),  // hệ số bậc 3 gần 2/5
+        (-63 + (Math.random() * 10 - 5)).toFixed(0),  // hệ số bậc 2 gần -63
+        (3240 + (Math.random() * 200 - 100)).toFixed(0),  // hệ số bậc 1 gần 3240
+        (-3100 + e + (Math.random() * 200 - 100)).toFixed(0)  // hằng số tự do gần -3100
+    ];
+
+    const a = 1;
+    const b = 60;
+
+    let result = solveMaxExport(a, b, coefficients.map(Number));
+
+    // Đảm bảo nghiệm của đạo hàm nằm trong khoảng [a, b]
+    while (result.maxPoint < a || result.maxPoint > b) {
+        result = solveMaxExport(a, b, coefficients.map(Number));
+    }
+    const kq = Math.ceil(result.maxPoint);
+
+    // Định nghĩa hàm S(t) từ các hệ số (sao chép từ solveMaxExport)
+    function S(t) {
+        return coefficients.reduce((acc, coef, index) => acc + coef * Math.pow(t, coefficients.length - 1 - index), 0);
+    }
+
+    // Tạo đề bài và lời giải trong một chuỗi LaTeX duy nhất
+    let question = `
+\\begin{ex}
+    Đợt xuất khẩu gạo của tỉnh A thường kéo dài $2$ tháng ($60$ ngày). Người ta nhận thấy số lượng gạo xuất khẩu tính theo ngày thứ $t$ được xác định bởi công thức 
+    $$S(t) = ${coefficients[0]}t^3 ${coefficients[1] >= 0 ? '+' : ''} ${coefficients[1]}t^2 ${coefficients[2] >= 0 ? '+' : ''} ${coefficients[2]}t ${coefficients[3] >= 0 ? '+' : ''} ${coefficients[3]} \\text{ (tấn), với } 1 \\leq t \\leq 60.$$ 
+    Hỏi trong $60$ ngày đó thì ngày thứ mấy có số lượng gạo xuất khẩu cao nhất?
+\\shortans{$${kq}$}
+\\loigiai{
+    Xét hàm số $S(t) = ${coefficients[0]}t^3 ${coefficients[1] >= 0 ? '+' : ''} ${coefficients[1]}t^2 ${coefficients[2] >= 0 ? '+' : ''} ${coefficients[2]}t ${coefficients[3] >= 0 ? '+' : ''} ${coefficients[3]}$ liên tục trên đoạn $[1;60]$.\\\\
+    Ta có $S'(t)=${(coefficients[0] * 3).toFixed(2)}t^2 ${coefficients[1] * 2 >= 0 ? '+' : ''} ${(coefficients[1] * 2).toFixed(2)}t ${coefficients[2] >= 0 ? '+' : ''} ${coefficients[2]}$. Khi đó
+    $$S'(t)=0 \\Leftrightarrow ${(coefficients[0] * 3).toFixed(2)}t^2 ${coefficients[1] * 2 >= 0 ? '+' : ''} ${(coefficients[1] * 2).toFixed(2)}t ${coefficients[2] >= 0 ? '+' : ''} ${coefficients[2]}=0$$
+    Giải phương trình này ta được các điểm tới hạn là $t=${result.maxPoint.toFixed(2)}$.\\\\
+    Lại có $S(1)=${S(1).toFixed(2)}$, $S(${result.maxPoint.toFixed(2)})=${result.maxValue.toFixed(2)}$, $S(60)=${S(60).toFixed(2)}$.\\\\
+    Vậy ngày thứ ${result.maxPoint.toFixed(2)} tỉnh A có số lượng gạo xuất khẩu cao nhất với giá trị ${result.maxValue.toFixed(2)} đơn vị.
+}
+\\end{ex}`;
+    question = lamdeppm(question);
+    return question;
+}
+function solveMaxEconomic(a, b, coefficients) {
+    function S(t) {
+        return coefficients.reduce((acc, coef, index) => acc + coef * Math.pow(t, coefficients.length - 1 - index), 0);
+    }
+
+    function S_prime(t) {
+        return coefficients.slice(0, -1).reduce((acc, coef, index) => acc + coef * (coefficients.length - 1 - index) * Math.pow(t, coefficients.length - 2 - index), 0);
+    }
+
+    function solveQuadratic(a, b, c) {
+        const discriminant = b * b - 4 * a * c;
+        if (discriminant < 0) {
+            return [];
+        } else if (discriminant === 0) {
+            return [-b / (2 * a)];
+        } else {
+            return [
+                (-b + Math.sqrt(discriminant)) / (2 * a),
+                (-b - Math.sqrt(discriminant)) / (2 * a)
+            ];
+        }
+    }
+
+    const a1 = coefficients[0] * 3;
+    const b1 = coefficients[1] * 2;
+    const c1 = coefficients[2];
+
+    const criticalPoints = solveQuadratic(a1, b1, c1).filter(x => x >= a && x <= b);
+
+    criticalPoints.push(a);
+    criticalPoints.push(b);
+
+    let maxPoint = criticalPoints[0];
+    let maxValue = S(maxPoint);
+
+    for (let i = 1; i < criticalPoints.length; i++) {
+        const value = S(criticalPoints[i]);
+        if (value > maxValue) {
+            maxValue = value;
+            maxPoint = criticalPoints[i];
+        }
+    }
+
+    return {
+        maxPoint: maxPoint,
+        maxValue: maxValue
+    };
+}
+function thuc_te_chiphi_van_chuyen(e) {
+    
+   function RandomDecimal(min, max) {
+  return (Math.random() * (max - min) + min).toFixed(1);
+}
+function RandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+let m = RandomDecimal(0.1, 0.2);
+let n = RandomInt(-7, -4);   
+let p = RandomInt(40, 60);                     
+let q = RandomInt(-250, 400+e);
+                                    
+    const coefficients = [m, n, p, q];                                                    
+    const a = 1;
+    const b = 12;
+
+    let result = solveMaxEconomic(a, b, coefficients);
+
+    while (result.maxPoint < a || result.maxPoint > b) {
+        result = solveMaxEconomic(a, b, coefficients);
+    }
+    const kq = Math.ceil(result.maxPoint);
+
+    function S(t) {
+        return coefficients.reduce((acc, coef, index) => acc + coef * Math.pow(t, coefficients.length - 1 - index), 0);
+    }
+       
+    let question = `
+\\begin{ex}
+    Một công ty muốn tối ưu hóa chi phí vận chuyển hàng tháng. Chi phí vận chuyển hàng tháng $T(t)$ (triệu đồng) được xác định bởi công thức 
+    $$T(t) = ${m}t^3${n}t^2+${p}t+${q}$$
+    với $1 \\leq t \\leq 12$. Hỏi trong $12$ tháng đó thì tháng nào công ty có chi phí vận chuyển cao nhất?
+\\shortans{$${kq}$}
+\\loigiai{                                
+   
+}
+\\end{ex}`;
+question=question.replace('+-','-')
+    return question;
+}
+function thuc_te_thue_can_ho(e) {
+    // Tạo các thông số ngẫu nhiên cho bài toán
+    const initialUnits = 50+e + Math.floor(Math.random() * 15 - 5); // Số căn hộ ban đầu (45 đến 55)
+    const initialRent = Math.round((2000000 + Math.floor(Math.random() * 500000 - 250000)) / 10000) * 10000; // Giá thuê ban đầu (1,750,000 đến 2,250,000 đồng, làm tròn đến phần chục nghìn)
+    const rentIncrease = Math.round((100000 + Math.floor(Math.random() * 20000 - 10000)) / 10000) * 10000;  
+    const unitsVacantPerIncrease = 2 + Math.floor(Math.random() * 3 - 1); // Số căn hộ bị bỏ trống mỗi lần tăng giá (1 đến 3)
+
+    // Tạo hệ số cho bài toán
+    const a = -unitsVacantPerIncrease; // Hệ số của x^2
+    const b = initialUnits - unitsVacantPerIncrease; // Hệ số của x
+    const c = initialRent * initialUnits / 100000; // Hằng số (đơn vị trăm ngàn đồng)
+
+    // Đạo hàm của hàm số thu nhập
+    const vertexX = -b / (2 * a); // x tại đỉnh của parabol
+    const maxIncome = a * vertexX * vertexX + b * vertexX + c; // Thu nhập tối đa
+    const optimalRent = (initialRent + vertexX * rentIncrease).toFixed(0); // Giá thuê tối ưu
+
+    // Tạo đề bài và lời giải trong một chuỗi LaTeX duy nhất
+    let question = `
+\\begin{ex}
+    Một công ty bất động sản có $${initialUnits}$ căn hộ cho thuê. Biết rằng nếu cho thuê mỗi căn hộ với giá $${initialRent.toLocaleString()}$ đồng thì mỗi tháng mọi căn hộ đều có người thuê và cứ tăng thêm giá cho thuê mỗi căn hộ $${rentIncrease.toLocaleString()} $ đồng một tháng thì sẽ có $ ${unitsVacantPerIncrease} $ căn hộ bị bỏ trống. Hỏi muốn thu nhập cao nhất thì công ty đó cho thuê mỗi căn hộ với giá bao nhiêu một tháng?
+\\shortans{$${optimalRent}$}
+\\loigiai{
+    Giả sử giá thuê mỗi căn hộ là ${initialRent / 1000000} triệu + $x$ trăm ngàn đồng (đơn vị đồng) ($x$ dương). Khi đó, số căn hộ bị bỏ trống là $${unitsVacantPerIncrease}x$. Do đó, tổng số tiền (đơn vị trăm ngàn đồng) cho thuê nhà là
+    $$S = (${initialUnits} - ${unitsVacantPerIncrease}x)(${initialRent / 1000000} + x) = ${a}x^2 + ${b}x + ${c.toFixed(2)} = ${a}(x + ${(-b / (2 * a)).toFixed(2)})^2 + ${(maxIncome).toFixed(2)}.$$
+    Dấu bằng xảy ra khi $x = ${vertexX.toFixed(2)}$ trăm ngàn đồng.\\\\
+    Vậy để thu nhập cao nhất thì giá thuê mỗi căn hộ là ${optimalRent.toLocaleString()} đồng.
+}
+\\end{ex}`;
+    return question;
+}
+
