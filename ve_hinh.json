@@ -111,6 +111,16 @@
                     "image": "HinhTIKZ/hsbac2tren1.png"
                 }
             }
+        },
+        "Phân Thức Bậc Hai/ Bậc Nhất": {
+            "Đạo hàm y'>0": {
+                "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t\t\\tkzTabInit[nocadre=false,lgt=1,espcl=2,deltacl=0.5]\n\t\t{$x$/.7 ,$y'$/.7,$y$/2}\n\t\t{$-\\infty$, $x_1$ , $txd$ ,$x_2$ , $+\\infty$}\n\t\t\\tkzTabLine{,+ , 0 , - , d , - ,0 ,+, }\n\t\t\\tkzTabVar{-/$-\\infty$,+/$f(x_1)$,-D+/$-\\infty$/$+\\infty$,-/$f(x_2) $,+/$+\\infty$}\n\t\\end{tikzpicture}",
+                "image": "HinhTIKZ/bac2_1a.png"
+            },
+            "Đạo hàm y'<0": {
+                "content": "\t\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\t\t\\tkzTabInit[nocadre=false,lgt=1,espcl=2,deltacl=0.5]\n\t\t{$x$/.7 ,$y'$/.7,$y$/2}\n\t\t{$-\\infty$, $x_1$ , $txd$ ,$x_2$ , $+\\infty$}\n\t\t\\tkzTabLine{,- , 0 , + , d , + ,0 ,-, }\n\t\t\\tkzTabVar{+/$+\\infty$,-/$f(x_1)$,+D-/$+\\infty$/$-\\infty$,+/$f(x_2) $,-/$-\\infty$}\n\t\\end{tikzpicture}",
+                "image": "HinhTIKZ/bac2_1b.png"
+            }
         }
     },
     "HHKG": {
