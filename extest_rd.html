@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Đề Từ Nhiều File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px #ccc;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .control-buttons input[type="file"] {
+            display: none;
+        }
+
+        .control-buttons label,
+        .control-buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .control-buttons label {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .control-buttons button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .control-buttons button:hover,
+        .control-buttons label:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .control-buttons input[type="number"] {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 150px;
+        }
+
+        .file-container {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .file-container strong {
+            flex: 1;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .file-container input[type="number"] {
+            width: 60px;
+            margin-right: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .file-container button {
+            background-color: #ffc107;
+            color: black;
+            padding: 5px 10px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-container input[type="checkbox"] {
+            margin-left: 10px;
+        }
+
+        .question-container {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .question {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e9ecef;
+        }
+
+        .file1 {
+            background-color: #f8d7da;
+        }
+
+        .file2 {
+            background-color: #d1ecf1;
+        }
+
+        .file3 {
+            background-color: #fff3cd;
+        }
+
+        /* Add more classes with different colors as needed */
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <a href="index.html">Quay Lại Trang Chủ</a>
+    </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+
+    <h1>Tạo Đề Từ Nhiều File</h1>
+    <div class="control-buttons">
+        <label for="fileInput">Chọn+Thêm</label>
+        <input type="file" id="fileInput" multiple accept=".tex">
+        <button onclick="downloadResult()">Download Kết Quả</button>
+        <input type="number" id="quickNumber" placeholder="Nhập Số Câu Mỗi File">
+        <button onclick="quickRandom()">Chọn Nhanh</button>
+        <button onclick="quickRandomAgain()">Chọn Lại</button>
+        <input type="number" id="numFiles" placeholder="Nhập Số Đề Cần Tạo">
+        <button onclick="createFiles()">Tạo Đề</button>
+        <button onclick="showInstructions()">HD</button>
+    </div>
+    <div id="fileList"></div>
+    <div class="question-container" id="questionContainer"></div>
+
+    <script>
+        let fileIndex = 1;
+        const loadedFiles = {};
+        let fileInputCache = [];
+        const fileInputElement = document.getElementById('fileInput');
+
+        fileInputElement.addEventListener('change', handleFileSelect);
+
+        function triggerFileInput() {
+            fileInputElement.click();
+        }
+
+        function handleFileSelect(event) {
+            fileInputCache.push(...Array.from(event.target.files));
+            loadMoreFiles();
+        }
+
+        function loadMoreFiles() {
+            const fileList = document.getElementById('fileList');
+            const filesToLoad = fileInputCache.splice(0, 5); // Load 5 files at a time
+
+            filesToLoad.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const content = e.target.result;
+                    const questionCount = (content.match(/\\begin{ex}/g) || []).length;
+
+                    const fileContainer = document.createElement('div');
+                    fileContainer.className = 'file-container';
+                    fileContainer.innerHTML = `
+                        <strong>${file.name}</strong> - ${questionCount} Câu
+                        <input type="number" placeholder="Số Câu Cần Lấy" min="1" max="${questionCount}" data-file="${file.name}">
+                        <button onclick="getRandomQuestions('${file.name}', ${questionCount}, ${fileIndex}, false)">Random</button>
+                        <button onclick="getRandomQuestions('${file.name}', ${questionCount}, ${fileIndex}, true)">Random Again</button>
+                        <input type="checkbox" id="excludeTaken${fileIndex}" checked> Không Chọn Lại
+                    `;
+                    fileList.appendChild(fileContainer);
+
+                    // Store content for later use
+                    loadedFiles[file.name] = {
+                        content: content,
+                        questions: content.match(/\\begin{ex}[\s\S]*?\\end{ex}/g),
+                        takenQuestions: []
+                    };
+                    fileIndex++;
+                };
+                reader.readAsText(file);
+            });
+        }
+
+        function getRandomQuestions(fileName, questionCount, fileIndex, randomAgain) {
+            const numberInput = document.querySelector(`input[data-file="${fileName}"]`);
+            const numQuestions = parseInt(numberInput.value, 10);
+            const excludeTaken = document.getElementById(`excludeTaken${fileIndex}`).checked;
+
+            if (isNaN(numQuestions) || numQuestions < 1 || numQuestions > questionCount) {
+                alert('Số câu không hợp lệ');
+                return;
+            }
+
+            const fileData = loadedFiles[fileName];
+            let questions = excludeTaken
+                ? fileData.questions.filter(q => !fileData.takenQuestions.includes(q))
+                : [...fileData.questions];
+
+            if (numQuestions > questions.length) {
+                alert('Không đủ số câu hỏi có sẵn');
+                return;
+            }
+
+            const randomQuestions = [];
+            const randomIndexes = new Set();
+
+            while (randomQuestions.length < numQuestions) {
+                const randomIndex = Math.floor(Math.random() * questions.length);
+                const question = questions[randomIndex];
+                if (!randomIndexes.has(randomIndex)) {
+                    randomQuestions.push(question);
+                    randomIndexes.add(randomIndex);
+                    if (excludeTaken) {
+                        fileData.takenQuestions.push(question);
+                    }
+                }
+            }
+
+            if (randomAgain) {
+                // Remove previous random questions
+                const previousQuestions = document.querySelectorAll(`.question.file${fileIndex}`);
+                previousQuestions.forEach(q => q.remove());
+            }
+
+            const questionContainer = document.getElementById('questionContainer');
+            randomQuestions.forEach(question => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = `question file${fileIndex}`;
+                questionDiv.innerText = question;
+                questionContainer.appendChild(questionDiv);
+            });
+        }
+
+        function quickRandom() {
+            const numQuestions = parseInt(document.getElementById('quickNumber').value, 10);
+            if (isNaN(numQuestions) || numQuestions < 1) {
+                alert('Số câu không hợp lệ');
+                return;
+            }
+
+            for (let fileName in loadedFiles) {
+                const fileIndex = Object.keys(loadedFiles).indexOf(fileName) + 1;
+                document.querySelector(`input[data-file="${fileName}"]`).value = numQuestions;
+                getRandomQuestions(fileName, loadedFiles[fileName].questions.length, fileIndex, false);
+            }
+        }
+
+        function quickRandomAgain() {
+            const numQuestions = parseInt(document.getElementById('quickNumber').value, 10);
+            if (isNaN(numQuestions) || numQuestions < 1) {
+                alert('Số câu không hợp lệ');
+                return;
+            }
+
+            for (let fileName in loadedFiles) {
+                const fileIndex = Object.keys(loadedFiles).indexOf(fileName) + 1;
+                getRandomQuestions(fileName, loadedFiles[fileName].questions.length, fileIndex, true);
+            }
+        }
+
+        function createFiles() {
+            const numFiles = parseInt(document.getElementById('numFiles').value, 10);
+            const numQuestions = parseInt(document.getElementById('quickNumber').value, 10);
+            if (isNaN(numFiles) || numFiles < 1 || isNaN(numQuestions) || numQuestions < 1) {
+                alert('Số đầu vào không hợp lệ');
+                return;
+            }
+
+            for (let fileName in loadedFiles) {
+                const fileData = loadedFiles[fileName];
+                if (numFiles * numQuestions > fileData.questions.length) {
+                    alert(`Không đủ câu hỏi có sẵn trong ${fileName}`);
+                    return;
+                }
+            }
+
+            for (let i = 0; i < numFiles; i++) {
+                const allQuestions = [];
+
+                for (let fileName in loadedFiles) {
+                    const fileData = loadedFiles[fileName];
+                    let questions = fileData.questions.filter(q => !fileData.takenQuestions.includes(q));
+
+                    for (let j = 0; j < numQuestions; j++) {
+                        const randomIndex = Math.floor(Math.random() * questions.length);
+                        const question = questions.splice(randomIndex, 1)[0];
+                        fileData.takenQuestions.push(question);
+                        allQuestions.push(question);
+                    }
+                }
+
+                const fileContent = allQuestions.join('\n\n');
+                const blob = new Blob([fileContent], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `De_${i + 1}.tex`;
+                link.click();
+            }
+        }
+
+        function downloadResult() {
+            const questionContainer = document.getElementById('questionContainer');
+            const questions = Array.from(questionContainer.getElementsByClassName('question'))
+                .map(question => question.innerText)
+                .join('\n\n');
+            const blob = new Blob([questions], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'file_de.tex';
+            link.click();
+        }
+
+        function showInstructions() {
+            alert("Hướng dẫn sử dụng:\n1. Chọn tệp LaTeX.\n2. Nhập số câu cần lấy từ mỗi tệp.\n3. Chọn số đề cần tạo.\n4. Nhấn 'Chọn Nhanh' hoặc 'Chọn Lại' để lấy câu hỏi ngẫu nhiên.\n5. Nhấn 'Tạo Đề' để tạo các đề từ các câu hỏi đã chọn.");
+        }
+    </script>
+</body>
+
+</html>
