@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng của tôi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            /* thêm khoảng cách để không bị che bởi menu */
+        }
+
+        .title {
+            text-align: center;
+            color: green;
+            /* Màu xanh lá cây cho tiêu đề */
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: blue;
+            /* Màu xanh dương cho nhãn */
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #5cb85c;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .button-group button:hover {
+            background-color: #4cae4c;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .form-group-half {
+            width: 48%;
+        }
+
+        #txt_input1 {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="menu">
+        <a href="index.html">Quay Lại Trang Chủ</a>
+    </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+    <div class="container">
+        <h1 class="title">Tạo Trình Chiếu Beamer</h1>
+
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="txt_author">Tên Bài:</label>
+                <input type="text" id="txt_author" placeholder="Các Chuyên Đề Ôn Thi THPT 2024\\TOÁN 12">
+            </div>
+            <div class="form-group form-group-half">
+                <label for="txt_title">Người Soạn:</label>
+                <input type="text" id="txt_title" placeholder="Tên Của Bạn">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="txt_topic">Bài/Tiết/Đề:</label>
+                <input type="text" id="txt_topic" placeholder="Tiết">
+            </div>
+            <div class="form-group form-group-half">
+                <label for="txt_topic3">Bài/Tiết/Đề Thứ:</label>
+                <input type="text" id="txt_topic3" placeholder="1">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="txt_topic2">Nội Dung:</label>
+                <input type="text" id="txt_topic2" placeholder="Lý Thuyết Và Các Dạng Toán">
+            </div>
+            <div class="form-group form-group-half">
+                <label for="noidung_find">Find:</label>
+                <input type="text" id="noidung_find" placeholder="">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group form-group-half">
+                <label for="noidung_replace">Replace:</label>
+                <input type="text" id="noidung_replace" placeholder="">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="findReplace()">Thay Thế</button>
+            <button onclick="loadFile()">Load file</button>
+            <button onclick="processFile()">Tạo File Beamer</button>
+            <button onclick="showHelp()">Hướng dẫn</button>
+            <button onclick="clearFields()">Xoá Khai Báo</button>
+        </div>
+
+        <div class="form-group">
+            <label for="txt_input1">Nội Dung File:</label>
+            <textarea id="txt_input1"></textarea>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+    <script>
+        function findReplace() {
+            const findText = document.getElementById('noidung_find').value;
+            const replaceText = document.getElementById('noidung_replace').value;
+            const currentText = document.getElementById('txt_input1').value;
+
+            const newText = currentText.replace(new RegExp(findText, 'g'), replaceText);
+            document.getElementById('txt_input1').value = newText;
+        }
+
+        function loadFile() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.tex';
+            fileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        let data = e.target.result;
+                        data = data.replace(/%\\Opensolutionfile{ans}.*\n?/g, '');
+                        data = data.replace(/%\\Closesolutionfile{ans}.*\n?/g, '');
+                        document.getElementById('txt_input1').value = data;
+
+                        const count_ex = (data.match(/\\begin{ex}/g) || []).length;
+                        const count_vd = (data.match(/\\begin{vd}/g) || []).length;
+                        const count_bt = (data.match(/\\begin{bt}/g) || []).length;
+                        const count_dn = (data.match(/\\begin{dn}/g) || []).length;
+                        const count_dl = (data.match(/\\begin{dl}/g) || []).length;
+                        const count_luuy = (data.match(/\\begin{luuy}/g) || []).length;
+
+                        const msg = `Đã load file ${file.name}\nSố lượng \\begin{dn}: ${count_dn}\nSố lượng \\begin{dl}: ${count_dl}\nSố lượng \\begin{vd}: ${count_vd}\nSố lượng \\begin{bt}: ${count_bt}\nSố lượng \\begin{ex}: ${count_ex}\nSố lượng \\begin{luuy}: ${count_luuy}`;
+                        alert(msg);
+                    };
+                    reader.readAsText(file, 'utf-8');
+                }
+            };
+            fileInput.click();
+        }
+
+        function layCacNgoacLon(text, startIdx) {
+            let demNgoac = 0;
+            let batDau = null;
+            for (let i = startIdx; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        return [batDau, i];
+                    }
+                }
+            }
+            return null;
+        }
+
+        function processShortans(data) {
+            return data.replace(/\\begin{ex}[\s\S]*?\\end{ex}/g, match => {
+                let shortansMatch = match.match(/\\shortans\{/);
+                if (shortansMatch) {
+                    let startIdx = shortansMatch.index + shortansMatch[0].length - 1;
+                    let positions = layCacNgoacLon(match, startIdx);
+                    if (positions) {
+                        let content = match.substring(positions[0] + 1, positions[1]);
+                        let modifiedShortans = `\\fbox{Đáp Án: ${content}}`;
+                        let beforeShortans = match.substring(0, shortansMatch.index);
+                        let afterShortans = match.substring(positions[1] + 1);
+                        return beforeShortans + afterShortans.replace(/\\end{ex}/, `${modifiedShortans}\n\\end{ex}`);
+                    }
+                }
+                return match;
+            });
+        }
+
+
+        function layCacNgoacLonChoice(text, startIdx) {
+            let ngoacLon = [];
+            let demNgoac = 0;
+            let batDau = null;
+            for (let i = startIdx; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        ngoacLon.push([batDau, i]);
+                        if (ngoacLon.length === 4) break; // Lấy 4 cặp ngoặc đầu tiên
+                        batDau = null;
+                    }
+                }
+            }
+            return ngoacLon;
+        }
+
+        function processChoice(data) {
+            return data.replace(/\\begin{ex}[\s\S]*?\\end{ex}/g, match => {
+                let choiceMatch = match.match(/\\choice(?!TF)/);
+                if (choiceMatch) {
+                    let startIdx = choiceMatch.index + choiceMatch[0].length;
+                    let positions = layCacNgoacLonChoice(match, startIdx);
+                    let dapAn = "";
+                    for (let i = 0; i < positions.length; i++) {
+                        let content = match.substring(positions[i][0] + 1, positions[i][1]);
+                        if (content.includes("True")) {
+                            if (i === 0) dapAn = "\\fbox{Chọn Đáp Án \\highY{A}}";
+                            else if (i === 1) dapAn = "\\fbox{Chọn Đáp Án \\highY{B}}";
+                            else if (i === 2) dapAn = "\\fbox{Chọn Đáp Án \\highY{C}}";
+                            else if (i === 3) dapAn = "\\fbox{Chọn Đáp Án \\highY{D}}";
+                            break;
+                        }
+                    }
+                    if (dapAn) {
+                        match = match.replace(/\\end{ex}/, `${dapAn}\n\\end{ex}`);
+                    }
+                }
+                return match;
+            });
+        }
+
+        function layCacNgoacLonTF(text, startIdx) {
+            let ngoacLon = [];
+            let demNgoac = 0;
+            let batDau = null;
+            for (let i = startIdx; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        ngoacLon.push([batDau, i]);
+                        if (ngoacLon.length === 4) break; // Lấy 4 cặp ngoặc đầu tiên
+                        batDau = null;
+                    }
+                }
+            }
+            return ngoacLon;
+        }
+
+        function processChoiceTF(data) {
+
+            return data.replace(/\\begin{ex}[\s\S]*?\\end{ex}/g, match => {
+                let choiceTFMatch = match.match(/\\choiceTF/);
+                if (choiceTFMatch) {
+                    let startIdx = choiceTFMatch.index + choiceTFMatch[0].length;
+                    let positions = layCacNgoacLonTF(match, startIdx);
+                    let result = ["\\highG{S}", "\\highG{S}", "\\highG{S}", "\\highG{S}"];
+                    for (let i = 0; i < positions.length; i++) {
+                        let content = match.substring(positions[i][0] + 1, positions[i][1]);
+                        if (content.includes("True")) {
+                            result[i] = "\\highY{Đ}";
+                        }
+                    }
+                    let keyString = `\\fixedfbox{zzzxy${result[0]}}\\fixedfbox{${result[1]}}\\fixedfbox{${result[2]}}\\fixedfbox{${result[3]}}`;
+                    match = match.replace(/\\end{ex}/, `${keyString}\n\\end{ex}`);
+                }
+                return match;
+            });
+        }
+
+        function processEx(data) {
+            return data.replace(/\\begin{ex}[\s\S]*?\\end{ex}/g, match => {
+                if (match.includes('loigiai')) {
+                    // Thay thế dấu } ngay trước từ khoá \fixedfbox, ngoại trừ trước đó là }
+                    match = match.replace(/([^}])}\s*\\fixedfbox/g, '$1\\fixedfbox');
+
+                }
+                if (match.includes('fixedfbox{\\high')) {
+                    // Thêm dấu } trước \end{ex}
+                    match = match.replace(/\\end{ex}/g, '}\n\\end{ex}');
+                }
+                if (match.includes('\\fbox{Chọn Đáp Án \\highY')) {
+                    // Thêm dấu } trước \end{ex}
+                    match = match.replace(/\\end{ex}/g, '}\n\\end{ex}');
+                }
+                if (match.includes('\\fbox{Chọn Đáp Án \\highY')) {
+                    // Thêm dấu } trước \end{ex}
+                    match = match.replace(/([^ĐS])}\s*\\fbox{Chọn Đáp Án/g, '$1\\fbox{Chọn Đáp Án');
+                }
+                if (match.includes('\\fbox{Đáp Án:')) {
+                    match = match.replace(/}\s*\\fbox{Đáp Án:/g, '\\fbox{Đáp Án:');
+                    // Thêm dấu } trước \end{ex}
+                    match = match.replace(/\\end{ex}/g, '}\n\\end{ex}');
+                }
+                return match;
+            });
+        }
+
+        function processFile() {
+            const inputData = document.getElementById('txt_input1').value;
+            if (!inputData) {
+                alert('Vui lòng chọn file để xử lý!');
+                return;
+            }
+
+            const now = new Date();
+            const folderName = `beamer_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')}`;
+
+            let data = inputData;
+            const end_index = data.lastIndexOf("\\end{vd}");
+            const close_bracket_index = data.lastIndexOf("}", end_index);
+            if (close_bracket_index >= 0) {
+                data = data.slice(0, close_bracket_index) + " " + data.slice(close_bracket_index + 1);
+            }
+
+            let outside_tikz = true;
+            let data_new = "";
+            for (let line of data.split("\n")) {
+                if (line.includes("\\begin{tikzpicture}")) {
+                    outside_tikz = false;
+                } else if (line.includes("\\end{tikzpicture}")) {
+                    outside_tikz = true;
+                }
+                if (outside_tikz) {
+                    line = line.replace(/\$\$(.*?)\$\$/, "\\[$1\\]");
+                }
+                data_new += line + "\n";
+            }
+
+            data = data_new.replace(/{nx}/g, "{luuy}");
+            data = data.replace(/{bt}/g, "{ex}");
+            data = data.replace(/{listEX}/g, "{enumerate}");
+            data = data.replace(/{enumEX}{1}/g, "{enumerate}");
+            data = data.replace(/{enumEX}/g, "{enumerate}");
+            data = data.replace(/\\subsection/g, "\\boxmini");
+            data = data.replace(/\\subsubsection/g, "\\boxminione");
+            data = data.replace(/{itemchoice}/g, "{itemize}");
+            data = data.replace(/itemch/g, "item");
+
+            data = data.replace(/(?<=\\begin{enumerate})(.*?)\n/g, "\n");
+            data = data.replace(/}\s*\\end{vd}/g, "\\end{vd}");
+
+            const regex = /(?<=\\begin{vd})([\s\S]*?)(?=\\end{vd})/g;
+            const vds = [...data.matchAll(regex)];
+            vds.forEach(vd => {
+                data = data.replace(vd[0], vd[0].replace("\\loigiai{", "\\begin{center}\\color{violet}\\textbf{Hướng Dẫn Giải}\\end{center}\n"));
+            });
+
+            // Di chuyển và thay thế \shortans
+            data = processShortans(data);
+            data = processChoice(data)
+            data = processChoiceTF(data)
+
+            data = data.replace(/\\choiceTF[^\{]*/g, '\\choice\n'); // Thay thế \choiceTF và các ký tự theo sau nó bằng \choice
+
+            data = processEx(data)
+            data = data.replace(/\\fixedfbox{zzzxy/g, '\\\\Đáp Án:\\fixedfbox{');
+            const count_ex = (data.match(/\\begin{ex}/g) || []).length;
+            let output = "";
+            if (count_ex > 0) {
+                output += `\\AddSTT[Home,1,2,...,${count_ex}]\n`;
+            }
+            output += "\\setbeamercolor*{structure}{fg=violet}\n";
+            output += "\\newcommand\\Fontvi{\\fontsize{16}{0}\\selectfont}\n";
+            output += `\\title[]{\\textbf{\\color{yellow} ${document.getElementById('txt_author').value}}}\n`;
+            output += `\\author[]{\\textbf{\\color{blue} ${document.getElementById('txt_title').value}}}\n`;
+            output += `\\institute{\\textsc{\\color{violet}\\textbf{${document.getElementById('txt_topic').value}\\circEX{\\fontsize{25pt}{2pt}\\selectfont ${document.getElementById('txt_topic3').value}}}\\fontsize{14pt}{9pt}\\sffamily \\selectfont\\bfseries\\color{orange}. ${document.getElementById('txt_topic2').value}}}\n\n`;
+            output += "\\begin{frame}[label=Home]\\titlepage\\end{frame}";
+
+            let ex_count = 0;
+            let dn_count = 0;
+            let vd_count = 0;
+            let in_vd = false;
+
+            for (let line of data.split("\n")) {
+                if (line.includes("\\begin{dn}")) {
+                    dn_count += 1;
+                    output += `\\begin{dn}{${dn_count}. }\n`;
+                } else if (line.includes("\\begin{ex}")) {
+                    ex_count += 1;
+                    output += `\\begin{frame}[label=${ex_count}]\\end{frame}\n\\begin{ex}\n`;
+                    in_vd = false;
+                } else if (line.includes("\\begin{vd}")) {
+                    vd_count += 1;
+                    output += `\\begin{frame}[label=VD${vd_count}]\n`;
+                    output += `\\begin{khung2}{Ví dụ ${vd_count}}\n`;
+                    in_vd = true;
+                } else if (line.includes("\\end{vd}")) {
+                    output += "\\end{khung2}\n";
+                    output += "\\end{frame}\n";
+                    in_vd = false;
+                } else if (in_vd && line.trim() === "") {
+                    continue;
+                } else {
+                    output += line + "\n";
+                }
+            }
+
+            const mainTexContent = `\\documentclass[aspectratio=169,t]{beamer}
+\\usetheme{Madrid}
+%%\\usetheme{Singapore}
+%%\\usepackage{fouriernc}
+\\usepackage{enumerate}
+\\usepackage{graphicx}
+%%\\usefonttheme{serif}
+%%\\usepackage[dethi,choice]{ex_beamer}
+%%\\usepackage[loigiai,choice]{ex_beamer}
+\\usepackage[pause,choice]{ex_beamer}
+%%\\usepackage[solcolor]{ex_test}\\hideansEX{ex}
+\\newcommand*{\\circlednumber}[1]{%% Định nghĩa hình tròn
+	\\begin{tikzpicture}[baseline=(A.base),scale=0.8]%%
+		\\node[circle,draw=blue!60!black,fill=white,inner sep=1.6pt,outer sep=1pt] (A) {\\color{white} #1};
+		\\node[circle,draw=none,fill=blue!60!black,inner sep=0.8pt,outer sep=1pt] (A) {\\color{white} #1};
+	\\end{tikzpicture}%%
+}
+
+\\newcommand\\AddButton{
+
+	\\setbeamertemplate{footline}{
+
+		\\leavevmode
+
+		\\vskip-10pt
+		\\hspace{0.5cm}
+		\\href{run:C:/Program Files (x86)/CASIO/ClassWiz Emulator Subscription/fx-580VN X Emulator/fx-580VN X Emulator.exe}{\\beamergotobutton{MTCT}}
+
+	}
+
+}
+\\usepackage{polynom}
+\\usepackage{enumitem}
+\\setlist[enumerate]{%%wide=1cm,
+	itemsep=-1pt,
+	leftmargin=0.8cm,
+	topsep=2pt,
+	label=\\protect\\circlednumber{\\color{yellow} \\textbf{\\arabic*}}
+}
+
+\\usepackage{framed}
+\\usepackage[many]{tcolorbox}
+\\colorlet{tcbcol@back}{tcbcolback}
+\\colorlet{tcbcol@frame}{tcbcolframe}
+
+\\newcommand{\\hoac}[1]{
+	\\left[\\begin{aligned}#1\\end{aligned}\\right.}
+\\newcommand{\\heva}[1]{
+	\\left\\{\\begin{aligned}#1\\end{aligned}\\right.}
+
+\\usepackage{amsmath,amssymb,mathrsfs,fancyhdr,tkz-euclide,tikz-3dplot,fontawesome}
+\\usepackage{framed,tikz,tkz-tab,tkz-linknodes,pgfplots,currfile,enumerate}
+\\usetikzlibrary{shapes.geometric,arrows,calc,intersections,angles,patterns,shadings,quotes}
+\\pgfplotsset{compat=1.16}
+\\usepgfplotslibrary{fillbetween}
+\\definecolor{mycolor}{RGB}{5,69,45}
+\\newcounter{khung2}
+\\newtcolorbox[use counter=khung2]{khung2}[1]{enhanced,
+	before skip=1mm,after skip=1mm,left=0.5 mm, right=0.5 mm, 
+	colback=cyan!20,colframe=orange,boxrule=0.3mm, coltitle=black,
+	attach boxed title to top center={xshift=0cm,yshift*=1mm-\\tcboxedtitleheight},
+	varwidth boxed title*=-3cm,
+	boxed title style={frame code={
+			\\path[fill=tcbcol@back!30!orange]
+			([yshift=-1mm,xshift=-1mm]frame.north west)
+			arc[start angle=0,end angle=180,radius=1mm]
+			([yshift=-1mm,xshift=1mm]frame.north east)
+			arc[start angle=180,end angle=0,radius=1mm];
+			\\path[left color=tcbcol@back!60!orange,right color=tcbcol@back!60!orange,
+			middle color=tcbcol@back!80!orange]
+			([xshift=-2mm]frame.north west) -- ([xshift=2mm]frame.north east)
+			[rounded corners=1mm]-- ([xshift=1mm,yshift=-1mm]frame.north east)
+			-- (frame.south east) -- (frame.south west)
+			-- ([xshift=-1mm,yshift=-1mm]frame.north west)
+			[sharp corners]-- cycle;
+		},interior engine=empty,
+	},fonttitle=\\fontfamily{qag}\\fontsize{8}{0}
+	\\bfseries,	fontupper=\\fontfamily{ptm}\\fontsize{10}{0}\\sffamily,title={#1}}
+\\newcounter{dang}
+\\newtcolorbox[auto counter]{dang}[1]{enhanced, breakable,
+	before skip=1mm,after skip=1mm,
+	left=-1mm,right=1mm,top=2mm,bottom=1mm,
+	colframe=green!35!blue,colback=cyan!20!white,colbacktitle=pink!70!white,coltitle=blue!70!black,
+	,boxrule=0.4mm,
+	attach boxed title to top center=
+	{yshift=-0.1mm-\\tcboxedtitleheight/2,yshifttext=2mm-\\tcboxedtitleheight/2},
+	varwidth boxed title*=-3cm,
+	boxed title style={boxrule=0.3mm,
+		frame code={ \\path[tcb fill frame] ([xshift=-4mm]frame.west)
+			-- (frame.north west) -- (frame.north east) -- ([xshift=4mm]frame.east)
+			-- (frame.south east) -- (frame.south west) -- cycle; },
+		interior code={ \\path[tcb fill interior] ([xshift=-2mm]interior.west)
+			-- (interior.north west) -- (interior.north east)
+			-- ([xshift=2mm]interior.east) -- (interior.south east) -- (interior.south west)
+			-- cycle;} 
+	},
+	fonttitle=\\fontfamily{qag}\\fontsize{10}{0}
+	\\bfseries,
+	fontupper=\\fontfamily{ptm}\\fontsize{11}{0}\\sffamily,
+	title={#1}
+}
+\\newcounter{khung4}
+\\newtcolorbox[auto counter]{khung4}[1]{enhanced, breakable,
+	before skip=1mm,after skip=1mm,
+	left=-1mm,right=1mm,top=2mm,bottom=1mm,
+	colframe=green!35!blue,colback=cyan!20!white,colbacktitle=pink!70!white,coltitle=blue!70!black,
+	,boxrule=0.4mm,
+	attach boxed title to top center=
+	{yshift=-0.1mm-\\tcboxedtitleheight/2,yshifttext=2mm-\\tcboxedtitleheight/2},
+	varwidth boxed title*=-3cm,
+	boxed title style={boxrule=0.3mm,
+		frame code={ \\path[tcb fill frame] ([xshift=-4mm]frame.west)
+			-- (frame.north west) -- (frame.north east) -- ([xshift=4mm]frame.east)
+			-- (frame.south east) -- (frame.south west) -- cycle; },
+		interior code={ \\path[tcb fill interior] ([xshift=-2mm]interior.west)
+			-- (interior.north west) -- (interior.north east)
+			-- ([xshift=2mm]interior.east) -- (interior.south east) -- (interior.south west)
+			-- cycle;} 
+	},
+	fonttitle=\\fontfamily{qag}\\fontsize{10}{0}
+	\\bfseries,
+	fontupper=\\fontfamily{ptm}\\fontsize{11}{0}\\sffamily,
+	title={#1}
+}
+
+\\setbeamertemplate{navigation symbols}{}
+\\setbeamersize{text margin left=6mm,text margin right=6mm}
+\\setbeamerfont{block title}{size=\\normalsize,series=\\bfseries}
+\\setbeamerfont{footline}{size*={5}{\\z@},series=\\bfseries}
+\\setbeamercolor*{structure}{fg=yellow}
+\\setbeamertemplate{headline}{\\vspace{-5mm}}
+\\newcommand{\\indam}[1]{
+	{\\fontsize{12.5pt}{9pt}\\sffamily \\selectfont\\bfseries\\color{orange} #1}
+}
+\\newcommand{\\indamm}[1]{
+	{\\fontsize{10pt}{9pt}\\sffamily \\selectfont\\bfseries\\color{violet} #1}
+}
+\\newcommand{\\boxmini}[1]{
+	\\begin{center}
+		\\begin{tikzpicture}[outline/.style={draw=##1,thick,fill=##1!30},outline/.default=cyan]
+			\\node [outline,rounded corners] at (0,0) {\\fontfamily{qag} \\selectfont\\bfseries\\color{magenta} #1};
+		\\end{tikzpicture}
+	\\end{center}
+}
+\\newcommand{\\boxminione}[1]{
+	\\begin{center}
+		\\begin{tikzpicture}[outline/.style={draw=##1,thick,fill=##1!30},outline/.default=cyan]
+			\\node [outline,rounded corners] at (0,0) {\\fontfamily{qag} \\selectfont\\bfseries\\color{violet} #1};
+		\\end{tikzpicture}
+	\\end{center}
+}
+\\def\\iconGN{{\\color{blue}\\faBook}}
+\\def\\iconNS{{\\color{gray}\\faStar}}
+\\def\\iconC{{\\color{blue}$\\bullet$}}
+\\def\\iconMT{{\\color{magenta!80!black}\\faSunO}}
+\\def\\iconX{{\\color{red}\\faClose}}
+
+%%-----------------------------------
+\\newcommand{\\AddSTT}[1][1,2,...,50]{
+	\\setbeamertemplate{footline}{
+		\\leavevmode
+		\\vspace{-0.4cm}
+		\\begin{center}
+			\\foreach \\x in {#1}{
+				\\hyperlink{\\x}{\\fontsize{10 pt}{0}\\color{yellow!60!black}\\x}}
+		\\end{center}
+	}
+}
+%========================================
+\\newtcolorbox[auto counter,number within=section]{dn}[2][]{
+	colframe=violet,
+	colback=white,
+	%black!10, 
+	left=0cm,
+	right=0cm,
+	toprule=0pt,
+	bottomrule=0pt,
+	leftrule=7pt,
+	rightrule=0pt,
+	center title,
+	arc=0mm,
+	detach title,before upper={\\tcbtitle\\quad},
+	breakable,
+	fonttitle=\\color{red}\\faGears
+	\\fontfamily{qag}\\selectfont\\bfseries,
+	title=~Định nghĩa~\\,#2,#1
+}
+
+\\newtcolorbox[auto counter,number within=section]{dl}[2][]{
+	colframe=blue,
+	colback=white,
+	%%black!10, 
+	left=0cm,
+	right=0cm,
+	toprule=0pt,
+	bottomrule=0pt,
+	%%	boxrule=0pt,
+	leftrule=7pt,
+	rightrule=0pt,
+	center title,
+	%%	arc is angular,
+	arc=0mm,
+	detach title,before upper={\\tcbtitle\\quad},
+	%%	sharp corners,
+	breakable,
+	fonttitle=\\color{cyan}\\faLeanpub
+	\\fontfamily{qag}\\selectfont\\bfseries,
+	title=~Định lý~\\thetcbcounter.\\,#2,#1
+}
+
+\\newtcolorbox{luuy}[1][]{enhanced,
+	before skip=2mm,after skip=3mm,
+	boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+	colback=yellow!50,
+	colframe=yellow!20!black,
+	sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+	underlay={%
+		\\path[fill=tcbcol@back!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+		\\path[draw=tcbcol@frame,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+		\\path[fill=yellow!50!black,draw=none] (interior.south west) rectangle node[white]{\\Huge\\bfseries !} ([xshift=4mm]interior.north west);
+	},
+	drop fuzzy shadow, #1}
+%%-----------------Thêm màu cho công thức toán
+\\usepackage{amsmath,amssymb,amsfonts}\\everymath{\\color{magenta}\\displaystyle}\\everydisplay{\\color{magenta}}
+\\newcommand{\\highY}[1]{%
+	\\tikz[baseline=(char.base)]{
+		\\node[fill=yellow, draw, circle, minimum size=1.5em] (char) {\\textcolor{red}{#1}};
+	}%
+}
+\\newcommand{\\highG}[1]{%
+	\\tikz[baseline=(char.base)]{
+		\\node[fill=green, draw, circle, minimum size=1.5em] (char) {\\textcolor{red}{#1}};
+	}%
+}
+
+\\newcommand{\\fixedfbox}[1]{%
+	\\fbox{%
+		\\begin{minipage}[c][2em][c]{2em}
+			\\centering #1
+		\\end{minipage}%
+	}%
+}
+\\begin{document}
+\\Opensolutionfile{ans}
+\\input{beamer.tex}
+\\Closesolutionfile{ans}
+\\end{document}
+`;
+
+            const exBeamerStyContent = `\\ProvidesPackage{ex_beamer}[2020/04/23 for Ex_beamer version 2.4.5 beta 7.4, Tran Anh Tuan]
+\\RequirePackage{ifthen}
+\\RequirePackage{fancyhdr}
+\\RequirePackage{multicol}
+\\RequirePackage{answers}
+\\RequirePackage{array}
+\\RequirePackage{multirow}
+\\RequirePackage{longtable}
+\\RequirePackage[utf8]{vietnam}
+\\RequirePackage{tikz}
+\\RequirePackage{amsthm}
+\\RequirePackage{calc}
+\\RequirePackage{etoolbox}
+\\RequirePackage{probsoln}
+\\RequirePackage{picinpar}
+\\RequirePackage{environ}
+\\RequirePackage{varwidth}
+%
+\\newcommand{\\showlabelchoice}{%
+}
+%Ẩn hiện công thức tự động
+\\newlength\\wsh
+\\newlength\\hsh
+\\newlength\\dsh
+\\newcommand{\\sh}[1]{%
+\\settowidth\\wsh{#1}%
+\\settoheight\\hsh{#1}%
+\\settodepth\\dsh{#1}%
+\\raisebox{0pt}[\\hsh][\\dsh]{
+\\rule{\\wsh}{0.1pt}}}
+\\newcommand{\\TF}[1]{\\EXboxTF{\\textbf{\\colorEX#1}}}
+\\newcommand{\\boxEX}[2][9pt]{%
+\\def\\sizeboxEX{#1}%
+\\setbox1=\\hbox{#2}%
+\\ \\EXbox{#2}\\ %
+}
+%Lệnh tagEX gán nhãn công thức thủ công
+\\newcommand{\\tagEX}[1]{%
+\\hfill{\\rm (#1)}%
+\\par
+\\@ifnextchar\\begin%
+{\\vspace{-\\baselineskip}}
+{}
+}
+%Tuỳ chọn pause
+\\newcommand{\\pauseEX}{}
+\\let\\itemold\\item
+\\renewcommand{\\item}{\\pauseEX\\itemold}
+\\newcommand{\\nameex}{Câu}
+%Khoanh tròn
+\\newcommand*\\circEX[1]{\\tikz[baseline=(char.base)]{\\node[shape=circle,draw=red,inner sep=1pt,fill=yellow!50] (char) {\\color{red} #1};}}
+%Gói beamer
+\\RequirePackage{ragged2e}
+\\justifying
+%Dấu chấm, phảy sau mỗi phương án
+\\def\\dotEX{.}
+%Tương thích gói picinpar
+\\def\\picinpar{\\setlength{\\textwidth}{\\textwidth}}
+\\AtBeginEnvironment{window}{\\def\\picinpar{\\setlength{\\textwidth}{\\textwidth-\\picwd-\\lwindowsep-2\\fboxsep}}}
+%Tùy chọn lời giải
+\\newcommand{\\choicew}[1]{\\setlength{\\widthch}{#1}}
+\\newcommand{\\loigiai}[1]{}
+\\DeclareOption{pause}{%
+\\def\\True{\\colorEX\\setcounter{numTrue}{\\thedapan}\\setcounter{numTrueSol}{\\thedapan}}
+\\def\\loigiaiEX{\\color{yellow} Lời giải.}
+\\showanswers
+\\renewcommand{\\pauseEX}{\\pause}
+\\renewcommand{\\loigiai}[1]{
+\\let\\oldnewline\\\\
+\\renewcommand{\\\\}{\\oldnewline\\pauseEX}
+\\let\\oldcenter\\center
+\\let\\oldendcenter\\endcenter
+\\renewenvironment{center}{\\setlength\\topsep{0pt}\\oldcenter}{\\oldendcenter \\pauseEX}
+\\let\\oldmath\\[
+\\let\\oldendmath\\]
+\\def\\[{\\pauseEX\\oldmath}
+\\def\\]{\\oldendmath\\pauseEX}
+\\renewcommand{\\IMrightleft}[2]{
+\\vspace*{-\\parskip}
+\\par\\noindent
+\\begin{minipage}[t][][b]{\\widthimmini}\\vspaceIM
+    ##2
+\\end{minipage}\\pauseEX
+\\hspace{2\\fboxsep}
+\\begin{minipage}[t][][t]{\\linewidth-\\widthimmini-4\\fboxsep}
+\\let\\oldnewline\\\\
+\\renewcommand{\\\\}{\\oldnewline\\pauseEX}
+    ##1
+\\end{minipage}
+\\par\\nointerlineskip
+}
+\\renewcommand{\\immini}[3][]{
+\\setbox\\imbox=\\vbox{\\hbox{##3}}
+\\widthimmini=\\wd\\imbox
+\\IMrightleft{##2}{##3}
+}
+\\pauseEX\\par\\begin{onlysolution}{
+\\begin{beamercolorbox}[colsep*=.75ex]{block title}
+\\loigiaiEX\\pauseEX
+\\end{beamercolorbox}
+}\\@ifnextchar\\immini
+{\\vspace*{-\\parskip}}
+{\\par\\noindent}#1\\showlabelchoice%
+\\end{onlysolution}
+}
+\\renewcommand{\\nextEX}[1]{%
+\\renewcommand{\\IMrightleft}[2]{
+\\vspace*{-\\parskip}
+\\par\\noindent
+\\begin{minipage}[t][][b]{\\widthimmini}\\vspaceIM
+    ##2
+\\end{minipage}\\pauseEX
+\\hspace{2\\fboxsep}
+\\begin{minipage}[t][][t]{\\linewidth-\\widthimmini-4\\fboxsep}
+\\let\\oldnewline\\\\
+\\renewcommand{\\\\}{\\oldnewline\\pauseEX}
+    ##1
+\\end{minipage}
+\\par\\nointerlineskip
+}
+\\renewcommand{\\immini}[3][]{
+\\setbox\\imbox=\\vbox{\\hbox{##3}}
+\\widthimmini=\\wd\\imbox
+\\IMrightleft{##2}{##3}
+}
+\\newpage
+\\begin{frame}
+\\let\\oldnewline\\\\
+\\renewcommand{\\\\}{\\oldnewline\\pauseEX}
+\\let\\oldcenter\\center
+\\let\\oldendcenter\\endcenter
+\\renewenvironment{center}{\\setlength\\topsep{0pt}\\oldcenter}{\\oldendcenter \\pauseEX}
+\\let\\oldmath\\[
+\\let\\oldendmath\\]
+\\def\\[{\\pauseEX\\oldmath}
+\\def\\]{\\oldendmath\\pauseEX}
+%\\begin{frame}[allowframebreaks,t]
+#1
+\\end{frame}
+}
+}%
+\\DeclareOption{loigiai}{
+\\renewcommand{\\nextEX}[1]{%
+\\newpage
+\\begin{frame}
+#1
+\\end{frame}
+}
+\\def\\True{\\colorEX\\setcounter{numTrue}{\\thedapan}\\setcounter{numTrueSol}{\\thedapan}}
+\\def\\loigiaiEX{\\color{blue} Lời giải.}
+\\showanswers
+\\renewcommand{\\loigiai}[1]{
+\\pauseEX\\par\\begin{onlysolution}{
+\\begin{beamercolorbox}[colsep*=.75ex]{block title}
+\\loigiaiEX\\pauseEX
+\\end{beamercolorbox}
+}\\@ifnextchar\\immini
+{\\vspace*{-\\parskip}}
+{\\par\\noindent}#1\\showlabelchoice%
+\\end{onlysolution}}
+}
+%\\def\\colorEX{\\color{black}}
+\\def\\colorEX{}
+\\newcounter{numTrue}
+\\newcounter{numTrueSol}
+\\newcommand{\\nextEX}[1]{%
+}%
+\\DeclareOption{choice}{
+\\renewcommand{\\showlabelchoice}{%
+\\ifnum\\the\\value{numTrueSol}=1
+\\par\\noindent 
+\\fi
+\\ifnum\\the\\value{numTrueSol}=2
+\\par\\noindent 
+\\fi
+\\ifnum\\the\\value{numTrueSol}=3
+\\par\\noindent 
+\\fi
+\\ifnum\\the\\value{numTrueSol}=4
+\\par\\noindent 
+\\fi
+\\ifnum\\the\\value{numTrueSol}=5
+\\par\\noindent 
+\\fi
+\\setcounter{numTrueSol}{0}
+}
+}
+\\DeclareOption{dethi}{
+\\renewcommand{\\loigiai}[1]{%
+}
+\\def\\True{\\setcounter{numTrue}{\\thedapan}\\setcounter{numTrueSol}{\\thedapan}} 
+}
+\\ExecuteOptions{dethi}
+\\ProcessOptions
+%Nội dung gói ex_test
+\\newlength\\dorongfix
+\\dorongfix=\\textwidth
+\\newlength\\dorong
+\\dorong=\\textwidth
+\\Newassociation{solbook}{Solbook}{ansbook}
+\\renewcommand{\\Solbooklabel}[1]{\\textbf{Câu #1.}}
+\\Newassociation{solEX}{Solution}{ans}
+\\Newassociation{sol}{Solution}{ans_old}
+\\theoremstyle{definition}
+\\newtheorem{exb}{\\nameex}
+\\AtBeginEnvironment{exb}{\\setcounter{numTrueSol}{0}\\def\\dotEX{.}}
+\\AtEndEnvironment{exb}{
+\\ifnum\\the\\value{numTrue}=1
+\\scantokens{\\begin{solEX}A\\end{solEX}}
+\\fi
+\\ifnum\\the\\value{numTrue}=2
+\\scantokens{\\begin{solEX}B\\end{solEX}}
+\\fi
+\\ifnum\\the\\value{numTrue}=3
+\\scantokens{\\begin{solEX}C\\end{solEX}}
+\\fi
+\\ifnum\\the\\value{numTrue}=4
+\\scantokens{\\begin{solEX}D\\end{solEX}}
+\\fi
+\\setcounter{numTrue}{0}
+\\setcounter{numTrueSol}{0}
+}
+\\newcommand*\\circled[1]{\\tikz[baseline=(char.base)]{
+        \\node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\\newcounter{dapan}
+\\newcommand{\\dapan}{\\stepcounter{dapan}{\\textbf{\\Alph{dapan}.}}}
+%\\newcommand{\\dapan}{\\stepcounter{dapan}{\\circled{\\Alph{dapan}}}}%Đáp án khoanh tròn
+% \\newcommand{\\dapan}{\\stepcounter{dapan}{\\textbf{\\color{mau}\\Alph{dapan}.}}} %Tô màu đáp án
+\\newcommand{\\boncot}[4]{
+\\picinpar
+\\setlength{\\dorong}{(\\textwidth-0.02\\dorongfix)/4-\\fboxsep}
+\\par\\setcounter{dapan}{0}
+\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #1\\dotEX
+\\end{minipage}
+\\noindent\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #2\\dotEX
+\\end{minipage}
+\\noindent\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #3\\dotEX
+\\end{minipage}
+\\noindent\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #4\\dotEX
+\\end{minipage}
+
+}
+\\newcommand{\\haicot}[4]{
+\\picinpar
+\\setlength{\\dorong}{0.5\\textwidth-0.01\\dorongfix-\\fboxsep}
+\\setcounter{dapan}{0}
+\\par\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #1\\dotEX
+\\end{minipage}
+\\noindent\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #2\\dotEX
+\\end{minipage}
+\\par\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #3\\dotEX
+\\end{minipage}
+\\noindent\\begin{minipage}[t]{\\dorong}
+\\leavevmode\\dapan\\ #4\\dotEX
+\\end{minipage}
+
+}
+\\newcommand{\\motcot}[4]{
+\\picinpar
+\\setlength{\\dorong}{\\textwidth-0.02\\dorongfix}
+\\par\\setcounter{dapan}{0}
+\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\strut\\leavevmode\\dapan\\ #1\\dotEX\\strut
+\\end{minipage}
+
+\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\strut\\leavevmode\\dapan\\ #2\\dotEX\\strut
+\\end{minipage}
+
+\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\strut\\leavevmode\\dapan\\ #3\\dotEX\\strut
+\\end{minipage}
+
+\\noindent\\hspace{0.02\\dorongfix}\\begin{minipage}[t]{\\dorong}
+\\strut\\leavevmode\\dapan\\ #4\\dotEX\\strut
+\\end{minipage}
+
+}
+%%%%%%%Tự động chọn \\motcot, \\haicot, \\boncot
+  \\newlength\\widthcha
+    \\newlength\\widthchb
+    \\newlength\\widthchc
+    \\newlength\\widthchd
+    \\newlength\\widthch
+    \\newlength\\tabmaxwidth
+    \\newlength\\fourthtabwidth
+    \\newlength\\halftabwidth
+  \\newcommand{\\choice}[4]{%
+   \\setlength\\tabmaxwidth{\\textwidth-\\picwd-\\lwindowsep}
+    \\setlength\\fourthtabwidth{0.25\\textwidth-0.25\\picwd-0.25\\lwindowsep}
+    \\setlength\\halftabwidth{0.5\\textwidth-0.5\\picwd-0.5\\lwindowsep}
+  \\settowidth\\widthcha{AM.#1}
+  \\ifdim\\widthch<\\widthcha\\relax\\setlength{\\widthch}{\\widthcha}\\fi%
+  \\settowidth\\widthchb{BM.#2}%
+  \\ifdim\\widthch<\\widthchb\\relax\\setlength{\\widthch}{\\widthchb}\\fi%
+  \\settowidth\\widthchc{CM.#3}%
+  \\ifdim\\widthch<\\widthchc\\relax\\setlength{\\widthch}{\\widthchc}\\fi%
+  \\settowidth\\widthchd{DM.#4}%
+  \\ifdim\\widthch<\\widthchd\\relax\\setlength{\\widthch}{\\widthchd}\\fi%
+  \\ifdim\\widthch<\\fourthtabwidth
+    \\boncot{#1}{#2}{#3}{#4}
+  \\else\\ifdim\\widthch<\\halftabwidth
+      \\haicot{#1}{#2}{#3}{#4}
+    \\else
+      \\motcot{#1}{#2}{#3}{#4}
+  \\fi\\fi
+}
+  \\newcommand{\\choicefix}[4]{%
+   \\setlength\\tabmaxwidth{\\textwidth-\\picwd-\\lwindowsep}
+    \\setlength\\fourthtabwidth{0.25\\textwidth-0.25\\picwd-0.25\\lwindowsep}
+    \\setlength\\halftabwidth{0.5\\textwidth-0.5\\picwd-0.5\\lwindowsep}
+  \\settowidth\\widthcha{AM.#1}
+  \\ifdim\\widthch<\\widthcha\\relax\\setlength{\\widthch}{\\widthcha}\\fi%
+  \\settowidth\\widthchb{BM.#2}%
+  \\ifdim\\widthch<\\widthchb\\relax\\setlength{\\widthch}{\\widthchb}\\fi%
+  \\settowidth\\widthchc{CM.#3}%
+  \\ifdim\\widthch<\\widthchc\\relax\\setlength{\\widthch}{\\widthchc}\\fi%
+  \\settowidth\\widthchd{DM.#4}%
+  \\ifdim\\widthch<\\widthchd\\relax\\setlength{\\widthch}{\\widthchd}\\fi%
+  \\ifdim\\widthch<\\fourthtabwidth
+    \\boncot{#1}{#2}{#3}{#4}
+  \\else\\ifdim\\widthch<\\halftabwidth
+      \\haicot{#1}{#2}{#3}{#4}
+    \\else
+      \\motcot{#1}{#2}{#3}{#4}
+  \\fi\\fi
+}
+%Gói beamer
+\\setbeamertemplate{theorem begin}
+{%
+\\par\\vskip\\medskipamount%
+\\begin{beamercolorbox}[colsep*=0.75ex]{block title}
+\\usebeamerfont*{block title}%
+\\inserttheoremname\\inserttheoremnumber
+\\ifx\\inserttheoremaddition\\empty.\\else\\ (\\inserttheoremaddition).\\fi%
+\\end{beamercolorbox}%
+}
+\\setbeamertemplate{theorem end}{}
+\\newbox\\mb
+\\NewEnviron{ex}[1][]{%
+\\setbox\\mb=\\vbox{\\hbox{\\begin{varwidth}{\\textwidth}\\BODY\\end{varwidth}}}
+\\ifdim\\ht\\mb>0.5\\paperheight
+\\renewcommand{\\loigiai}[1]{%
+\\renewcommand{\\pauseEX}{}	
+\\newpage\\begin{frame}[allowframebreaks]\\begin{onlysolution}{%
+\\begin{beamercolorbox}[colsep*=.75ex]{block title}
+\\loigiaiEX
+\\end{beamercolorbox}
+}##1\\showlabelchoice%
+\\end{onlysolution}\\end{frame}}
+\\newpage
+%\\addtolength{\\footskip}{-5pt}
+
+\\vspace*{\\headsep}
+
+\\begin{exb}[#1]
+\\BODY
+\\end{exb}
+\\else
+\\newpage
+%\\addtolength{\\headsep}{-8pt}
+%\\addtolength{\\footskip}{8pt}
+\\begin{frame}[t]
+\\begin{exb}[#1]
+\\BODY
+\\end{exb}
+\\end{frame}
+\\fi
+}
+%Các phương pháp đưa hình vào văn bản
+\\def\\vspaceIM{\\vspace{-13pt}}
+\\def\\breakIM{}
+\\def\\numpicinpar{0}
+\\newdimen\\widthimmini
+\\newdimen\\heightimmini
+\\newdimen\\spaceleft
+\\newbox\\imbox
+\\newcommand{\\IMleftright}[2]{
+\\vspace*{-\\parskip}
+\\par\\noindent
+\\begin{minipage}[t][][t]{\\linewidth-\\widthimmini-6\\fboxsep}
+    #1
+\\end{minipage}
+\\hspace{2\\fboxsep}
+\\begin{minipage}[t][][b]{\\widthimmini}\\vspaceIM
+    #2
+\\end{minipage}
+\\par\\nointerlineskip
+}
+\\newcommand{\\immini}[3][]{
+\\setbox\\imbox=\\vbox{\\hbox{#3}}
+\\widthimmini=\\wd\\imbox
+\\IMleftright{#2}{#3}
+}
+\\newcommand{\\IMrightleft}[2]{
+\\vspace*{-\\parskip}
+\\par\\noindent
+\\begin{minipage}[t][][b]{\\widthimmini}\\vspaceIM
+    #2
+\\end{minipage}
+\\hspace{2\\fboxsep}
+\\begin{minipage}[t][][t]{\\linewidth-\\widthimmini-4\\fboxsep}
+    #1
+\\end{minipage}
+\\par\\nointerlineskip
+}
+\\newcommand{\\imminiL}[3][]{
+\\setbox\\imbox=\\vbox{\\hbox{#3}}
+\\widthimmini=\\wd\\imbox
+\\IMrightleft{#2}{#3}
+}
+\\newcommand{\\impicinpar}[2]{
+\\begin{window}[\\numpicinpar,r,{
+#2
+}, {}]
+\\begin{flushleft}
+#1
+\\end{flushleft}
+\\end{window}
+}
+%Hết cách đưa hình vào văn bản
+% Biểu diễn khoảng, đoạn trên trục số
+\\usetikzlibrary{decorations.pathreplacing,decorations.markings,patterns}
+\\def\\colorInterval{black}
+\\def\\skipInterval{0.4cm}
+\\newcommand{\\Interval}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (#2,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (#4,0); 
+    \\draw[color=\\colorInterval] decorate[decoration={ticks,amplitude=3pt,segment length=1mm}] {(a)--(b)};
+}
+\\newcommand{\\IntervalR}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (#2,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (#4,0); 
+    \\draw decorate[decoration={markings,mark=% actually add a mark
+  between positions 0 and 1 step 1mm
+  with
+  {
+\\draw[color=\\colorInterval] (-3pt,-3pt) -- (3pt,3pt);
+  }}] {(a)--(b)};
+}
+\\newcommand{\\IntervalL}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (#2,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (#4,0); 
+    \\draw decorate[decoration={
+    markings,
+    mark=between positions 0 and 1 step 1mm
+    with
+    {
+    \\draw[color=\\colorInterval] (-3pt,3pt) -- (3pt,-3pt);
+    }
+    }
+    ] {(a)--(b)};
+}
+\\newcommand{\\IntervalLF}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (#2,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (#4,0); 
+    \\fill[pattern=north west lines,pattern color=\\colorInterval](#2,-3pt)rectangle(#4,3pt);
+}
+\\newcommand{\\IntervalRF}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (#2,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (#4,0); 
+    \\fill[pattern=north east lines,pattern color=\\colorInterval](#2,-3pt)rectangle(#4,3pt);
+}
+\\def\\pre{0}
+\\def\\next{2}
+\\newcommand{\\IntervalLR}[2]{
+\\def\\pre{#1}
+\\def\\next{#2}
+}
+\\newcommand{\\IntervalG}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (\\pre,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (\\next,0); 
+   \\draw[color=\\colorInterval] decorate[decoration={ticks,amplitude=3pt,segment length=1mm}] {(a)--(b)};
+}
+\\newcommand{\\IntervalGL}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (\\pre,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (\\next,0); 
+    \\draw decorate[decoration={markings,mark=% actually add a mark
+  between positions 0 and 1 step 1mm
+  with
+  {
+\\draw[color=\\colorInterval] (-3pt,3pt) -- (3pt,-3pt);
+  }}] {(a)--(b)};
+}
+\\newcommand{\\IntervalGR}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (\\pre,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (\\next,0); 
+    \\draw decorate[decoration={markings,mark=% actually add a mark
+  between positions 0 and 1 step 1mm
+  with
+  {
+\\draw[color=\\colorInterval] (-3pt,-3pt) -- (3pt,3pt);
+  }}] {(a)--(b)};
+}
+
+\\newcommand{\\IntervalGLF}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (\\pre,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (\\next,0); 
+    \\fill[pattern=north west lines,pattern color=\\colorInterval](\\pre,-3pt)rectangle(\\next,3pt);
+}
+\\newcommand{\\IntervalGRF}[4]{%
+    \\coordinate [label={center:$#1$},label=below:$\\rule{0pt}{\\skipInterval}#2$] (a) at (\\pre,0); 
+    \\coordinate [label={center:$#3$},label=below:$\\rule{0pt}{\\skipInterval}#4$] (b) at (\\next,0); 
+    \\fill[pattern=north east lines,pattern color=\\colorInterval](\\pre,-3pt)rectangle(\\next,3pt);
+}
+%Định nghĩa fill dots
+\\newcommand{\\dotlineEX}[1]{
+\\def\\numlinedot{#1}
+\\par
+\\foreach \\x in{1,...,\\numlinedot}
+{
+    \\noindent\\dotfill
+    \\par
+}
+}
+%Liệt kê danh sách đáp án
+\\newsavebox{\\mybox}
+\\newcommand{\\listans}
+{
+\\renewenvironment{Solution}[1]
+{##1\\hspace*{-4pt}}
+{\\hspace*{-5pt}}
+}
+\\newcommand{\\rowans}
+{
+\\renewenvironment{Solution}[1]
+{\\begin{minipage}{0.1\\textwidth-\\fboxsep}\\color{blue}##1.\\color{violet}}
+{\\end{minipage}}
+}
+%Đường tròn LG
+\\usetikzlibrary{plotmarks}
+\\newcommand{\\trucLG}{
+\\draw[->] (0,-1.3) -- (0,1.3) node[left] {$\\sin$};
+\\draw[->] (-1.3,0) -- (1.3,0) node[below] {$\\cos$};
+\\draw (0,0) circle (1cm);
+}
+\\newcommand{\\pointLG}[4]
+{
+\\foreach \\i in {0,...,#2}
+{
+\\draw[color=#4]
+  plot[mark=#3] coordinates {({#1+\\i*360/#2}:1)};
+}
+}
+\\makeatletter
+\\def\\sizeboxEX{9pt}
+\\def\\EXbox#1{%
+\\begingroup%
+\\setlength{\\fboxsep}{0.3ex}%
+\\setlength{\\@tempdima}{\\sizeboxEX}%
+\\setlength{\\@tempdimb}{(\\@tempdima-\\ht1+\\dp1)/2}%
+\\raise-\\@tempdimb\\hbox{\\fbox{\\vbox to \\@tempdima{%
+            \\vfil\\hbox to \\@tempdima{\\hfil#1\\hfil}\\vfil}}}%
+\\endgroup%
+}
+\\def\\EXboxTF#1{%
+\\begingroup%
+\\setlength{\\fboxsep}{0.3ex}%
+\\setbox1=\\hbox{#1}%
+\\setlength{\\@tempdima}{\\sizeboxEX}%
+\\fbox{\\vbox to \\@tempdima{%
+            \\vfil\\hbox to \\@tempdima{\\hfil\\copy1\\hfil}\\vfil}}%
+\\endgroup%
+}
+\\makeatother
+\\newcommand{\\inputans}[2]{
+\\begin{multicols}{10}
+\\input{#2} 
+\\end{multicols}
+}
+\\newcommand{\\inputansbox}[2]{
+\\begin{multicols}{10}
+\\input{#2} 
+\\end{multicols}
+}
+% Môi trường liệt kê dàn theo nhiều dòng khác nhau
+\\newcounter{numlistEX}
+\\setcounter{numlistEX}{0}
+\\def\\numlistEX{\\alph{numlistEX})}
+\\newcommand{\\listEXnum}{\\stepcounter{numlistEX}{\\numlistEX}}
+\\newlength{\\indentlistEX}
+\\newenvironment{listEX}[1][]
+{%
+\\setlength\\topsep{0pt}
+\\hfill
+\\flushleft
+\\ifstrempty{#1}%
+{%
+\\settowidth{\\indentlistEX}{\\space\\thenumlistEX\\space\\space\\,}
+\\leftskip=\\dimexpr\\indentlistEX+10pt\\relax
+\\rightskip=0pt plus 0cm
+\\vspace*{-\\baselineskip}
+\\def\\item{\\hfil\\egroup\\penalty50
+\\par
+\\leavevmode\\bgroup\\space\\hspace*{-\\indentlistEX}\\listEXnum\\space} %
+}
+{%
+\\ifthenelse{#1=1}{
+\\settowidth{\\indentlistEX}{\\space\\thenumlistEX\\space\\space\\,}
+\\leftskip=\\dimexpr\\indentlistEX+10pt\\relax
+\\rightskip=0pt plus 0cm
+\\vspace*{-\\baselineskip}
+\\def\\item{\\hfil\\egroup\\penalty50
+\\par
+\\leavevmode\\bgroup\\space\\hspace*{-\\indentlistEX}\\listEXnum\\space} %
+}{
+\\dimen0 \\linewidth
+\\divide\\dimen0 by #1\\relax
+\\advance\\dimen0 0pt\\relax
+\\def\\item{\\hfil\\egroup\\penalty50
+\\leavevmode\\hbox to \\dimen0 \\bgroup\\space\\hspace*{10pt}\\listEXnum\\space}%
+}}
+\\leavevmode\\bgroup\\hskip 0pt plus -1fill
+}
+{%
+\\hfil\\egroup\\endflushleft%
+\\setcounter{numlistEX}{0}%
+}
+%Lệnh enumEX
+\\newenvironment{enumEX}[2][a)]
+{  
+\\ifthenelse{#2=1}{
+\\vspace{-\\topsep}
+\\enumerate[\\hspace*{14pt}#1]
+\\setlength{\\itemsep}{1pt}
+\\setlength{\\parskip}{0pt}
+\\setlength{\\parsep}{0pt}
+\\def\\eenumEX{\\endenumerate}
+}{
+\\NumTabs{#2}
+\\setlength\\topsep{0pt}
+\\flushleft
+\\inparaenum[#1]
+\\let\\latexitem\\item
+\\def\\item{\\def\\item{\\tab\\hspace*{14pt}\\latexitem}\\hspace*{14pt}\\latexitem}
+\\def\\eenumEX{\\endinparaenum}
+}
+} 
+{
+\\eenumEX\\endflushleft
+}
+%Tương thích item
+\\makeatletter
+\\def\\beamer@cramped{}%%%%%%
+\\makeatother
+`;
+
+            const zip = new JSZip();
+            zip.file(`${folderName}/main.tex`, mainTexContent);
+            zip.file(`${folderName}/beamer.tex`, output);
+            zip.file(`${folderName}/ex_beamer.sty`, exBeamerStyContent);
+            zip.folder(`${folderName}/ans`);
+
+            zip.generateAsync({ type: "blob" }).then(function (content) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `${folderName}.zip`;
+                link.click();
+            });
+
+            alert(`Đã xử lý xong file và lưu vào thư mục ${folderName}!`);
+        }
+
+        function showHelp() {
+            alert(`
+            1. Xoá các khai báo như main, tiêu đề, thời gian, bảng đáp án...
+            2. Xoá các linh tinh không cần thiết trong file tex tránh lỗi.`);
+        }
+
+        function clearFields() {
+            let currentText = document.getElementById('txt_input1').value;
+
+            // Xóa các dòng bắt đầu bằng %
+            currentText = currentText.replace(/^%.*$/gm, '');
+            // Xóa các dòng bắt đầu bằng %
+            currentText = currentText.replace(/^\\setcounter.*$/gm, '');
+
+            // Xóa các nội dung từ \begin{indapan}.....\end{indapan}
+            currentText = currentText.replace(/\\begin{indapan}[\s\S]*?\\end{indapan}/g, '');
+
+            // Xóa các nội dung từ \begin{name}.....\end{name}
+            currentText = currentText.replace(/\\begin{name}[\s\S]*?\\end{name}/g, '');
+
+            // Xóa \setcounter{ex}{0}\setcounter{bt}{0}
+            currentText = currentText.replace(/\\setcounter{ex}{0}\\setcounter{bt}{0}/g, '');
+
+            document.getElementById('txt_input1').value = currentText;
+        }
+
+    </script>
+</body>
+
+</html>
