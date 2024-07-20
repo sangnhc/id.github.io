@@ -409,6 +409,9 @@
             let outside_tikz = true;
             let data_new = "";
             for (let line of data.split("\n")) {
+		if (line.trim() === "") {
+            	    continue;
+        	}
                 if (line.includes("\\begin{tikzpicture}")) {
                     outside_tikz = false;
                 } else if (line.includes("\\end{tikzpicture}")) {
@@ -712,7 +715,7 @@
 	},
 	drop fuzzy shadow, #1}
 %%-----------------Thêm màu cho công thức toán
-\\usepackage{amsmath,amssymb,amsfonts}\\everymath{\\color{magenta}\\displaystyle}\\everydisplay{\\color{magenta}}
+%%\\usepackage{amsmath,amssymb,amsfonts}\\everymath{\\color{magenta}\\displaystyle}\\everydisplay{\\color{magenta}}
 \\newcommand{\\highY}[1]{%
 	\\tikz[baseline=(char.base)]{
 		\\node[fill=yellow, draw, circle, minimum size=1.5em] (char) {\\textcolor{red}{#1}};
