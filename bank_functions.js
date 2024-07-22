@@ -4509,3 +4509,3428 @@ function thuc_te_thue_can_ho(e) {
     return question;
 }
 
+///XÁC SUẤT CÓ ĐK
+function xs_duong_tinh(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(diseaseRate, sensitivity, specificity) {
+        const P_B = diseaseRate;
+        const P_B_prime = 1 - P_B;
+        const P_T_given_B = sensitivity;
+        const P_T_given_B_prime = 1 - specificity;
+
+        const P_T = (P_T_given_B * P_B) + (P_T_given_B_prime * P_B_prime);
+        const P_B_given_T = (P_T_given_B * P_B) / P_T;
+
+        return P_B_given_T.toFixed(4);
+    }
+  
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const diseaseRate = parseFloat(generateRandomPercentage(0.01, 0.001));
+    const sensitivity = parseFloat(generateRandomPercentage(0.99, 0.01));
+    const specificity = parseFloat(generateRandomPercentage(0.95, 0.01));
+
+    // Tính xác suất một người mắc bệnh nếu họ có kết quả xét nghiệm dương tính
+    const P_B_given_T = calculateProbability(diseaseRate, sensitivity, specificity);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một bệnh có tỉ lệ $${(diseaseRate * 100).toFixed(2)}\\%$ trong dân số. Xét nghiệm bệnh có độ nhạy (tỉ lệ dương tính thật) là $${(sensitivity * 100).toFixed(2)}\\%$ và độ đặc hiệu (tỉ lệ âm tính thật) là $${(specificity * 100).toFixed(2)}\\%$. Tính xác suất một người mắc bệnh nếu họ có kết quả xét nghiệm dương tính là bao nhiêu $\\%$, làm tròn một chữ số thập phân. 
+\\shortans{$${(P_B_given_T * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $B$ là sự kiện người đó mắc bệnh.
+    \\item $T$ là sự kiện xét nghiệm dương tính.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỉ lệ mắc bệnh trong dân số: $P(B) = ${diseaseRate}$.
+    \\item Độ nhạy của xét nghiệm (tỉ lệ dương tính thật): $P(T|B) = ${sensitivity}$.
+    \\item Độ đặc hiệu của xét nghiệm (tỉ lệ âm tính thật): $P(T'|B') = ${specificity}$.
+\\end{itemize}\\\\
+\\textbf{Bước 1: Tính xác suất xét nghiệm dương tính $P(T)$}\\\\
+Xét nghiệm dương tính có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Người mắc bệnh và xét nghiệm dương tính.
+    \\item Người không mắc bệnh nhưng xét nghiệm dương tính giả.
+\\end{enumerate}
+Ta tính xác suất xét nghiệm dương tính bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(T) = P(T|B)P(B) + P(T|B')P(B')
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(B') = 1 - P(B) = ${(1 - diseaseRate).toFixed(4)}$
+    \\item $P(T|B) = ${sensitivity}$
+    \\item $P(T|B') = 1 - P(T'|B') = 1 - ${specificity} = ${(1 - specificity).toFixed(4)}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(T) = ${sensitivity} \\times ${diseaseRate} + ${(1 - specificity).toFixed(4)} \\times ${(1 - diseaseRate).toFixed(4)}
+\\]
+\\[
+P(T) = ${(sensitivity * diseaseRate).toFixed(4)} + ${((1 - specificity) * (1 - diseaseRate)).toFixed(4)}
+\\]
+\\[
+P(T) = ${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(B|T) = \\dfrac{P(T|B) \\cdot P(B)}{P(T)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(B|T) = \\frac{${sensitivity} \\times ${diseaseRate}}{${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}}
+\\]
+\\[
+P(B|T) = \\frac{${(sensitivity * diseaseRate).toFixed(4)}}{${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}}
+\\]
+\\[
+P(B|T) \\approx ${P_B_given_T}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một người mắc bệnh nếu họ có kết quả xét nghiệm dương tính là khoảng $${(P_B_given_T * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỉ lệ mắc bệnh trong dân số là rất thấp $${(diseaseRate * 100).toFixed(2)}\\%$, vì vậy ngay cả khi xét nghiệm dương tính, khả năng người đó thực sự mắc bệnh chỉ khoảng $${(P_B_given_T * 100).toFixed(2)}\\%$. Độ nhạy và độ đặc hiệu của xét nghiệm cao, nhưng do tỉ lệ mắc bệnh trong dân số thấp, nên kết quả dương tính giả cũng ảnh hưởng đáng kể đến xác suất cuối cùng.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+
+function xs_sanpham_AB_hong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(machineARate, machineBRate, defectiveRateA, defectiveRateB) {
+        const P_A = machineARate;
+        const P_B = machineBRate;
+        const P_D_given_A = defectiveRateA;
+        const P_D_given_B = defectiveRateB;
+
+        const P_D = (P_D_given_A * P_A) + (P_D_given_B * P_B);
+        const P_A_given_D = (P_D_given_A * P_A) / P_D;
+
+        return P_A_given_D.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const machineARate = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const machineBRate = 1 - machineARate;
+    const defectiveRateA = parseFloat(generateRandomPercentage(0.01, 0.005));
+    const defectiveRateB = parseFloat(generateRandomPercentage(0.02, 0.005));
+
+    // Tính xác suất sản phẩm hỏng được sản xuất bởi máy A
+    const P_A_given_D = calculateProbability(machineARate, machineBRate, defectiveRateA, defectiveRateB);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một nhà máy có hai máy sản xuất, máy A và máy B. Máy A sản xuất $${(machineARate * 100).toFixed(2)}\\%$ sản phẩm, máy B sản xuất $${(machineBRate * 100).toFixed(2)}\\%$. Máy A có $${(defectiveRateA * 100).toFixed(2)}\\%$ sản phẩm hỏng, máy B có $${(defectiveRateB * 100).toFixed(2)}\\%$ sản phẩm hỏng. Nếu một sản phẩm được chọn ngẫu nhiên là hỏng, tính xác suất sản phẩm đó được sản xuất bởi máy A là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_A_given_D * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $A$ là sự kiện sản phẩm được sản xuất bởi máy A.
+    \\item $B$ là sự kiện sản phẩm được sản xuất bởi máy B.
+    \\item $D$ là sự kiện sản phẩm bị hỏng.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỉ lệ sản phẩm do máy A sản xuất: $P(A) = ${machineARate}$.
+    \\item Tỉ lệ sản phẩm do máy B sản xuất: $P(B) = ${machineBRate}$.
+    \\item Tỉ lệ sản phẩm hỏng do máy A sản xuất: $P(D|A) = ${defectiveRateA}$.
+    \\item Tỉ lệ sản phẩm hỏng do máy B sản xuất: $P(D|B) = ${defectiveRateB}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất sản phẩm bị hỏng $P(D)$}\\\\
+Sản phẩm bị hỏng có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Sản phẩm do máy A sản xuất và bị hỏng.
+    \\item Sản phẩm do máy B sản xuất và bị hỏng.
+\\end{enumerate}
+Ta tính xác suất sản phẩm bị hỏng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(D) = P(D|A)P(A) + P(D|B)P(B)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(A) = ${machineARate}$
+    \\item $P(B) = ${machineBRate}$
+    \\item $P(D|A) = ${defectiveRateA}$
+    \\item $P(D|B) = ${defectiveRateB}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(D) = ${defectiveRateA} \\times ${machineARate} + ${defectiveRateB} \\times ${machineBRate}
+\\]
+\\[
+P(D) = ${(defectiveRateA * machineARate).toFixed(4)} + ${(defectiveRateB * machineBRate).toFixed(4)}
+\\]
+\\[
+P(D) = ${((defectiveRateA * machineARate) + (defectiveRateB * machineBRate)).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(A|D) = \\dfrac{P(D|A) \\cdot P(A)}{P(D)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(A|D) = \\frac{${defectiveRateA} \\times ${machineARate}}{${((defectiveRateA * machineARate) + (defectiveRateB * machineBRate)).toFixed(4)}}
+\\]
+\\[
+P(A|D) = \\frac{${(defectiveRateA * machineARate).toFixed(4)}}{${((defectiveRateA * machineARate) + (defectiveRateB * machineBRate)).toFixed(4)}}
+\\]
+\\[
+P(A|D) \\approx ${P_A_given_D}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất sản phẩm bị hỏng được sản xuất bởi máy A là khoảng $${(P_A_given_D * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỉ lệ sản phẩm do máy A và máy B sản xuất là khác nhau, nhưng cả hai đều có tỉ lệ sản phẩm hỏng nhất định. Do đó, khi một sản phẩm được chọn ngẫu nhiên là hỏng, khả năng sản phẩm đó được sản xuất bởi máy A là khoảng $${(P_A_given_D * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_hocsinh_traloi_dung(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(studyRate, correctGivenStudy, correctGivenNoStudy) {
+        const P_S = studyRate;
+        const P_NS = 1 - P_S;
+        const P_C_given_S = correctGivenStudy;
+        const P_C_given_NS = correctGivenNoStudy;
+
+        const P_C = (P_C_given_S * P_S) + (P_C_given_NS * P_NS);
+        const P_S_given_C = (P_C_given_S * P_S) / P_C;
+
+        return P_S_given_C.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const studyRate = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const correctGivenStudy = parseFloat(generateRandomPercentage(0.70, 0.05));
+    const correctGivenNoStudy = parseFloat(generateRandomPercentage(0.20, 0.05));
+
+    // Tính xác suất học sinh học bài nếu họ trả lời đúng một câu hỏi
+    const P_S_given_C = calculateProbability(studyRate, correctGivenStudy, correctGivenNoStudy);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Trong một kỳ thi trắc nghiệm, xác suất để một học sinh trả lời đúng một câu hỏi là $${(correctGivenStudy * 100).toFixed(2)}\\%$ nếu học sinh đó học bài và $${(correctGivenNoStudy * 100).toFixed(2)}\\%$ nếu học sinh đó không học bài. Xác suất học sinh học bài là $${(studyRate * 100).toFixed(2)}\\%$. Nếu một học sinh trả lời đúng một câu hỏi, tính xác suất học sinh đó đã học bài là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_S_given_C * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $S$ là sự kiện học sinh học bài.
+    \\item $NS$ là sự kiện học sinh không học bài.
+    \\item $C$ là sự kiện học sinh trả lời đúng một câu hỏi.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất học sinh học bài: $P(S) = ${studyRate}$.
+    \\item Xác suất học sinh không học bài: $P(NS) = ${(1 - studyRate).toFixed(4)}$.
+    \\item Xác suất trả lời đúng nếu học sinh học bài: $P(C|S) = ${correctGivenStudy}$.
+    \\item Xác suất trả lời đúng nếu học sinh không học bài: $P(C|NS) = ${correctGivenNoStudy}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất học sinh trả lời đúng $P(C)$}\\\\
+Học sinh trả lời đúng có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Học sinh học bài và trả lời đúng.
+    \\item Học sinh không học bài nhưng trả lời đúng.
+\\end{enumerate}
+Ta tính xác suất học sinh trả lời đúng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(C) = P(C|S)P(S) + P(C|NS)P(NS)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(S) = ${studyRate}$
+    \\item $P(NS) = ${(1 - studyRate).toFixed(4)}$
+    \\item $P(C|S) = ${correctGivenStudy}$
+    \\item $P(C|NS) = ${correctGivenNoStudy}$
+\\end{itemize}
+Thay các giá trị vào, ta có
+\\[
+P(C) = ${correctGivenStudy} \\times ${studyRate} + ${correctGivenNoStudy} \\times ${(1 - studyRate).toFixed(4)}
+\\]
+\\[
+P(C) = ${(correctGivenStudy * studyRate).toFixed(4)} + ${(correctGivenNoStudy * (1 - studyRate)).toFixed(4)}
+\\]
+\\[
+P(C) = ${((correctGivenStudy * studyRate) + (correctGivenNoStudy * (1 - studyRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(S|C) = \\dfrac{P(C|S) \\cdot P(S)}{P(C)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(S|C) = \\dfrac{${correctGivenStudy} \\times ${studyRate}}{${((correctGivenStudy * studyRate) + (correctGivenNoStudy * (1 - studyRate))).toFixed(4)}}
+\\]
+\\[
+P(S|C) = \\dfrac{${(correctGivenStudy * studyRate).toFixed(4)}}{${((correctGivenStudy * studyRate) + (correctGivenNoStudy * (1 - studyRate))).toFixed(4)}}
+\\]
+\\[
+P(S|C) \\approx ${P_S_given_C}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất học sinh đã học bài nếu họ trả lời đúng một câu hỏi là khoảng $${(P_S_given_C * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỉ lệ học sinh học bài là $${(studyRate * 100).toFixed(2)}\\%$, nhưng khả năng trả lời đúng câu hỏi khi không học bài vẫn có một tỉ lệ nhất định là $${(correctGivenNoStudy * 100).toFixed(2)}\\%$. Do đó, khi một học sinh trả lời đúng một câu hỏi, khả năng học sinh đó đã học bài là khoảng $${(P_S_given_C * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_hoc_sinh_diem_cao(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(attendanceRate, highGradeGivenAttendance, highGradeGivenNoAttendance) {
+        const P_A = attendanceRate;
+        const P_N = 1 - P_A;
+        const P_H_given_A = highGradeGivenAttendance;
+        const P_H_given_N = highGradeGivenNoAttendance;
+
+        const P_H = (P_H_given_A * P_A) + (P_H_given_N * P_N);
+        const P_A_given_H = (P_H_given_A * P_A) / P_H;
+
+        return P_A_given_H.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const attendanceRate = parseFloat(generateRandomPercentage(0.80, 0.05));
+    const highGradeGivenAttendance = parseFloat(generateRandomPercentage(0.90, 0.05));
+    const highGradeGivenNoAttendance = parseFloat(generateRandomPercentage(0.40, 0.05));
+
+    // Tính xác suất học sinh thường xuyên đi học nếu họ đạt điểm cao
+    const P_A_given_H = calculateProbability(attendanceRate, highGradeGivenAttendance, highGradeGivenNoAttendance);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một trường học có $${(attendanceRate * 100).toFixed(2)}\\%$ học sinh thường xuyên đi học. Nếu một học sinh thường xuyên đi học, xác suất đạt điểm cao là $${(highGradeGivenAttendance * 100).toFixed(2)}\\%$. Nếu học sinh không thường xuyên đi học, xác suất đạt điểm cao là $${(highGradeGivenNoAttendance * 100).toFixed(2)}\\%$. Tính xác suất một học sinh đạt điểm cao là học sinh thường xuyên đi học là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_A_given_H * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $A$ là sự kiện học sinh thường xuyên đi học.
+    \\item $N$ là sự kiện học sinh không thường xuyên đi học.
+    \\item $H$ là sự kiện học sinh đạt điểm cao.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất học sinh thường xuyên đi học: $P(A) = ${attendanceRate}$.
+    \\item Xác suất học sinh không thường xuyên đi học: $P(N) = ${1 - attendanceRate}$.
+    \\item Xác suất đạt điểm cao nếu học sinh thường xuyên đi học: $P(H|A) = ${highGradeGivenAttendance}$.
+    \\item Xác suất đạt điểm cao nếu học sinh không thường xuyên đi học: $P(H|N) = ${highGradeGivenNoAttendance}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất học sinh đạt điểm cao $P(H)$}\\\\
+Học sinh đạt điểm cao có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Học sinh thường xuyên đi học và đạt điểm cao.
+    \\item Học sinh không thường xuyên đi học và đạt điểm cao.
+\\end{enumerate}
+Ta tính xác suất học sinh đạt điểm cao bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(H) = P(H|A)P(A) + P(H|N)P(N)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(A) = ${attendanceRate}$
+    \\item $P(N) = ${1 - attendanceRate}$
+    \\item $P(H|A) = ${highGradeGivenAttendance}$
+    \\item $P(H|N) = ${highGradeGivenNoAttendance}$
+\\end{itemize}
+Thay các giá trị vào, ta có
+\\[
+P(H) = ${highGradeGivenAttendance} \\times ${attendanceRate} + ${highGradeGivenNoAttendance} \\times ${1 - attendanceRate}
+\\]
+\\[
+P(H) = ${(highGradeGivenAttendance * attendanceRate).toFixed(4)} + ${(highGradeGivenNoAttendance * (1 - attendanceRate)).toFixed(4)}
+\\]
+\\[
+P(H) = ${((highGradeGivenAttendance * attendanceRate) + (highGradeGivenNoAttendance * (1 - attendanceRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes ta được
+\\[
+P(A|H) = \\dfrac{P(H|A) \\cdot P(A)}{P(H)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(A|H) = \\dfrac{${highGradeGivenAttendance} \\times ${attendanceRate}}{${((highGradeGivenAttendance * attendanceRate) + (highGradeGivenNoAttendance * (1 - attendanceRate))).toFixed(4)}}
+\\]
+\\[
+P(A|H) = \\dfrac{${(highGradeGivenAttendance * attendanceRate).toFixed(4)}}{${((highGradeGivenAttendance * attendanceRate) + (highGradeGivenNoAttendance * (1 - attendanceRate))).toFixed(4)}}
+\\]
+\\[
+P(A|H) \\approx ${P_A_given_H}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một học sinh đạt điểm cao là học sinh thường xuyên đi học là khoảng $${(P_A_given_H * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỉ lệ học sinh thường xuyên đi học là $${(attendanceRate * 100).toFixed(2)}\\%$, nhưng khả năng đạt điểm cao khi không thường xuyên đi học vẫn có một tỉ lệ nhất định là $${(highGradeGivenNoAttendance * 100).toFixed(2)}\\%$. Do đó, khi một học sinh đạt điểm cao, khả năng học sinh đó thường xuyên đi học là khoảng $${(P_A_given_H * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+    return question;
+}
+function xs_click_quangcao(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(clickThroughRate, purchaseGivenClick, purchaseGivenNoClick) {
+        const P_C = clickThroughRate;
+        const P_NC = 1 - P_C;
+        const P_P_given_C = purchaseGivenClick;
+        const P_P_given_NC = purchaseGivenNoClick;
+
+        const P_P = (P_P_given_C * P_C) + (P_P_given_NC * P_NC);
+        const P_C_given_P = (P_P_given_C * P_C) / P_P;
+
+        return P_C_given_P.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const clickThroughRate = parseFloat(generateRandomPercentage(0.02, 0.01));
+    const purchaseGivenClick = parseFloat(generateRandomPercentage(0.30, 0.05));
+    const purchaseGivenNoClick = parseFloat(generateRandomPercentage(0.01, 0.005));
+
+    // Tính xác suất một người mua sản phẩm đã nhấp chuột vào quảng cáo
+    const P_C_given_P = calculateProbability(clickThroughRate, purchaseGivenClick, purchaseGivenNoClick);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một chiến dịch quảng cáo trực tuyến có tỷ lệ nhấp chuột (CTR) là $${(clickThroughRate * 100).toFixed(2)}\\%$. Nếu người dùng nhấp chuột vào quảng cáo, xác suất họ mua sản phẩm là $${(purchaseGivenClick * 100).toFixed(2)}\\%$. Nếu người dùng không nhấp chuột vào quảng cáo, xác suất họ mua sản phẩm là $${(purchaseGivenNoClick * 100).toFixed(2)}\\%$. Tính xác suất một người mua sản phẩm đã nhấp chuột vào quảng cáo là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_C_given_P * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $C$ là sự kiện người dùng nhấp chuột vào quảng cáo.
+    \\item $N$ là sự kiện người dùng không nhấp chuột vào quảng cáo.
+    \\item $P$ là sự kiện người dùng mua sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ nhấp chuột vào quảng cáo: $P(C) = ${clickThroughRate}$.
+    \\item Tỷ lệ không nhấp chuột vào quảng cáo: $P(N) = ${1 - clickThroughRate}$.
+    \\item Xác suất mua sản phẩm nếu nhấp chuột vào quảng cáo: $P(P|C) = ${purchaseGivenClick}$.
+    \\item Xác suất mua sản phẩm nếu không nhấp chuột vào quảng cáo: $P(P|N) = ${purchaseGivenNoClick}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất mua sản phẩm $P(P)$}\\\\
+Người dùng mua sản phẩm có thể xảy ra theo hai cách
+\\begin{enumerate}
+    \\item Người dùng nhấp chuột vào quảng cáo và mua sản phẩm.
+    \\item Người dùng không nhấp chuột vào quảng cáo nhưng mua sản phẩm.
+\\end{enumerate}
+Ta tính xác suất người dùng mua sản phẩm bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P) = P(P|C)P(C) + P(P|N)P(N)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(C) = ${clickThroughRate}$
+    \\item $P(N) = ${1 - clickThroughRate}$
+    \\item $P(P|C) = ${purchaseGivenClick}$
+    \\item $P(P|N) = ${purchaseGivenNoClick}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(P) = ${purchaseGivenClick} \\times ${clickThroughRate} + ${purchaseGivenNoClick} \\times ${1 - clickThroughRate}
+\\]
+\\[
+P(P) = ${(purchaseGivenClick * clickThroughRate).toFixed(4)} + ${(purchaseGivenNoClick * (1 - clickThroughRate)).toFixed(4)}
+\\]
+\\[
+P(P) = ${((purchaseGivenClick * clickThroughRate) + (purchaseGivenNoClick * (1 - clickThroughRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(C|P) = \\dfrac{P(P|C) \\cdot P(C)}{P(P)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(C|P) = \\dfrac{${purchaseGivenClick} \\times ${clickThroughRate}}{${((purchaseGivenClick * clickThroughRate) + (purchaseGivenNoClick * (1 - clickThroughRate))).toFixed(4)}}
+\\]
+\\[
+P(C|P) = \\dfrac{${(purchaseGivenClick * clickThroughRate).toFixed(4)}}{${((purchaseGivenClick * clickThroughRate) + (purchaseGivenNoClick * (1 - clickThroughRate))).toFixed(4)}}
+\\]
+\\[
+P(C|P) \\approx ${P_C_given_P}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một người mua sản phẩm đã nhấp chuột vào quảng cáo là khoảng $${(P_C_given_P * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ nhấp chuột vào quảng cáo là $${(clickThroughRate * 100).toFixed(2)}\\%$, nhưng khả năng mua sản phẩm khi không nhấp chuột vào quảng cáo vẫn có một tỉ lệ nhất định là $${(purchaseGivenNoClick * 100).toFixed(2)}\\%$. Do đó, khi một người mua sản phẩm, khả năng người đó đã nhấp chuột vào quảng cáo là khoảng $${(P_C_given_P * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_khao_sat_thi_truong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(likeRate, buyGivenLike, buyGivenDislike) {
+        const P_L = likeRate;
+        const P_D = 1 - P_L;
+        const P_B_given_L = buyGivenLike;
+        const P_B_given_D = buyGivenDislike;
+
+        const P_B = (P_B_given_L * P_L) + (P_B_given_D * P_D);
+        const P_L_given_B = (P_B_given_L * P_L) / P_B;
+
+        return P_L_given_B.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const likeRate = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const buyGivenLike = parseFloat(generateRandomPercentage(0.75, 0.05));
+    const buyGivenDislike = parseFloat(generateRandomPercentage(0.10, 0.05));
+
+    // Tính xác suất một khách hàng mua sản phẩm là khách hàng thích sản phẩm
+    const P_L_given_B = calculateProbability(likeRate, buyGivenLike, buyGivenDislike);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty khảo sát thị trường để đánh giá sản phẩm mới. Kết quả cho thấy $${(likeRate * 100).toFixed(2)}\\%$ khách hàng thích sản phẩm. Trong số những khách hàng thích sản phẩm, $${(buyGivenLike * 100).toFixed(2)}\\%$ sẽ mua sản phẩm. Trong số những khách hàng không thích sản phẩm, chỉ $${(buyGivenDislike * 100).toFixed(2)}\\%$ sẽ mua sản phẩm. Tính xác suất một khách hàng mua sản phẩm là khách hàng thích sản phẩm là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_L_given_B * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $L$ là sự kiện khách hàng thích sản phẩm.
+    \\item $D$ là sự kiện khách hàng không thích sản phẩm.
+    \\item $B$ là sự kiện khách hàng mua sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ khách hàng thích sản phẩm: $P(L) = ${likeRate}$.
+    \\item Tỷ lệ khách hàng không thích sản phẩm: $P(D) = ${1 - likeRate}$.
+    \\item Xác suất mua sản phẩm nếu thích sản phẩm: $P(B|L) = ${buyGivenLike}$.
+    \\item Xác suất mua sản phẩm nếu không thích sản phẩm: $P(B|D) = ${buyGivenDislike}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất mua sản phẩm $P(B)$}\\\\
+Khách hàng mua sản phẩm có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng thích sản phẩm và mua sản phẩm.
+    \\item Khách hàng không thích sản phẩm nhưng mua sản phẩm.
+\\end{enumerate}
+Ta tính xác suất khách hàng mua sản phẩm bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(B) = P(B|L)P(L) + P(B|D)P(D)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(L) = ${likeRate}$
+    \\item $P(D) = ${1 - likeRate}$
+    \\item $P(B|L) = ${buyGivenLike}$
+    \\item $P(B|D) = ${buyGivenDislike}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(B) = ${buyGivenLike} \\times ${likeRate} + ${buyGivenDislike} \\times ${1 - likeRate}
+\\]
+\\[
+P(B) = ${(buyGivenLike * likeRate).toFixed(4)} + ${(buyGivenDislike * (1 - likeRate)).toFixed(4)}
+\\]
+\\[
+P(B) = ${((buyGivenLike * likeRate) + (buyGivenDislike * (1 - likeRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(L|B) = \\dfrac{P(B|L) \\cdot P(L)}{P(B)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(L|B) = \\dfrac{${buyGivenLike} \\times ${likeRate}}{${((buyGivenLike * likeRate) + (buyGivenDislike * (1 - likeRate))).toFixed(4)}}
+\\]
+\\[
+P(L|B) = \\dfrac{${(buyGivenLike * likeRate).toFixed(4)}}{${((buyGivenLike * likeRate) + (buyGivenDislike * (1 - likeRate))).toFixed(4)}}
+\\]
+\\[
+P(L|B) \\approx ${P_L_given_B}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng mua sản phẩm là khách hàng thích sản phẩm là khoảng $${(P_L_given_B * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng thích sản phẩm là $${(likeRate * 100).toFixed(2)}\\%$, nhưng khả năng mua sản phẩm khi không thích sản phẩm vẫn có một tỉ lệ nhất định là $${(buyGivenDislike * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng mua sản phẩm, khả năng khách hàng đó thích sản phẩm là khoảng $${(P_L_given_B * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_hocsinh_lam_btvn(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(homeworkRate, highGradeGivenHomework, highGradeGivenNoHomework) {
+        const P_H = homeworkRate;
+        const P_NH = 1 - P_H;
+        const P_G_given_H = highGradeGivenHomework;
+        const P_G_given_NH = highGradeGivenNoHomework;
+
+        const P_G = (P_G_given_H * P_H) + (P_G_given_NH * P_NH);
+        const P_H_given_G = (P_G_given_H * P_H) / P_G;
+
+        return P_H_given_G.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const homeworkRate = parseFloat(generateRandomPercentage(0.70, 0.05));
+    const highGradeGivenHomework = parseFloat(generateRandomPercentage(0.80, 0.05));
+    const highGradeGivenNoHomework = parseFloat(generateRandomPercentage(0.30, 0.05));
+
+    // Tính xác suất học sinh đạt điểm cao đã làm bài tập về nhà
+    const P_H_given_G = calculateProbability(homeworkRate, highGradeGivenHomework, highGradeGivenNoHomework);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một giáo viên toán phát hiện rằng $${(homeworkRate * 100).toFixed(2)}\\%$ học sinh trong lớp đã làm bài tập về nhà. Nếu học sinh đã làm bài tập về nhà, xác suất đạt điểm cao trong bài thi là $${(highGradeGivenHomework * 100).toFixed(2)}\\%$. Nếu học sinh không làm bài tập về nhà, xác suất đạt điểm cao trong bài thi là $${(highGradeGivenNoHomework * 100).toFixed(2)}\\%$. Tính xác suất một học sinh đạt điểm cao đã làm bài tập về nhà là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_H_given_G * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $H$ là sự kiện học sinh đã làm bài tập về nhà.
+    \\item $NH$ là sự kiện học sinh không làm bài tập về nhà.
+    \\item $G$ là sự kiện học sinh đạt điểm cao.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất học sinh đã làm bài tập về nhà: $P(H) = ${homeworkRate}$.
+    \\item Xác suất học sinh không làm bài tập về nhà: $P(NH) = ${1 - homeworkRate}$.
+    \\item Xác suất đạt điểm cao nếu học sinh đã làm bài tập về nhà: $P(G|H) = ${highGradeGivenHomework}$.
+    \\item Xác suất đạt điểm cao nếu học sinh không làm bài tập về nhà: $P(G|NH) = ${highGradeGivenNoHomework}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất đạt điểm cao $P(G)$}\\\\
+Học sinh đạt điểm cao có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Học sinh đã làm bài tập về nhà và đạt điểm cao.
+    \\item Học sinh không làm bài tập về nhà nhưng đạt điểm cao.
+\\end{enumerate}
+Ta tính xác suất học sinh đạt điểm cao bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(G) = P(G|H)P(H) + P(G|NH)P(NH)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(H) = ${homeworkRate}$
+    \\item $P(NH) = ${1 - homeworkRate}$
+    \\item $P(G|H) = ${highGradeGivenHomework}$
+    \\item $P(G|NH) = ${highGradeGivenNoHomework}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(G) = ${highGradeGivenHomework} \\times ${homeworkRate} + ${highGradeGivenNoHomework} \\times ${1 - homeworkRate}
+\\]
+\\[
+P(G) = ${(highGradeGivenHomework * homeworkRate).toFixed(4)} + ${(highGradeGivenNoHomework * (1 - homeworkRate)).toFixed(4)}
+\\]
+\\[
+P(G) = ${((highGradeGivenHomework * homeworkRate) + (highGradeGivenNoHomework * (1 - homeworkRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(H|G) = \\dfrac{P(G|H) \\cdot P(H)}{P(G)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(H|G) = \\dfrac{${highGradeGivenHomework} \\times ${homeworkRate}}{${((highGradeGivenHomework * homeworkRate) + (highGradeGivenNoHomework * (1 - homeworkRate))).toFixed(4)}}
+\\]
+\\[
+P(H|G) = \\dfrac{${(highGradeGivenHomework * homeworkRate).toFixed(4)}}{${((highGradeGivenHomework * homeworkRate) + (highGradeGivenNoHomework * (1 - homeworkRate))).toFixed(4)}}
+\\]
+\\[
+P(H|G) \\approx ${P_H_given_G}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một học sinh đạt điểm cao đã làm bài tập về nhà là khoảng $${(P_H_given_G * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ học sinh đã làm bài tập về nhà là $${(homeworkRate * 100).toFixed(2)}\\%$, nhưng khả năng đạt điểm cao khi không làm bài tập về nhà vẫn có một tỉ lệ nhất định là $${(highGradeGivenNoHomework * 100).toFixed(2)}\\%$. Do đó, khi một học sinh đạt điểm cao, khả năng học sinh đó đã làm bài tập về nhà là khoảng $${(P_H_given_G * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_bi_benh(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(diseaseRate, sensitivity, specificity) {
+        const P_D = diseaseRate;
+        const P_ND = 1 - P_D;
+        const P_T_given_D = sensitivity;
+        const P_T_given_ND = 1 - specificity;
+
+        const P_T = (P_T_given_D * P_D) + (P_T_given_ND * P_ND);
+        const P_D_given_T = (P_T_given_D * P_D) / P_T;
+
+        return P_D_given_T.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const diseaseRate = parseFloat(generateRandomPercentage(0.05, 0.01));
+    const sensitivity = parseFloat(generateRandomPercentage(0.90, 0.05));
+    const specificity = parseFloat(generateRandomPercentage(0.95, 0.05));
+
+    // Tính xác suất một bệnh nhân có kết quả xét nghiệm dương tính mắc bệnh A
+    const P_D_given_T = calculateProbability(diseaseRate, sensitivity, specificity);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một bệnh viện phát hiện rằng $${(diseaseRate * 100).toFixed(2)}\\%$ bệnh nhân mắc một loại bệnh A. Xét nghiệm cho bệnh A có độ nhạy là $${(sensitivity * 100).toFixed(2)}\\%$ (xác suất dương tính thật) và độ đặc hiệu là $${(specificity * 100).toFixed(2)}\\%$ (xác suất âm tính thật). Tính xác suất một bệnh nhân có kết quả xét nghiệm dương tính mắc bệnh A là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_D_given_T * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $D$ là sự kiện bệnh nhân mắc bệnh A.
+    \\item $ND$ là sự kiện bệnh nhân không mắc bệnh A.
+    \\item $T$ là sự kiện xét nghiệm dương tính.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất bệnh nhân mắc bệnh A: $P(D) = ${diseaseRate}$.
+    \\item Xác suất bệnh nhân không mắc bệnh A: $P(ND) = ${1 - diseaseRate}$.
+    \\item Xác suất xét nghiệm dương tính nếu mắc bệnh: $P(T|D) = ${sensitivity}$.
+    \\item Xác suất xét nghiệm dương tính nếu không mắc bệnh: $P(T|ND) = ${1 - specificity}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất xét nghiệm dương tính $P(T)$}\\\\
+Xét nghiệm dương tính có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Bệnh nhân mắc bệnh và xét nghiệm dương tính.
+    \\item Bệnh nhân không mắc bệnh nhưng xét nghiệm dương tính giả.
+\\end{enumerate}
+Ta tính xác suất xét nghiệm dương tính bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(T) = P(T|D)P(D) + P(T|ND)P(ND)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(D) = ${diseaseRate}$
+    \\item $P(ND) = ${1 - diseaseRate}$
+    \\item $P(T|D) = ${sensitivity}$
+    \\item $P(T|ND) = ${1 - specificity}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(T) = ${sensitivity} \\times ${diseaseRate} + ${(1 - specificity).toFixed(4)} \\times ${(1 - diseaseRate).toFixed(4)}
+\\]
+\\[
+P(T) = ${(sensitivity * diseaseRate).toFixed(4)} + ${((1 - specificity) * (1 - diseaseRate)).toFixed(4)}
+\\]
+\\[
+P(T) = ${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(D|T) = \\dfrac{P(T|D) \\cdot P(D)}{P(T)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(D|T) = \\dfrac{${sensitivity} \\times ${diseaseRate}}{${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}}
+\\]
+\\[
+P(D|T) = \\dfrac{${(sensitivity * diseaseRate).toFixed(4)}}{${((sensitivity * diseaseRate) + ((1 - specificity) * (1 - diseaseRate))).toFixed(4)}}
+\\]
+\\[
+P(D|T) \\approx ${P_D_given_T}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một bệnh nhân có kết quả xét nghiệm dương tính mắc bệnh A là khoảng $${(P_D_given_T * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ bệnh nhân mắc bệnh A là $${(diseaseRate * 100).toFixed(2)}\\%$, nhưng khả năng xét nghiệm dương tính giả vẫn có một tỉ lệ nhất định là $${((1 - specificity) * 100).toFixed(2)}\\%$. Do đó, khi một bệnh nhân có kết quả xét nghiệm dương tính, khả năng họ thực sự mắc bệnh A là khoảng $${(P_D_given_T * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+    return question;
+}
+function xs_trung_bau_cu(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(winRateA, policyGivenA, policyGivenB) {
+        const P_A = winRateA;
+        const P_B = 1 - P_A;
+        const P_X_given_A = policyGivenA;
+        const P_X_given_B = policyGivenB;
+
+        const P_X = (P_X_given_A * P_A) + (P_X_given_B * P_B);
+        return P_X.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const winRateA = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const policyGivenA = parseFloat(generateRandomPercentage(0.80, 0.05));
+    const policyGivenB = parseFloat(generateRandomPercentage(0.30, 0.05));
+
+    // Tính xác suất chính sách X được thực hiện
+    const P_X = calculateProbability(winRateA, policyGivenA, policyGivenB);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Trong một cuộc bầu cử, có hai ứng cử viên: A và B. Ứng cử viên A có $${(winRateA * 100).toFixed(2)}\\%$ cơ hội thắng cử. Nếu A thắng cử, xác suất họ thực hiện chính sách X là $${(policyGivenA * 100).toFixed(2)}\\%$. Nếu B thắng cử, xác suất họ thực hiện chính sách X là $${(policyGivenB * 100).toFixed(2)}\\%$. Tính xác suất chính sách X được thực hiện là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_X * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $A$ là sự kiện ứng cử viên A thắng cử.
+    \\item $B$ là sự kiện ứng cử viên B thắng cử.
+    \\item $X$ là sự kiện chính sách X được thực hiện.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất ứng cử viên A thắng cử: $P(A) = ${winRateA}$.
+    \\item Xác suất ứng cử viên B thắng cử: $P(B) = ${1 - winRateA}$.
+    \\item Xác suất thực hiện chính sách X nếu A thắng: $P(X|A) = ${policyGivenA}$.
+    \\item Xác suất thực hiện chính sách X nếu B thắng: $P(X|B) = ${policyGivenB}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất chính sách X được thực hiện $P(X)$}\\\\
+Chính sách X được thực hiện có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Ứng cử viên A thắng cử và thực hiện chính sách X.
+    \\item Ứng cử viên B thắng cử và thực hiện chính sách X.
+\\end{enumerate}
+Ta tính xác suất chính sách X được thực hiện bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(X) = P(X|A)P(A) + P(X|B)P(B)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(A) = ${winRateA}$
+    \\item $P(B) = ${1 - winRateA}$
+    \\item $P(X|A) = ${policyGivenA}$
+    \\item $P(X|B) = ${policyGivenB}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(X) = ${policyGivenA} \\times ${winRateA} + ${policyGivenB} \\times ${1 - winRateA}
+\\]
+\\[
+P(X) = ${(policyGivenA * winRateA).toFixed(4)} + ${(policyGivenB * (1 - winRateA)).toFixed(4)}
+\\]
+\\[
+P(X) = ${((policyGivenA * winRateA) + (policyGivenB * (1 - winRateA))).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất chính sách X được thực hiện là khoảng $${(P_X * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Ứng cử viên A có $${(winRateA * 100).toFixed(2)}\\%$ cơ hội thắng cử và xác suất họ thực hiện chính sách X là $${(policyGivenA * 100).toFixed(2)}\\%$. Ứng cử viên B có $${((1 - winRateA) * 100).toFixed(2)}\\%$ cơ hội thắng cử và xác suất họ thực hiện chính sách X là $${(policyGivenB * 100).toFixed(2)}\\%$. Do đó, khi tính toán, xác suất chính sách X được thực hiện là khoảng $${(P_X * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_nhanvien_hoanthanh_tot(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(experiencedRate, onTimeGivenExperienced, onTimeGivenInexperienced) {
+        const P_E = experiencedRate;
+        const P_IE = 1 - P_E;
+        const P_OT_given_E = onTimeGivenExperienced;
+        const P_OT_given_IE = onTimeGivenInexperienced;
+
+        const P_OT = (P_OT_given_E * P_E) + (P_OT_given_IE * P_IE);
+        const P_E_given_OT = (P_OT_given_E * P_E) / P_OT;
+
+        return P_E_given_OT.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const experiencedRate = parseFloat(generateRandomPercentage(0.70, 0.05));
+    const onTimeGivenExperienced = parseFloat(generateRandomPercentage(0.90, 0.05));
+    const onTimeGivenInexperienced = parseFloat(generateRandomPercentage(0.50, 0.05));
+
+    // Tính xác suất một nhân viên hoàn thành công việc đúng hạn là nhân viên có kinh nghiệm
+    const P_E_given_OT = calculateProbability(experiencedRate, onTimeGivenExperienced, onTimeGivenInexperienced);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty có $${(experiencedRate * 100).toFixed(2)}\\%$ nhân viên là người có kinh nghiệm. Trong số nhân viên có kinh nghiệm, $${(onTimeGivenExperienced * 100).toFixed(2)}\\%$ hoàn thành công việc đúng hạn. Trong số nhân viên không có kinh nghiệm, chỉ $${(onTimeGivenInexperienced * 100).toFixed(2)}\\%$ hoàn thành công việc đúng hạn. Tính xác suất một nhân viên hoàn thành công việc đúng hạn là nhân viên có kinh nghiệm là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_E_given_OT * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $E$ là sự kiện nhân viên có kinh nghiệm.
+    \\item $IE$ là sự kiện nhân viên không có kinh nghiệm.
+    \\item $OT$ là sự kiện nhân viên hoàn thành công việc đúng hạn.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất nhân viên có kinh nghiệm: $P(E) = ${experiencedRate}$.
+    \\item Xác suất nhân viên không có kinh nghiệm: $P(IE) = ${1 - experiencedRate}$.
+    \\item Xác suất hoàn thành công việc đúng hạn nếu có kinh nghiệm: $P(OT|E) = ${onTimeGivenExperienced}$.
+    \\item Xác suất hoàn thành công việc đúng hạn nếu không có kinh nghiệm: $P(OT|IE) = ${onTimeGivenInexperienced}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất hoàn thành công việc đúng hạn $P(OT)$}\\\\
+Nhân viên hoàn thành công việc đúng hạn có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Nhân viên có kinh nghiệm và hoàn thành công việc đúng hạn.
+    \\item Nhân viên không có kinh nghiệm nhưng hoàn thành công việc đúng hạn.
+\\end{enumerate}
+Ta tính xác suất nhân viên hoàn thành công việc đúng hạn bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(OT) = P(OT|E)P(E) + P(OT|IE)P(IE)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(E) = ${experiencedRate}$
+    \\item $P(IE) = ${1 - experiencedRate}$
+    \\item $P(OT|E) = ${onTimeGivenExperienced}$
+    \\item $P(OT|IE) = ${onTimeGivenInexperienced}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(OT) = ${onTimeGivenExperienced} \\times ${experiencedRate} + ${onTimeGivenInexperienced} \\times ${1 - experiencedRate}
+\\]
+\\[
+P(OT) = ${(onTimeGivenExperienced * experiencedRate).toFixed(4)} + ${(onTimeGivenInexperienced * (1 - experiencedRate)).toFixed(4)}
+\\]
+\\[
+P(OT) = ${((onTimeGivenExperienced * experiencedRate) + (onTimeGivenInexperienced * (1 - experiencedRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(E|OT) = \\dfrac{P(OT|E) \\cdot P(E)}{P(OT)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(E|OT) = \\dfrac{${onTimeGivenExperienced} \\times ${experiencedRate}}{${((onTimeGivenExperienced * experiencedRate) + (onTimeGivenInexperienced * (1 - experiencedRate))).toFixed(4)}}
+\\]
+\\[
+P(E|OT) = \\dfrac{${(onTimeGivenExperienced * experiencedRate).toFixed(4)}}{${((onTimeGivenExperienced * experiencedRate) + (onTimeGivenInexperienced * (1 - experiencedRate))).toFixed(4)}}
+\\]
+\\[
+P(E|OT) \\approx ${P_E_given_OT}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một nhân viên hoàn thành công việc đúng hạn là nhân viên có kinh nghiệm là khoảng $${(P_E_given_OT * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ nhân viên có kinh nghiệm là $${(experiencedRate * 100).toFixed(2)}\\%$, nhưng khả năng hoàn thành công việc đúng hạn khi không có kinh nghiệm vẫn có một tỉ lệ nhất định là $${(onTimeGivenInexperienced * 100).toFixed(2)}\\%$. Do đó, khi một nhân viên hoàn thành công việc đúng hạn, khả năng nhân viên đó có kinh nghiệm là khoảng $${(P_E_given_OT * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_tiem_thuoc_khoibenh(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(treatmentRate, successGivenTreatment, successGivenNoTreatment) {
+        const P_T = treatmentRate;
+        const P_NT = 1 - P_T;
+        const P_S_given_T = successGivenTreatment;
+        const P_S_given_NT = successGivenNoTreatment;
+
+        const P_S = (P_S_given_T * P_T) + (P_S_given_NT * P_NT);
+        const P_T_given_S = (P_S_given_T * P_T) / P_S;
+
+        return P_T_given_S.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const treatmentRate = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const successGivenTreatment = parseFloat(generateRandomPercentage(0.85, 0.05));
+    const successGivenNoTreatment = parseFloat(generateRandomPercentage(0.10, 0.05));
+
+    // Tính xác suất một bệnh nhân khỏi bệnh là bệnh nhân được tiêm thuốc
+    const P_T_given_S = calculateProbability(treatmentRate, successGivenTreatment, successGivenNoTreatment);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một loại thuốc mới có tỷ lệ thành công là $${(successGivenTreatment * 100).toFixed(2)}\\%$ đối với bệnh nhân mắc bệnh X. Trong một thử nghiệm lâm sàng, $${(treatmentRate * 100).toFixed(2)}\\%$ bệnh nhân được tiêm thuốc này. Tính xác suất một bệnh nhân khỏi bệnh là bệnh nhân được tiêm thuốc là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_T_given_S * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $T$ là sự kiện bệnh nhân được tiêm thuốc.
+    \\item $NT$ là sự kiện bệnh nhân không được tiêm thuốc.
+    \\item $S$ là sự kiện bệnh nhân khỏi bệnh.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất bệnh nhân được tiêm thuốc: $P(T) = ${treatmentRate}$.
+    \\item Xác suất bệnh nhân không được tiêm thuốc: $P(NT) = ${1 - treatmentRate}$.
+    \\item Xác suất khỏi bệnh nếu được tiêm thuốc: $P(S|T) = ${successGivenTreatment}$.
+    \\item Xác suất khỏi bệnh nếu không được tiêm thuốc: $P(S|NT) = ${successGivenNoTreatment}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất khỏi bệnh $P(S)$}\\\\
+Bệnh nhân khỏi bệnh có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Bệnh nhân được tiêm thuốc và khỏi bệnh.
+    \\item Bệnh nhân không được tiêm thuốc nhưng vẫn khỏi bệnh.
+\\end{enumerate}
+Ta tính xác suất bệnh nhân khỏi bệnh bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|T)P(T) + P(S|NT)P(NT)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(T) = ${treatmentRate}$
+    \\item $P(NT) = ${1 - treatmentRate}$
+    \\item $P(S|T) = ${successGivenTreatment}$
+    \\item $P(S|NT) = ${successGivenNoTreatment}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${successGivenTreatment} \\times ${treatmentRate} + ${successGivenNoTreatment} \\times ${1 - treatmentRate}
+\\]
+\\[
+P(S) = ${(successGivenTreatment * treatmentRate).toFixed(4)} + ${(successGivenNoTreatment * (1 - treatmentRate)).toFixed(4)}
+\\]
+\\[
+P(S) = ${((successGivenTreatment * treatmentRate) + (successGivenNoTreatment * (1 - treatmentRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(T|S) = \\dfrac{P(S|T) \\cdot P(T)}{P(S)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(T|S) = \\dfrac{${successGivenTreatment} \\times ${treatmentRate}}{${((successGivenTreatment * treatmentRate) + (successGivenNoTreatment * (1 - treatmentRate))).toFixed(4)}}
+\\]
+\\[
+P(T|S) = \\dfrac{${(successGivenTreatment * treatmentRate).toFixed(4)}}{${((successGivenTreatment * treatmentRate) + (successGivenNoTreatment * (1 - treatmentRate))).toFixed(4)}}
+\\]
+\\[
+P(T|S) \\approx ${P_T_given_S}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một bệnh nhân khỏi bệnh là bệnh nhân được tiêm thuốc là khoảng $${(P_T_given_S * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ bệnh nhân được tiêm thuốc là $${(treatmentRate * 100).toFixed(2)}\\%$, nhưng khả năng khỏi bệnh khi không được tiêm thuốc vẫn có một tỉ lệ nhất định là $${(successGivenNoTreatment * 100).toFixed(2)}\\%$. Do đó, khi một bệnh nhân khỏi bệnh, khả năng bệnh nhân đó đã được tiêm thuốc là khoảng $${(P_T_given_S * 100).toFixed(1)}\\%$.\\\\
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_thang_tro_choi(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(winRate, continueGivenWin, continueGivenLose) {
+        const P_W = winRate;
+        const P_L = 1 - P_W;
+        const P_C_given_W = continueGivenWin;
+        const P_C_given_L = continueGivenLose;
+
+        const P_C = (P_C_given_W * P_W) + (P_C_given_L * P_L);
+        const P_W_given_C = (P_C_given_W * P_W) / P_C;
+
+        return P_W_given_C.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const winRate = parseFloat(generateRandomPercentage(0.40, 0.05));
+    const continueGivenWin = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const continueGivenLose = parseFloat(generateRandomPercentage(0.30, 0.05));
+
+    // Tính xác suất một người chơi tiếp tục trò chơi là họ đã thắng trò chơi
+    const P_W_given_C = calculateProbability(winRate, continueGivenWin, continueGivenLose);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một trò chơi có $${(winRate * 100).toFixed(2)}\\%$ khả năng thắng. Nếu một người chơi thắng, xác suất họ chơi tiếp là $${(continueGivenWin * 100).toFixed(2)}\\%$. Nếu họ thua, xác suất họ chơi tiếp là $${(continueGivenLose * 100).toFixed(2)}\\%$. Tính xác suất một người chơi tiếp tục trò chơi là họ đã thắng trò chơi là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_W_given_C * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $W$ là sự kiện người chơi thắng trò chơi.
+    \\item $L$ là sự kiện người chơi thua trò chơi.
+    \\item $C$ là sự kiện người chơi tiếp tục trò chơi.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất người chơi thắng trò chơi: $P(W) = ${winRate}$.
+    \\item Xác suất người chơi thua trò chơi: $P(L) = ${1 - winRate}$.
+    \\item Xác suất tiếp tục chơi nếu thắng: $P(C|W) = ${continueGivenWin}$.
+    \\item Xác suất tiếp tục chơi nếu thua: $P(C|L) = ${continueGivenLose}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất tiếp tục chơi $P(C)$}\\\\
+Người chơi tiếp tục chơi có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Người chơi thắng trò chơi và tiếp tục chơi.
+    \\item Người chơi thua trò chơi nhưng tiếp tục chơi.
+\\end{enumerate}
+Ta tính xác suất người chơi tiếp tục chơi bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(C) = P(C|W)P(W) + P(C|L)P(L)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(W) = ${winRate}$
+    \\item $P(L) = ${1 - winRate}$
+    \\item $P(C|W) = ${continueGivenWin}$
+    \\item $P(C|L) = ${continueGivenLose}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(C) = ${continueGivenWin} \\times ${winRate} + ${continueGivenLose} \\times ${1 - winRate}
+\\]
+\\[
+P(C) = ${(continueGivenWin * winRate).toFixed(4)} + ${(continueGivenLose * (1 - winRate)).toFixed(4)}
+\\]
+\\[
+P(C) = ${((continueGivenWin * winRate) + (continueGivenLose * (1 - winRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(W|C) = \\dfrac{P(C|W) \\cdot P(W)}{P(C)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(W|C) = \\frac{${continueGivenWin} \\times ${winRate}}{${((continueGivenWin * winRate) + (continueGivenLose * (1 - winRate))).toFixed(4)}}
+\\]
+\\[
+P(W|C) = \\frac{${(continueGivenWin * winRate).toFixed(4)}}{${((continueGivenWin * winRate) + (continueGivenLose * (1 - winRate))).toFixed(4)}}
+\\]
+\\[
+P(W|C) \\approx ${P_W_given_C}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một người chơi tiếp tục trò chơi là họ đã thắng trò chơi là khoảng $${(P_W_given_C * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ thắng trò chơi là $${(winRate * 100).toFixed(2)}\\%$, nhưng khả năng tiếp tục chơi khi thua vẫn có một tỉ lệ nhất định là $${(continueGivenLose * 100).toFixed(2)}\\%$. Do đó, khi một người chơi tiếp tục trò chơi, khả năng họ đã thắng trò chơi là khoảng $${(P_W_given_C * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_mua_ngap_duong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(rainRate, floodGivenRain, floodGivenNoRain) {
+        const P_R = rainRate;
+        const P_NR = 1 - P_R;
+        const P_F_given_R = floodGivenRain;
+        const P_F_given_NR = floodGivenNoRain;
+
+        const P_F = (P_F_given_R * P_R) + (P_F_given_NR * P_NR);
+        return P_F.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const rainRate = parseFloat(generateRandomPercentage(0.40, 0.05));
+    const floodGivenRain = parseFloat(generateRandomPercentage(0.70, 0.05));
+    const floodGivenNoRain = parseFloat(generateRandomPercentage(0.10, 0.05));
+
+    // Tính xác suất đường bị ngập ngày mai
+    const P_F = calculateProbability(rainRate, floodGivenRain, floodGivenNoRain);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Dự báo thời tiết dự đoán có $${(rainRate * 100).toFixed(2)}\\%$ khả năng mưa ngày mai. Nếu trời mưa, xác suất đường bị ngập là $${(floodGivenRain * 100).toFixed(2)}\\%$. Nếu không mưa, xác suất đường bị ngập là $${(floodGivenNoRain * 100).toFixed(2)}\\%$. Tính xác suất đường bị ngập ngày mai là bao nhiêu $\\%$, làm tròn một chữ số thập phân.\\\\
+\\shortans{$${(P_F * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $R$ là sự kiện trời mưa.
+    \\item $NR$ là sự kiện trời không mưa.
+    \\item $F$ là sự kiện đường bị ngập.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất trời mưa: $P(R) = ${rainRate}$.
+    \\item Xác suất trời không mưa: $P(NR) = ${1 - rainRate}$.
+    \\item Xác suất đường bị ngập nếu trời mưa: $P(F|R) = ${floodGivenRain}$.
+    \\item Xác suất đường bị ngập nếu trời không mưa: $P(F|NR) = ${floodGivenNoRain}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất đường bị ngập $P(F)$}\\\\
+Đường bị ngập có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Trời mưa và đường bị ngập.
+    \\item Trời không mưa nhưng đường vẫn bị ngập.
+\\end{enumerate}
+Ta tính xác suất đường bị ngập bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(F) = P(F|R)P(R) + P(F|NR)P(NR)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(R) = ${rainRate}$
+    \\item $P(NR) = ${1 - rainRate}$
+    \\item $P(F|R) = ${floodGivenRain}$
+    \\item $P(F|NR) = ${floodGivenNoRain}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(F) = ${floodGivenRain} \\times ${rainRate} + ${floodGivenNoRain} \\times ${1 - rainRate}
+\\]
+\\[
+P(F) = ${(floodGivenRain * rainRate).toFixed(4)} + ${(floodGivenNoRain * (1 - rainRate)).toFixed(4)}
+\\]
+\\[
+P(F) = ${((floodGivenRain * rainRate) + (floodGivenNoRain * (1 - rainRate))).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất đường bị ngập ngày mai là khoảng $${(P_F * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ trời mưa là $${(rainRate * 100).toFixed(2)}\\%$, nhưng khả năng đường bị ngập khi không mưa vẫn có một tỉ lệ nhất định là $${(floodGivenNoRain * 100).toFixed(2)}\\%$. Do đó, khi tính toán, xác suất đường bị ngập ngày mai là khoảng $${(P_F * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_chi_boi_thuong_bao_hiem(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(highRiskRate, claimGivenHighRisk, claimGivenLowRisk) {
+        const P_HR = highRiskRate;
+        const P_LR = 1 - P_HR;
+        const P_C_given_HR = claimGivenHighRisk;
+        const P_C_given_LR = claimGivenLowRisk;
+
+        const P_C = (P_C_given_HR * P_HR) + (P_C_given_LR * P_LR);
+        const P_HR_given_C = (P_C_given_HR * P_HR) / P_C;
+
+        return P_HR_given_C.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const highRiskRate = parseFloat(generateRandomPercentage(0.10, 0.02));
+    const claimGivenHighRisk = parseFloat(generateRandomPercentage(0.20, 0.05));
+    const claimGivenLowRisk = parseFloat(generateRandomPercentage(0.05, 0.02));
+
+    // Tính xác suất một khách hàng nộp đơn yêu cầu bồi thường là khách hàng có nguy cơ cao
+    const P_HR_given_C = calculateProbability(highRiskRate, claimGivenHighRisk, claimGivenLowRisk);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty bảo hiểm ước tính rằng $${(highRiskRate * 100).toFixed(2)}\\%$ khách hàng của họ có nguy cơ cao xảy ra tai nạn. Trong số khách hàng có nguy cơ cao, $${(claimGivenHighRisk * 100).toFixed(2)}\\%$ sẽ nộp đơn yêu cầu bồi thường. Trong số khách hàng có nguy cơ thấp, chỉ $${(claimGivenLowRisk * 100).toFixed(2)}\\%$ sẽ nộp đơn yêu cầu bồi thường. Tính xác suất một khách hàng nộp đơn yêu cầu bồi thường là khách hàng có nguy cơ cao là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_HR_given_C * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $HR$ là sự kiện khách hàng có nguy cơ cao.
+    \\item $LR$ là sự kiện khách hàng có nguy cơ thấp.
+    \\item $C$ là sự kiện khách hàng nộp đơn yêu cầu bồi thường.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất khách hàng có nguy cơ cao: $P(HR) = ${highRiskRate}$.
+    \\item Xác suất khách hàng có nguy cơ thấp: $P(LR) = ${1 - highRiskRate}$.
+    \\item Xác suất nộp đơn yêu cầu bồi thường nếu có nguy cơ cao: $P(C|HR) = ${claimGivenHighRisk}$.
+    \\item Xác suất nộp đơn yêu cầu bồi thường nếu có nguy cơ thấp: $P(C|LR) = ${claimGivenLowRisk}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất nộp đơn yêu cầu bồi thường $P(C)$}\\\\
+Khách hàng nộp đơn yêu cầu bồi thường có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng có nguy cơ cao và nộp đơn yêu cầu bồi thường.
+    \\item Khách hàng có nguy cơ thấp nhưng vẫn nộp đơn yêu cầu bồi thường.
+\\end{enumerate}
+Ta tính xác suất khách hàng nộp đơn yêu cầu bồi thường bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(C) = P(C|HR)P(HR) + P(C|LR)P(LR)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(HR) = ${highRiskRate}$
+    \\item $P(LR) = ${1 - highRiskRate}$
+    \\item $P(C|HR) = ${claimGivenHighRisk}$
+    \\item $P(C|LR) = ${claimGivenLowRisk}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(C) = ${claimGivenHighRisk} \\times ${highRiskRate} + ${claimGivenLowRisk} \\times ${1 - highRiskRate}
+\\]
+\\[
+P(C) = ${(claimGivenHighRisk * highRiskRate).toFixed(4)} + ${(claimGivenLowRisk * (1 - highRiskRate)).toFixed(4)}
+\\]
+\\[
+P(C) = ${((claimGivenHighRisk * highRiskRate) + (claimGivenLowRisk * (1 - highRiskRate))).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(HR|C) = \\dfrac{P(C|HR) \\cdot P(HR)}{P(C)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(HR|C) = \\dfrac{${claimGivenHighRisk} \\times ${highRiskRate}}{${((claimGivenHighRisk * highRiskRate) + (claimGivenLowRisk * (1 - highRiskRate))).toFixed(4)}}
+\\]
+\\[
+P(HR|C) = \\dfrac{${(claimGivenHighRisk * highRiskRate).toFixed(4)}}{${((claimGivenHighRisk * highRiskRate) + (claimGivenLowRisk * (1 - highRiskRate))).toFixed(4)}}
+\\]
+\\[
+P(HR|C) \\approx ${P_HR_given_C}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng nộp đơn yêu cầu bồi thường là khách hàng có nguy cơ cao là khoảng $${(P_HR_given_C * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng có nguy cơ cao là $${(highRiskRate * 100).toFixed(2)}\\%$, nhưng khả năng nộp đơn yêu cầu bồi thường khi có nguy cơ thấp vẫn có một tỉ lệ nhất định là $${(claimGivenLowRisk * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng nộp đơn yêu cầu bồi thường, khả năng khách hàng đó có nguy cơ cao là khoảng $${(P_HR_given_C * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_thang_chung_khoan(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(stockSuccessRate, bondSuccessRate, stockSelectionRate, bondSelectionRate) {
+        const P_S = stockSelectionRate;
+        const P_B = bondSelectionRate;
+        const P_Success_given_S = stockSuccessRate;
+        const P_Success_given_B = bondSuccessRate;
+
+        const P_Success = (P_Success_given_S * P_S) + (P_Success_given_B * P_B);
+        const P_S_given_Success = (P_Success_given_S * P_S) / P_Success;
+
+        return P_S_given_Success.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const stockSuccessRate = parseFloat(generateRandomPercentage(0.70, 0.05));
+    const bondSuccessRate = parseFloat(generateRandomPercentage(0.30, 0.05));
+    const stockSelectionRate = parseFloat(generateRandomPercentage(0.60, 0.05));
+    const bondSelectionRate = 1 - stockSelectionRate;
+
+    // Tính xác suất nhà đầu tư thành công khi biết họ đã chọn cổ phiếu
+    const P_S_given_Success = calculateProbability(stockSuccessRate, bondSuccessRate, stockSelectionRate, bondSelectionRate);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một nhà đầu tư có $${(stockSuccessRate * 100).toFixed(2)}\\%$ cơ hội thành công khi đầu tư vào cổ phiếu và $${(bondSuccessRate * 100).toFixed(2)}\\%$ cơ hội thành công khi đầu tư vào trái phiếu. Xác suất nhà đầu tư chọn cổ phiếu là $${(stockSelectionRate * 100).toFixed(2)}\\%$ và chọn trái phiếu là $${(bondSelectionRate * 100).toFixed(2)}\\%$. Tính xác suất nhà đầu tư thành công khi biết họ đã chọn cổ phiếu là bao nhiêu $\\%$, làm tròn một chữ số thập phân.
+\\shortans{$${(P_S_given_Success * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $S$ là sự kiện nhà đầu tư chọn cổ phiếu.
+    \\item $B$ là sự kiện nhà đầu tư chọn trái phiếu.
+    \\item $Success$ là sự kiện nhà đầu tư thành công.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất nhà đầu tư chọn cổ phiếu: $P(S) = ${stockSelectionRate}$.
+    \\item Xác suất nhà đầu tư chọn trái phiếu: $P(B) = ${bondSelectionRate}$.
+    \\item Xác suất thành công nếu chọn cổ phiếu: $P(Success|S) = ${stockSuccessRate}$.
+    \\item Xác suất thành công nếu chọn trái phiếu: $P(Success|B) = ${bondSuccessRate}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất thành công $P(Success)$}\\\\
+Nhà đầu tư thành công có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Nhà đầu tư chọn cổ phiếu và thành công.
+    \\item Nhà đầu tư chọn trái phiếu và thành công.
+\\end{enumerate}
+Ta tính xác suất nhà đầu tư thành công bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(Success) = P(Success|S)P(S) + P(Success|B)P(B)
+\\]
+
+Ở đây:
+\\begin{itemize}
+    \\item $P(S) = ${stockSelectionRate}$
+    \\item $P(B) = ${bondSelectionRate}$
+    \\item $P(Success|S) = ${stockSuccessRate}$
+    \\item $P(Success|B) = ${bondSuccessRate}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(Success) = ${stockSuccessRate} \\times ${stockSelectionRate} + ${bondSuccessRate} \\times ${bondSelectionRate}
+\\]
+\\[
+P(Success) = ${(stockSuccessRate * stockSelectionRate).toFixed(4)} + ${(bondSuccessRate * bondSelectionRate).toFixed(4)}
+\\]
+\\[
+P(Success) = ${((stockSuccessRate * stockSelectionRate) + (bondSuccessRate * bondSelectionRate)).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}
+
+Định lý Bayes cho ta:
+\\[
+P(S|Success) = \\dfrac{P(Success|S) \\cdot P(S)}{P(Success)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(S|Success) = \\frac{${stockSuccessRate} \\times ${stockSelectionRate}}{${((stockSuccessRate * stockSelectionRate) + (bondSuccessRate * bondSelectionRate)).toFixed(4)}}
+\\]
+\\[
+P(S|Success) = \\frac{${(stockSuccessRate * stockSelectionRate).toFixed(4)}}{${((stockSuccessRate * stockSelectionRate) + (bondSuccessRate * bondSelectionRate)).toFixed(4)}}
+\\]
+\\[
+P(S|Success) \\approx ${P_S_given_Success}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất nhà đầu tư thành công khi biết họ đã chọn cổ phiếu là khoảng $${(P_S_given_Success * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ nhà đầu tư chọn cổ phiếu là $${(stockSelectionRate * 100).toFixed(2)}\\%$, nhưng khả năng thành công khi chọn trái phiếu vẫn có một tỉ lệ nhất định là $${(bondSuccessRate * 100).toFixed(2)}\\%$. Do đó, khi một nhà đầu tư thành công, khả năng họ đã chọn cổ phiếu là khoảng $${(P_S_given_Success * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_chon_keo(e) {
+    // Hàm tạo số ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam
+    function calculateProbability(totalStrawberry, totalOrange) {
+        const totalCandies = totalStrawberry + totalOrange;
+        const P_S = totalStrawberry / totalCandies;
+        return P_S.toFixed(4);
+    }
+
+    // Tổng số kẹo dâu và kẹo cam ngẫu nhiên trong khoảng 1 đến 10
+    const totalStrawberry = generateRandomNumber(5, 20);
+    const totalOrange = generateRandomNumber(5, 20);
+
+    // Tính xác suất
+    const P_S2 = calculateProbability(totalStrawberry, totalOrange);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một hộp có $${totalStrawberry}$ viên kẹo dâu và $${totalOrange}$ viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và được trả lại hộp, sau đó một viên kẹo khác được chọn. Tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam.\\
+\\shortans{$${(P_S2 * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $O_1$ là sự kiện viên kẹo đầu tiên là kẹo cam.
+    \\item $S_2$ là sự kiện viên kẹo thứ hai là kẹo dâu.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Số viên kẹo dâu: $${totalStrawberry}$.
+    \\item Số viên kẹo cam: $${totalOrange}$.
+    \\item Tổng số kẹo: $${totalStrawberry + totalOrange}$.
+    \\item Xác suất chọn kẹo dâu: $P(S_2) = \\dfrac{${totalStrawberry}}{${totalStrawberry + totalOrange}} = ${(totalStrawberry / (totalStrawberry + totalOrange)).toFixed(4)}$.
+\\end{itemize}
+\\textbf{Kết luận}
+Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam là khoảng $${(P_S2 * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_chon_keo_no_return(e) {
+    // Hàm tạo số ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam
+    function calculateProbability(totalStrawberry, totalOrange) {
+        const totalCandies = totalStrawberry + totalOrange;
+        const P_O1 = totalOrange / totalCandies;
+        const P_S2_given_O1 = totalStrawberry / (totalCandies - 1);
+
+        return P_S2_given_O1.toFixed(4);
+    }
+
+    // Tổng số kẹo dâu và kẹo cam ngẫu nhiên trong khoảng 1 đến 10
+    const totalStrawberry = generateRandomNumber(5, 20);
+    const totalOrange = generateRandomNumber(5, 20);
+
+    // Tính xác suất
+    const P_S2_given_O1 = calculateProbability(totalStrawberry, totalOrange);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một hộp có $${totalStrawberry}$ viên kẹo dâu và $${totalOrange}$ viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và không được trả lại hộp, sau đó một viên kẹo khác được chọn. Tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam.\\
+\\shortans{$${(P_S2_given_O1 * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $O_1$ là sự kiện viên kẹo đầu tiên là kẹo cam.
+    \\item $S_2$ là sự kiện viên kẹo thứ hai là kẹo dâu.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Số viên kẹo dâu: $${totalStrawberry}$.
+    \\item Số viên kẹo cam: $${totalOrange}$.
+    \\item Tổng số kẹo ban đầu: $${totalStrawberry + totalOrange}$.
+    \\item Xác suất chọn kẹo cam lần đầu: $P(O_1) = \\dfrac{${totalOrange}}{${totalStrawberry + totalOrange}} = ${(totalOrange / (totalStrawberry + totalOrange)).toFixed(4)}$.
+    \\item Xác suất chọn kẹo dâu lần hai sau khi chọn kẹo cam lần đầu: $P(S_2|O_1) = \\dfrac{${totalStrawberry}}{${totalStrawberry + totalOrange - 1}} = ${(totalStrawberry / (totalStrawberry + totalOrange - 1)).toFixed(4)}$.
+\\end{itemize}
+\\textbf{Kết luận}\\\\
+Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam là khoảng $${(P_S2_given_O1 * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_thi_qua_mon(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(passRate, passGivenStudy, passGivenNoStudy, studyRate) {
+        const P_S = studyRate;
+        const P_NS = 1 - P_S;
+        const P_P_given_S = passGivenStudy;
+        const P_P_given_NS = passGivenNoStudy;
+
+        const P_P = (P_P_given_S * P_S) + (P_P_given_NS * P_NS);
+        const P_S_given_P = (P_P_given_S * P_S) / P_P;
+
+        return P_S_given_P.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const studyRate = parseFloat(generateRandomPercentage(0.30, 0.10)); // Xác suất học chăm chỉ
+    const passGivenStudy = parseFloat(generateRandomPercentage(0.80, 0.05));
+    const passGivenNoStudy = parseFloat(generateRandomPercentage(0.10, 0.02));
+    const passRate = 0.20; // Tỷ lệ đậu chung
+
+    // Tính xác suất một sinh viên đậu là họ đã học chăm chỉ
+    const P_S_given_P = calculateProbability(passRate, passGivenStudy, passGivenNoStudy, studyRate);
+    
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một trường đại học có tỷ lệ đậu là $${(passRate * 100).toFixed(2)}\\%$. Nếu một sinh viên học chăm chỉ, xác suất đậu là $${(passGivenStudy * 100).toFixed(2)}\\%$. Nếu không học chăm chỉ, xác suất đậu là $${(passGivenNoStudy * 100).toFixed(2)}\\%$. Tính xác suất một sinh viên đậu là họ đã học chăm chỉ.
+\\shortans{$${(P_S_given_P * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $S$ là sự kiện sinh viên học chăm chỉ.
+    \\item $NS$ là sự kiện sinh viên không học chăm chỉ.
+    \\item $P$ là sự kiện sinh viên đậu.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất học chăm chỉ: $P(S) = ${studyRate}$.
+    \\item Xác suất không học chăm chỉ: $P(NS) = ${1 - studyRate}$.
+    \\item Xác suất đậu nếu học chăm chỉ: $P(P|S) = ${passGivenStudy}$.
+    \\item Xác suất đậu nếu không học chăm chỉ: $P(P|NS) = ${passGivenNoStudy}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất đậu $P(P)$}\\\\
+Sinh viên đậu có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Sinh viên học chăm chỉ và đậu.
+    \\item Sinh viên không học chăm chỉ nhưng vẫn đậu.
+\\end{enumerate}
+Ta tính xác suất sinh viên đậu bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P) = P(P|S)P(S) + P(P|NS)P(NS)
+\\]
+
+Ở đây:
+\\begin{itemize}
+    \\item $P(S) = ${studyRate}$
+    \\item $P(NS) = ${1 - studyRate}$
+    \\item $P(P|S) = ${passGivenStudy}$
+    \\item $P(P|NS) = ${passGivenNoStudy}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(P) = ${passGivenStudy} \\times ${studyRate} + ${passGivenNoStudy} \\times ${1 - studyRate}
+\\]
+\\[
+P(P) = ${(passGivenStudy * studyRate).toFixed(4)} + ${(passGivenNoStudy * (1 - studyRate)).toFixed(4)}
+\\]
+\\[
+P(P) = ${((passGivenStudy * studyRate) + (passGivenNoStudy * (1 - studyRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}
+
+Định lý Bayes cho ta:
+\\[
+P(S|P) = \\dfrac{P(P|S) \\cdot P(S)}{P(P)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(S|P) = \\frac{${passGivenStudy} \\times ${studyRate}}{${((passGivenStudy * studyRate) + (passGivenNoStudy * (1 - studyRate))).toFixed(4)}}
+\\]
+\\[
+P(S|P) = \\frac{${(passGivenStudy * studyRate).toFixed(4)}}{${((passGivenStudy * studyRate) + (passGivenNoStudy * (1 - studyRate))).toFixed(4)}}
+\\]
+\\[
+P(S|P) \\approx ${P_S_given_P}
+\\]
+
+\\textbf{Kết luận}\\\\
+Xác suất một sinh viên đậu là họ đã học chăm chỉ là khoảng $${(P_S_given_P * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ sinh viên học chăm chỉ là $${(studyRate * 100).toFixed(2)}\\%$, nhưng khả năng đậu khi không học chăm chỉ vẫn có một tỉ lệ nhất định là $${(passGivenNoStudy * 100).toFixed(2)}\\%$. Do đó, khi một sinh viên đậu, khả năng họ đã học chăm chỉ là khoảng $${(P_S_given_P * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_trung_thuong_khuyen_mai(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(promotionRate, winGivenParticipation, participateGivenNoWin) {
+        const P_P = promotionRate;
+        const P_W_given_P = winGivenParticipation;
+        const P_NW = 1 - P_W_given_P;
+        const P_P_again_given_NW = participateGivenNoWin;
+
+        const P_P_total = (P_W_given_P * P_P) + (P_P_again_given_NW * P_NW);
+        const P_W_given_P_total = (P_W_given_P * P_P) / P_P_total;
+
+        return P_W_given_P_total.toFixed(4);
+    }
+
+    // Xác suất ngẫu nhiên trong khoảng nhất định
+    const promotionRate = parseFloat(generateRandomPercentage(0.01, 0.005));
+    const winGivenParticipation = parseFloat(generateRandomPercentage(0.50, 0.05));
+    const participateGivenNoWin = parseFloat(generateRandomPercentage(0.10, 0.02));
+
+    // Tính xác suất
+    const P_W_given_P_total = calculateProbability(promotionRate, winGivenParticipation, participateGivenNoWin);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một chương trình khuyến mãi có $${(promotionRate * 100).toFixed(2)}\\%$ cơ hội trúng thưởng. Nếu một người tham gia, xác suất họ trúng thưởng là $${(winGivenParticipation * 100).toFixed(2)}\\%$. Nếu họ không trúng thưởng, xác suất họ tham gia lần nữa là $${(participateGivenNoWin * 100).toFixed(2)}\\%$. Tính xác suất một người trúng thưởng khi biết họ đã tham gia.
+\\shortans{$${(P_W_given_P_total * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $P$ là sự kiện người tham gia chương trình khuyến mãi.
+    \\item $W$ là sự kiện người trúng thưởng.
+    \\item $NW$ là sự kiện người không trúng thưởng.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất tham gia chương trình: $P(P) = ${promotionRate}$.
+    \\item Xác suất trúng thưởng nếu tham gia: $P(W|P) = ${winGivenParticipation}$.
+    \\item Xác suất không trúng thưởng nếu tham gia: $P(NW|P) = ${1 - winGivenParticipation}$.
+    \\item Xác suất tham gia lần nữa nếu không trúng thưởng: $P(P|NW) = ${participateGivenNoWin}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất tổng tham gia $P(P_{total})$}\\\\
+Người tham gia có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Người tham gia và trúng thưởng.
+    \\item Người không trúng thưởng và tham gia lần nữa.
+\\end{enumerate}
+Ta tính xác suất tổng tham gia bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P_{total}) = P(W|P)P(P) + P(P|NW)P(NW|P)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(P) = ${promotionRate}$
+    \\item $P(W|P) = ${winGivenParticipation}$
+    \\item $P(NW|P) = ${1 - winGivenParticipation}$
+    \\item $P(P|NW) = ${participateGivenNoWin}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(P_{total}) = ${winGivenParticipation} \\times ${promotionRate} + ${participateGivenNoWin} \\times ${(1 - winGivenParticipation).toFixed(4)}
+\\]
+\\[
+P(P_{total}) = ${(winGivenParticipation * promotionRate).toFixed(4)} + ${(participateGivenNoWin * (1 - winGivenParticipation)).toFixed(4)}
+\\]
+\\[
+P(P_{total}) = ${((winGivenParticipation * promotionRate) + (participateGivenNoWin * (1 - winGivenParticipation))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(W|P_{total}) = \\dfrac{P(W|P) \\cdot P(P)}{P(P_{total})}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(W|P_{total}) = \\frac{${winGivenParticipation} \\times ${promotionRate}}{${((winGivenParticipation * promotionRate) + (participateGivenNoWin * (1 - winGivenParticipation))).toFixed(4)}}
+\\]
+\\[
+P(W|P_{total}) = \\frac{${(winGivenParticipation * promotionRate).toFixed(4)}}{${((winGivenParticipation * promotionRate) + (participateGivenNoWin * (1 - winGivenParticipation))).toFixed(4)}}
+\\]
+\\[
+P(W|P_{total}) \\approx ${P_W_given_P_total}
+\\]
+
+\\textbf{Kết luận}\\\\
+Xác suất một người trúng thưởng khi biết họ đã tham gia là khoảng $${(P_W_given_P_total * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ tham gia chương trình khuyến mãi là $${(promotionRate * 100).toFixed(2)}\\%$, nhưng khả năng trúng thưởng khi tham gia lần nữa vẫn có một tỉ lệ nhất định là $${(participateGivenNoWin * 100).toFixed(2)}\\%$. Do đó, khi một người tham gia chương trình khuyến mãi, khả năng họ trúng thưởng là khoảng $${(P_W_given_P_total * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_khoi_benh(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tạo số nguyên ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(highRiskRate, lowRiskRate, successGivenHighRisk, successGivenLowRisk) {
+        const P_HR = highRiskRate;
+        const P_LR = lowRiskRate;
+        const P_S_given_HR = successGivenHighRisk;
+        const P_S_given_LR = successGivenLowRisk;
+
+        const P_S = (P_S_given_HR * P_HR) + (P_S_given_LR * P_LR);
+        const P_HR_given_S = (P_S_given_HR * P_HR) / P_S;
+
+        return P_HR_given_S.toFixed(4);
+    }
+
+    // Tạo các giá trị ngẫu nhiên
+    const totalPatients = generateRandomNumber(900, 2000);
+    const highRiskRate = parseFloat(generateRandomPercentage(0.25, 0.05)); // Tỷ lệ bệnh nhân thuộc nhóm nguy cơ cao
+    const lowRiskRate = 1 - highRiskRate; // Tỷ lệ bệnh nhân thuộc nhóm nguy cơ thấp
+    const successGivenHighRisk = parseFloat(generateRandomPercentage(0.85, 0.05)); // Tỷ lệ thành công trong nhóm nguy cơ cao
+    const successGivenLowRisk = parseFloat(generateRandomPercentage(0.60, 0.05)); // Tỷ lệ thành công trong nhóm nguy cơ thấp
+
+    // Tính xác suất một bệnh nhân được chữa khỏi là bệnh nhân thuộc nhóm nguy cơ cao
+    const P_HR_given_S = calculateProbability(highRiskRate, lowRiskRate, successGivenHighRisk, successGivenLowRisk);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một loại thuốc mới được thử nghiệm trên $${totalPatients}$ bệnh nhân. Trong số đó, $${(highRiskRate * 100).toFixed(2)}\\%$ bệnh nhân thuộc nhóm nguy cơ cao và $${(lowRiskRate * 100).toFixed(2)}\\%$ thuộc nhóm nguy cơ thấp. Nhóm nguy cơ cao có tỷ lệ thành công là $${(successGivenHighRisk * 100).toFixed(2)}\\%$ và nhóm nguy cơ thấp có tỷ lệ thành công là $${(successGivenLowRisk * 100).toFixed(2)}\\%$. Tính xác suất một bệnh nhân được chữa khỏi là bệnh nhân thuộc nhóm nguy cơ cao.
+\\shortans{$${(P_HR_given_S * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $HR$ là sự kiện bệnh nhân thuộc nhóm nguy cơ cao.
+    \\item $LR$ là sự kiện bệnh nhân thuộc nhóm nguy cơ thấp.
+    \\item $S$ là sự kiện bệnh nhân được chữa khỏi.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ bệnh nhân thuộc nhóm nguy cơ cao: $P(HR) = ${highRiskRate}$.
+    \\item Tỷ lệ bệnh nhân thuộc nhóm nguy cơ thấp: $P(LR) = ${lowRiskRate}$.
+    \\item Xác suất chữa khỏi nếu thuộc nhóm nguy cơ cao: $P(S|HR) = ${successGivenHighRisk}$.
+    \\item Xác suất chữa khỏi nếu thuộc nhóm nguy cơ thấp: $P(S|LR) = ${successGivenLowRisk}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất chữa khỏi $P(S)$}\\\\
+Bệnh nhân được chữa khỏi có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Bệnh nhân thuộc nhóm nguy cơ cao và được chữa khỏi.
+    \\item Bệnh nhân thuộc nhóm nguy cơ thấp và được chữa khỏi.
+\\end{enumerate}
+Ta tính xác suất bệnh nhân được chữa khỏi bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|HR)P(HR) + P(S|LR)P(LR)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(HR) = ${highRiskRate}$
+    \\item $P(LR) = ${lowRiskRate}$
+    \\item $P(S|HR) = ${successGivenHighRisk}$
+    \\item $P(S|LR) = ${successGivenLowRisk}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${successGivenHighRisk} \\times ${highRiskRate} + ${successGivenLowRisk} \\times ${lowRiskRate}
+\\]
+\\[
+P(S) = ${(successGivenHighRisk * highRiskRate).toFixed(4)} + ${(successGivenLowRisk * lowRiskRate).toFixed(4)}
+\\]
+\\[
+P(S) = ${((successGivenHighRisk * highRiskRate) + (successGivenLowRisk * lowRiskRate)).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(HR|S) = \\dfrac{P(S|HR) \\cdot P(HR)}{P(S)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(HR|S) = \\frac{${successGivenHighRisk} \\times ${highRiskRate}}{${((successGivenHighRisk * highRiskRate) + (successGivenLowRisk * lowRiskRate)).toFixed(4)}}
+\\]
+\\[
+P(HR|S) = \\frac{${(successGivenHighRisk * highRiskRate).toFixed(4)}}{${((successGivenHighRisk * highRiskRate) + (successGivenLowRisk * lowRiskRate)).toFixed(4)}}
+\\]
+\\[
+P(HR|S) \\approx ${P_HR_given_S}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một bệnh nhân được chữa khỏi là bệnh nhân thuộc nhóm nguy cơ cao là khoảng $${(P_HR_given_S * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ bệnh nhân thuộc nhóm nguy cơ cao là $${(highRiskRate * 100).toFixed(2)}\\%$, nhưng khả năng chữa khỏi khi thuộc nhóm nguy cơ thấp vẫn có một tỉ lệ nhất định là $${(successGivenLowRisk * 100).toFixed(2)}\\%$. Do đó, khi một bệnh nhân được chữa khỏi, khả năng họ thuộc nhóm nguy cơ cao là khoảng $${(P_HR_given_S * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_tham_du_hoithao(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tạo số nguyên ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(attendanceRate, purchaseGivenAttend, purchaseGivenNoAttend) {
+        const P_A = attendanceRate;
+        const P_NA = 1 - P_A;
+        const P_P_given_A = purchaseGivenAttend;
+        const P_P_given_NA = purchaseGivenNoAttend;
+
+        const P_P = (P_P_given_A * P_A) + (P_P_given_NA * P_NA);
+        const P_A_given_P = (P_P_given_A * P_A) / P_P;
+
+        return P_A_given_P.toFixed(4);
+    }
+
+    // Tạo các giá trị ngẫu nhiên
+    const totalInvited = generateRandomNumber(900, 1500); // Số khách mời ngẫu nhiên trong khoảng từ 900 đến 1100
+    const totalAttended = generateRandomNumber(400, 1000); // Số khách tham dự ngẫu nhiên trong khoảng từ 180 đến 220
+    const attendanceRate = totalAttended / totalInvited; // Tỷ lệ tham dự
+    const purchaseGivenAttend = parseFloat(generateRandomPercentage(0.40, 0.05)); // Tỷ lệ mua sản phẩm nếu tham dự
+    const purchaseGivenNoAttend = parseFloat(generateRandomPercentage(0.10, 0.05)); // Tỷ lệ mua sản phẩm nếu không tham dự
+
+    // Tính xác suất một khách hàng mua sản phẩm đã tham dự hội thảo
+    const P_A_given_P = calculateProbability(attendanceRate, purchaseGivenAttend, purchaseGivenNoAttend);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty tổ chức hội thảo và mời $${totalInvited}$ khách hàng. Trong số đó, $${totalAttended}$ khách hàng tham dự. Nếu khách hàng tham dự, xác suất họ mua sản phẩm là $${(purchaseGivenAttend * 100).toFixed(2)}\\%$. Nếu không tham dự, xác suất họ mua sản phẩm là $${(purchaseGivenNoAttend * 100).toFixed(2)}\\%$. Tính xác suất một khách hàng mua sản phẩm đã tham dự hội thảo.
+\\shortans{$${(P_A_given_P * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $A$ là sự kiện khách hàng tham dự hội thảo.
+    \\item $NA$ là sự kiện khách hàng không tham dự hội thảo.
+    \\item $P$ là sự kiện khách hàng mua sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ khách hàng tham dự: $P(A) = ${attendanceRate}$.
+    \\item Tỷ lệ khách hàng không tham dự: $P(NA) = ${1 - attendanceRate}$.
+    \\item Xác suất mua sản phẩm nếu tham dự: $P(P|A) = ${purchaseGivenAttend}$.
+    \\item Xác suất mua sản phẩm nếu không tham dự: $P(P|NA) = ${purchaseGivenNoAttend}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất mua sản phẩm $P(P)$}\\\\
+Khách hàng mua sản phẩm có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng tham dự hội thảo và mua sản phẩm.
+    \\item Khách hàng không tham dự hội thảo nhưng vẫn mua sản phẩm.
+\\end{enumerate}
+Ta tính xác suất khách hàng mua sản phẩm bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P) = P(P|A)P(A) + P(P|NA)P(NA)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(A) = ${attendanceRate}$
+    \\item $P(NA) = ${1 - attendanceRate}$
+    \\item $P(P|A) = ${purchaseGivenAttend}$
+    \\item $P(P|NA) = ${purchaseGivenNoAttend}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(P) = ${purchaseGivenAttend} \\times ${attendanceRate} + ${purchaseGivenNoAttend} \\times ${1 - attendanceRate}
+\\]
+\\[
+P(P) = ${(purchaseGivenAttend * attendanceRate).toFixed(4)} + ${(purchaseGivenNoAttend * (1 - attendanceRate)).toFixed(4)}
+\\]
+\\[
+P(P) = ${((purchaseGivenAttend * attendanceRate) + (purchaseGivenNoAttend * (1 - attendanceRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(A|P) = \\dfrac{P(P|A) \\cdot P(A)}{P(P)}
+\\]
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(A|P) = \\frac{${purchaseGivenAttend} \\times ${attendanceRate}}{${((purchaseGivenAttend * attendanceRate) + (purchaseGivenNoAttend * (1 - attendanceRate))).toFixed(4)}}
+\\]
+\\[
+P(A|P) = \\frac{${(purchaseGivenAttend * attendanceRate).toFixed(4)}}{${((purchaseGivenAttend * attendanceRate) + (purchaseGivenNoAttend * (1 - attendanceRate))).toFixed(4)}}
+\\]
+\\[
+P(A|P) \\approx ${P_A_given_P}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng mua sản phẩm đã tham dự hội thảo là khoảng $${(P_A_given_P * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng tham dự hội thảo là $${(attendanceRate * 100).toFixed(2)}\\%$, nhưng khả năng mua sản phẩm khi không tham dự vẫn có một tỉ lệ nhất định là $${(purchaseGivenNoAttend * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng mua sản phẩm, khả năng họ đã tham dự hội thảo là khoảng $${(P_A_given_P * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+    return question;
+}
+function xs_khach_hang_quay_lai(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(satisfactionRate, returnGivenSatisfied, returnGivenDissatisfied) {
+        const P_S = satisfactionRate;
+        const P_DS = 1 - P_S;
+        const P_R_given_S = returnGivenSatisfied;
+        const P_R_given_DS = returnGivenDissatisfied;
+
+        const P_R = (P_R_given_S * P_S) + (P_R_given_DS * P_DS);
+        const P_S_given_R = (P_R_given_S * P_S) / P_R;
+
+        return P_S_given_R.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const satisfactionRate = parseFloat(generateRandomPercentage(0.70, 0.05)); // Tỷ lệ khách hàng hài lòng
+    const returnGivenSatisfied = parseFloat(generateRandomPercentage(0.90, 0.05)); // Tỷ lệ quay lại nếu hài lòng
+    const returnGivenDissatisfied = parseFloat(generateRandomPercentage(0.20, 0.05)); // Tỷ lệ quay lại nếu không hài lòng
+
+    // Tính xác suất một khách hàng quay lại là họ hài lòng với dịch vụ
+    const P_S_given_R = calculateProbability(satisfactionRate, returnGivenSatisfied, returnGivenDissatisfied);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty thực hiện khảo sát và phát hiện rằng $${(satisfactionRate * 100).toFixed(2)}\\%$ khách hàng hài lòng với dịch vụ của họ. Trong số những khách hàng hài lòng, $${(returnGivenSatisfied * 100).toFixed(2)}\\%$ sẽ quay lại sử dụng dịch vụ. Trong số những khách hàng không hài lòng, chỉ $${(returnGivenDissatisfied * 100).toFixed(2)}\\%$ sẽ quay lại. Tính xác suất một khách hàng quay lại là họ hài lòng với dịch vụ.
+\\shortans{$${(P_S_given_R * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $S$ là sự kiện khách hàng hài lòng với dịch vụ.
+    \\item $DS$ là sự kiện khách hàng không hài lòng với dịch vụ.
+    \\item $R$ là sự kiện khách hàng quay lại sử dụng dịch vụ.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ khách hàng hài lòng: $P(S) = ${satisfactionRate}$.
+    \\item Tỷ lệ khách hàng không hài lòng: $P(DS) = ${1 - satisfactionRate}$.
+    \\item Xác suất quay lại nếu hài lòng: $P(R|S) = ${returnGivenSatisfied}$.
+    \\item Xác suất quay lại nếu không hài lòng: $P(R|DS) = ${returnGivenDissatisfied}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất quay lại $P(R)$}\\\\
+Khách hàng quay lại có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng hài lòng với dịch vụ và quay lại.
+    \\item Khách hàng không hài lòng với dịch vụ nhưng vẫn quay lại.
+\\end{enumerate}
+
+Ta tính xác suất khách hàng quay lại bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(R) = P(R|S)P(S) + P(R|DS)P(DS)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(S) = ${satisfactionRate}$
+    \\item $P(DS) = ${1 - satisfactionRate}$
+    \\item $P(R|S) = ${returnGivenSatisfied}$
+    \\item $P(R|DS) = ${returnGivenDissatisfied}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(R) = ${returnGivenSatisfied} \\times ${satisfactionRate} + ${returnGivenDissatisfied} \\times ${1 - satisfactionRate}
+\\]
+\\[
+P(R) = ${(returnGivenSatisfied * satisfactionRate).toFixed(4)} + ${(returnGivenDissatisfied * (1 - satisfactionRate)).toFixed(4)}
+\\]
+\\[
+P(R) = ${((returnGivenSatisfied * satisfactionRate) + (returnGivenDissatisfied * (1 - satisfactionRate))).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(S|R) = \\dfrac{P(R|S) \\cdot P(S)}{P(R)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(S|R) = \\frac{${returnGivenSatisfied} \\times ${satisfactionRate}}{${((returnGivenSatisfied * satisfactionRate) + (returnGivenDissatisfied * (1 - satisfactionRate))).toFixed(4)}}
+\\]
+\\[
+P(S|R) = \\frac{${(returnGivenSatisfied * satisfactionRate).toFixed(4)}}{${((returnGivenSatisfied * satisfactionRate) + (returnGivenDissatisfied * (1 - satisfactionRate))).toFixed(4)}}
+\\]
+\\[
+P(S|R) \\approx ${P_S_given_R}
+\\]
+
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng quay lại là họ hài lòng với dịch vụ là khoảng $${(P_S_given_R * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng hài lòng với dịch vụ là $${(satisfactionRate * 100).toFixed(2)}\\%$, nhưng khả năng quay lại khi không hài lòng vẫn có một tỉ lệ nhất định là $${(returnGivenDissatisfied * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng quay lại, khả năng họ hài lòng với dịch vụ là khoảng $${(P_S_given_R * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_khao_sat_mua_sanpham(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(interestRate, buyGivenInterest, buyGivenNoInterest) {
+        const P_I = interestRate;
+        const P_NI = 1 - P_I;
+        const P_B_given_I = buyGivenInterest;
+        const P_B_given_NI = buyGivenNoInterest;
+
+        const P_B = (P_B_given_I * P_I) + (P_B_given_NI * P_NI);
+        const P_I_given_B = (P_B_given_I * P_I) / P_B;
+
+        return P_I_given_B.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const interestRate = parseFloat(generateRandomPercentage(0.30, 0.05)); // Tỷ lệ khách hàng quan tâm
+    const buyGivenInterest = parseFloat(generateRandomPercentage(0.60, 0.05)); // Tỷ lệ mua sản phẩm nếu quan tâm
+    const buyGivenNoInterest = parseFloat(generateRandomPercentage(0.20, 0.05)); // Tỷ lệ mua sản phẩm nếu không quan tâm
+
+    // Tính xác suất một khách hàng mua sản phẩm mới là họ quan tâm đến sản phẩm
+    const P_I_given_B = calculateProbability(interestRate, buyGivenInterest, buyGivenNoInterest);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty thực hiện khảo sát thị trường và phát hiện rằng $${(interestRate * 100).toFixed(2)}\\%$ khách hàng quan tâm đến sản phẩm mới. Trong số những khách hàng quan tâm, $${(buyGivenInterest * 100).toFixed(2)}\\%$ sẽ mua sản phẩm. Trong số những khách hàng không quan tâm, chỉ $${(buyGivenNoInterest * 100).toFixed(2)}\\%$ sẽ mua sản phẩm. Tính xác suất một khách hàng mua sản phẩm mới là họ quan tâm đến sản phẩm.
+\\shortans{$${(P_I_given_B * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $I$ là sự kiện khách hàng quan tâm đến sản phẩm.
+    \\item $NI$ là sự kiện khách hàng không quan tâm đến sản phẩm.
+    \\item $B$ là sự kiện khách hàng mua sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ khách hàng quan tâm: $P(I) = ${interestRate}$.
+    \\item Tỷ lệ khách hàng không quan tâm: $P(NI) = ${1 - interestRate}$.
+    \\item Xác suất mua sản phẩm nếu quan tâm: $P(B|I) = ${buyGivenInterest}$.
+    \\item Xác suất mua sản phẩm nếu không quan tâm: $P(B|NI) = ${buyGivenNoInterest}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất mua sản phẩm $P(B)$}\\\\
+Khách hàng mua sản phẩm có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng quan tâm đến sản phẩm và mua sản phẩm.
+    \\item Khách hàng không quan tâm đến sản phẩm nhưng vẫn mua sản phẩm.
+\\end{enumerate}
+
+Ta tính xác suất khách hàng mua sản phẩm bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(B) = P(B|I)P(I) + P(B|NI)P(NI)
+\\]
+
+Ở đây:
+\\begin{itemize}
+    \\item $P(I) = ${interestRate}$
+    \\item $P(NI) = ${1 - interestRate}$
+    \\item $P(B|I) = ${buyGivenInterest}$
+    \\item $P(B|NI) = ${buyGivenNoInterest}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(B) = ${buyGivenInterest} \\times ${interestRate} + ${buyGivenNoInterest} \\times ${1 - interestRate}
+\\]
+\\[
+P(B) = ${(buyGivenInterest * interestRate).toFixed(4)} + ${(buyGivenNoInterest * (1 - interestRate)).toFixed(4)}
+\\]
+\\[
+P(B) = ${((buyGivenInterest * interestRate) + (buyGivenNoInterest * (1 - interestRate))).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}
+
+Định lý Bayes cho ta:
+\\[
+P(I|B) = \\dfrac{P(B|I) \\cdot P(I)}{P(B)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(I|B) = \\frac{${buyGivenInterest} \\times ${interestRate}}{${((buyGivenInterest * interestRate) + (buyGivenNoInterest * (1 - interestRate))).toFixed(4)}}
+\\]
+\\[
+P(I|B) = \\frac{${(buyGivenInterest * interestRate).toFixed(4)}}{${((buyGivenInterest * interestRate) + (buyGivenNoInterest * (1 - interestRate))).toFixed(4)}}
+\\]
+\\[
+P(I|B) \\approx ${P_I_given_B}
+\\]
+
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng mua sản phẩm mới là họ quan tâm đến sản phẩm là khoảng $${(P_I_given_B * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng quan tâm đến sản phẩm mới là $${(interestRate * 100).toFixed(2)}\\%$, nhưng khả năng mua sản phẩm khi không quan tâm vẫn có một tỉ lệ nhất định là $${(buyGivenNoInterest * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng mua sản phẩm, khả năng họ quan tâm đến sản phẩm là khoảng $${(P_I_given_B * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_baohanh_san_pham(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(defectRate, warrantyGivenDefect, warrantyGivenNoDefect) {
+        const P_D = defectRate;
+        const P_ND = 1 - P_D;
+        const P_W_given_D = warrantyGivenDefect;
+        const P_W_given_ND = warrantyGivenNoDefect;
+
+        const P_W = (P_W_given_D * P_D) + (P_W_given_ND * P_ND);
+        const P_D_given_W = (P_W_given_D * P_D) / P_W;
+
+        return P_D_given_W.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const defectRate = parseFloat(generateRandomPercentage(0.03, 0.01)); // Tỷ lệ lỗi sản phẩm
+    const warrantyGivenDefect = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất yêu cầu bảo hành nếu sản phẩm bị lỗi
+    const warrantyGivenNoDefect = parseFloat(generateRandomPercentage(0.01, 0.005)); // Xác suất yêu cầu bảo hành nếu sản phẩm không bị lỗi
+
+    // Tính xác suất sản phẩm bị lỗi khi khách hàng yêu cầu bảo hành
+    const P_D_given_W = calculateProbability(defectRate, warrantyGivenDefect, warrantyGivenNoDefect);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty sản xuất điện thoại di động có tỷ lệ lỗi sản phẩm là $${(defectRate * 100).toFixed(2)}\\%$. Khách hàng có thể yêu cầu bảo hành nếu sản phẩm bị lỗi. Xác suất khách hàng yêu cầu bảo hành khi sản phẩm bị lỗi là $${(warrantyGivenDefect * 100).toFixed(2)}\\%$. Nếu sản phẩm không bị lỗi, xác suất khách hàng yêu cầu bảo hành là $${(warrantyGivenNoDefect * 100).toFixed(2)}\\%$. Tính xác suất sản phẩm bị lỗi khi khách hàng yêu cầu bảo hành.
+\\shortans{$${(P_D_given_W * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $D$ là sự kiện sản phẩm bị lỗi.
+    \\item $ND$ là sự kiện sản phẩm không bị lỗi.
+    \\item $W$ là sự kiện khách hàng yêu cầu bảo hành.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ sản phẩm bị lỗi: $P(D) = ${defectRate}$.
+    \\item Tỷ lệ sản phẩm không bị lỗi: $P(ND) = ${1 - defectRate}$.
+    \\item Xác suất yêu cầu bảo hành nếu sản phẩm bị lỗi: $P(W|D) = ${warrantyGivenDefect}$.
+    \\item Xác suất yêu cầu bảo hành nếu sản phẩm không bị lỗi: $P(W|ND) = ${warrantyGivenNoDefect}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất yêu cầu bảo hành $P(W)$}\\\\
+Khách hàng yêu cầu bảo hành có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Sản phẩm bị lỗi và khách hàng yêu cầu bảo hành.
+    \\item Sản phẩm không bị lỗi nhưng khách hàng vẫn yêu cầu bảo hành.
+\\end{enumerate}
+
+Ta tính xác suất khách hàng yêu cầu bảo hành bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(W) = P(W|D)P(D) + P(W|ND)P(ND)
+\\]
+Ở đây:
+\\begin{itemize}
+    \\item $P(D) = ${defectRate}$
+    \\item $P(ND) = ${1 - defectRate}$
+    \\item $P(W|D) = ${warrantyGivenDefect}$
+    \\item $P(W|ND) = ${warrantyGivenNoDefect}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(W) = ${warrantyGivenDefect} \\times ${defectRate} + ${warrantyGivenNoDefect} \\times ${1 - defectRate}
+\\]
+\\[
+P(W) = ${(warrantyGivenDefect * defectRate).toFixed(4)} + ${(warrantyGivenNoDefect * (1 - defectRate)).toFixed(4)}
+\\]
+\\[
+P(W) = ${((warrantyGivenDefect * defectRate) + (warrantyGivenNoDefect * (1 - defectRate))).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(D|W) = \\dfrac{P(W|D) \\cdot P(D)}{P(W)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(D|W) = \\frac{${warrantyGivenDefect} \\times ${defectRate}}{${((warrantyGivenDefect * defectRate) + (warrantyGivenNoDefect * (1 - defectRate))).toFixed(4)}}
+\\]
+\\[
+P(D|W) = \\frac{${(warrantyGivenDefect * defectRate).toFixed(4)}}{${((warrantyGivenDefect * defectRate) + (warrantyGivenNoDefect * (1 - defectRate))).toFixed(4)}}
+\\]
+\\[
+P(D|W) \\approx ${P_D_given_W}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất sản phẩm bị lỗi khi khách hàng yêu cầu bảo hành là khoảng $${(P_D_given_W * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ sản phẩm bị lỗi là $${(defectRate * 100).toFixed(2)}\\%$, nhưng khả năng yêu cầu bảo hành khi sản phẩm không bị lỗi vẫn có một tỉ lệ nhất định là $${(warrantyGivenNoDefect * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng yêu cầu bảo hành, khả năng sản phẩm bị lỗi là khoảng $${(P_D_given_W * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_mua_sp_huuco_voco(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(organicRate, satisfiedGivenOrganic, satisfiedGivenNonOrganic) {
+        const P_O = organicRate;
+        const P_NO = 1 - P_O;
+        const P_S_given_O = satisfiedGivenOrganic;
+        const P_S_given_NO = satisfiedGivenNonOrganic;
+
+        const P_S = (P_S_given_O * P_O) + (P_S_given_NO * P_NO);
+        const P_O_given_S = (P_S_given_O * P_O) / P_S;
+
+        return P_O_given_S.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const organicRate = parseFloat(generateRandomPercentage(0.60, 0.05)); // Tỷ lệ khách hàng mua thực phẩm hữu cơ
+    const satisfiedGivenOrganic = parseFloat(generateRandomPercentage(0.70, 0.05)); // Tỷ lệ hài lòng nếu mua thực phẩm hữu cơ
+    const satisfiedGivenNonOrganic = parseFloat(generateRandomPercentage(0.50, 0.05)); // Tỷ lệ hài lòng nếu mua thực phẩm không hữu cơ
+
+    // Tính xác suất một khách hàng hài lòng với sản phẩm đã mua thực phẩm hữu cơ
+    const P_O_given_S = calculateProbability(organicRate, satisfiedGivenOrganic, satisfiedGivenNonOrganic);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một cửa hàng có $${(organicRate * 100).toFixed(2)}\\%$ khách hàng mua thực phẩm hữu cơ và $${((1 - organicRate) * 100).toFixed(2)}\\%$ khách hàng mua thực phẩm không hữu cơ. Trong số những khách hàng mua thực phẩm hữu cơ, $${(satisfiedGivenOrganic * 100).toFixed(2)}\\%$ hài lòng với sản phẩm. Trong số những khách hàng mua thực phẩm không hữu cơ, $${(satisfiedGivenNonOrganic * 100).toFixed(2)}\\%$ hài lòng với sản phẩm. Tính xác suất một khách hàng hài lòng với sản phẩm đã mua thực phẩm hữu cơ.
+\\shortans{$${(P_O_given_S * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $O$ là sự kiện khách hàng mua thực phẩm hữu cơ.
+    \\item $NO$ là sự kiện khách hàng mua thực phẩm không hữu cơ.
+    \\item $S$ là sự kiện khách hàng hài lòng với sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ khách hàng mua thực phẩm hữu cơ: $P(O) = ${organicRate}$.
+    \\item Tỷ lệ khách hàng mua thực phẩm không hữu cơ: $P(NO) = ${1 - organicRate}$.
+    \\item Xác suất hài lòng nếu mua thực phẩm hữu cơ: $P(S|O) = ${satisfiedGivenOrganic}$.
+    \\item Xác suất hài lòng nếu mua thực phẩm không hữu cơ: $P(S|NO) = ${satisfiedGivenNonOrganic}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất hài lòng $P(S)$}\\\\
+Khách hàng hài lòng có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Khách hàng mua thực phẩm hữu cơ và hài lòng.
+    \\item Khách hàng mua thực phẩm không hữu cơ nhưng vẫn hài lòng.
+\\end{enumerate}
+
+Ta tính xác suất khách hàng hài lòng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|O)P(O) + P(S|NO)P(NO)
+\\]
+
+Ở đây:
+\\begin{itemize}
+    \\item $P(O) = ${organicRate}$
+    \\item $P(NO) = ${1 - organicRate}$
+    \\item $P(S|O) = ${satisfiedGivenOrganic}$
+    \\item $P(S|NO) = ${satisfiedGivenNonOrganic}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${satisfiedGivenOrganic} \\times ${organicRate} + ${satisfiedGivenNonOrganic} \\times ${1 - organicRate}
+\\]
+\\[
+P(S) = ${(satisfiedGivenOrganic * organicRate).toFixed(4)} + ${(satisfiedGivenNonOrganic * (1 - organicRate)).toFixed(4)}
+\\]
+\\[
+P(S) = ${((satisfiedGivenOrganic * organicRate) + (satisfiedGivenNonOrganic * (1 - organicRate))).toFixed(4)}
+\\]
+
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(O|S) = \\dfrac{P(S|O) \\cdot P(O)}{P(S)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(O|S) = \\frac{${satisfiedGivenOrganic} \\times ${organicRate}}{${((satisfiedGivenOrganic * organicRate) + (satisfiedGivenNonOrganic * (1 - organicRate))).toFixed(4)}}
+\\]
+\\[
+P(O|S) = \\frac{${(satisfiedGivenOrganic * organicRate).toFixed(4)}}{${((satisfiedGivenOrganic * organicRate) + (satisfiedGivenNonOrganic * (1 - organicRate))).toFixed(4)}}
+\\]
+\\[
+P(O|S) \\approx ${P_O_given_S}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng hài lòng với sản phẩm đã mua thực phẩm hữu cơ là khoảng $${(P_O_given_S * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ khách hàng mua thực phẩm hữu cơ là $${(organicRate * 100).toFixed(2)}\\%$, nhưng khả năng hài lòng khi mua thực phẩm không hữu cơ vẫn có một tỉ lệ nhất định là $${(satisfiedGivenNonOrganic * 100).toFixed(2)}\\%$. Do đó, khi một khách hàng hài lòng với sản phẩm, khả năng họ đã mua thực phẩm hữu cơ là khoảng $${(P_O_given_S * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_hs_tb_gioi_quamon(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất theo định lý Bayes
+    function calculateProbability(goodRate, passGivenGood, passGivenAverage) {
+        const P_G = goodRate;
+        const P_A = 1 - P_G;
+        const P_P_given_G = passGivenGood;
+        const P_P_given_A = passGivenAverage;
+
+        const P_P = (P_P_given_G * P_G) + (P_P_given_A * P_A);
+        const P_G_given_P = (P_P_given_G * P_G) / P_P;
+
+        return P_G_given_P.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên
+    const goodRate = parseFloat(generateRandomPercentage(0.30, 0.05)); // Tỷ lệ học sinh học khá giỏi
+    const passGivenGood = parseFloat(generateRandomPercentage(0.90, 0.05)); // Tỷ lệ vượt qua kỳ thi nếu học sinh khá giỏi
+    const passGivenAverage = parseFloat(generateRandomPercentage(0.50, 0.05)); // Tỷ lệ vượt qua kỳ thi nếu học sinh trung bình, yếu
+
+    // Tính xác suất một học sinh vượt qua kỳ thi là học sinh khá giỏi
+    const P_G_given_P = calculateProbability(goodRate, passGivenGood, passGivenAverage);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một lớp học có $${(goodRate * 100).toFixed(2)}\\%$ học sinh học khá giỏi và $${((1 - goodRate) * 100).toFixed(2)}\\%$ học sinh trung bình, yếu. Trong số học sinh học khá giỏi, $${(passGivenGood * 100).toFixed(2)}\\%$ sẽ vượt qua kỳ thi. Trong số học sinh trung bình, yếu, chỉ $${(passGivenAverage * 100).toFixed(2)}\\%$ sẽ vượt qua kỳ thi. Tính xác suất một học sinh vượt qua kỳ thi là học sinh khá giỏi.
+\\shortans{$${(P_G_given_P * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $G$ là sự kiện học sinh học khá giỏi.
+    \\item $A$ là sự kiện học sinh trung bình, yếu.
+    \\item $P$ là sự kiện học sinh vượt qua kỳ thi.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Tỷ lệ học sinh học khá giỏi: $P(G) = ${goodRate}$.
+    \\item Tỷ lệ học sinh trung bình, yếu: $P(A) = ${1 - goodRate}$.
+    \\item Xác suất vượt qua kỳ thi nếu học sinh học khá giỏi: $P(P|G) = ${passGivenGood}$.
+    \\item Xác suất vượt qua kỳ thi nếu học sinh trung bình, yếu: $P(P|A) = ${passGivenAverage}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất vượt qua kỳ thi $P(P)$}\\\\
+Học sinh vượt qua kỳ thi có thể xảy ra theo hai cách:
+\\begin{enumerate}
+    \\item Học sinh học khá giỏi và vượt qua kỳ thi.
+    \\item Học sinh trung bình, yếu và vượt qua kỳ thi.
+\\end{enumerate}
+Ta tính xác suất học sinh vượt qua kỳ thi bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P) = P(P|G)P(G) + P(P|A)P(A)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(G) = ${goodRate}$
+    \\item $P(A) = ${1 - goodRate}$
+    \\item $P(P|G) = ${passGivenGood}$
+    \\item $P(P|A) = ${passGivenAverage}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(P) = ${passGivenGood} \\times ${goodRate} + ${passGivenAverage} \\times ${1 - goodRate}
+\\]
+\\[
+P(P) = ${(passGivenGood * goodRate).toFixed(4)} + ${(passGivenAverage * (1 - goodRate)).toFixed(4)}
+\\]
+\\[
+P(P) = ${((passGivenGood * goodRate) + (passGivenAverage * (1 - goodRate))).toFixed(4)}
+\\]
+\\textbf{Bước 2: Áp dụng định lý Bayes}\\\\
+Định lý Bayes cho ta:
+\\[
+P(G|P) = \\dfrac{P(P|G) \\cdot P(G)}{P(P)}
+\\]
+
+Thay các giá trị đã biết vào, ta có:
+\\[
+P(G|P) = \\frac{${passGivenGood} \\times ${goodRate}}{${((passGivenGood * goodRate) + (passGivenAverage * (1 - goodRate))).toFixed(4)}}
+\\]
+\\[
+P(G|P) = \\frac{${(passGivenGood * goodRate).toFixed(4)}}{${((passGivenGood * goodRate) + (passGivenAverage * (1 - goodRate))).toFixed(4)}}
+\\]
+\\[
+P(G|P) \\approx ${P_G_given_P}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một học sinh vượt qua kỳ thi là học sinh khá giỏi là khoảng $${(P_G_given_P * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Tỷ lệ học sinh học khá giỏi là $${(goodRate * 100).toFixed(2)}\\%$, nhưng khả năng vượt qua kỳ thi khi học sinh trung bình, yếu vẫn có một tỉ lệ nhất định là $${(passGivenAverage * 100).toFixed(2)}\\%$. Do đó, khi một học sinh vượt qua kỳ thi, khả năng họ học khá giỏi là khoảng $${(P_G_given_P * 100).toFixed(1)}\\%$.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+
+function xs_chon_nhan_vien_tot(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất ứng viên ngẫu nhiên có kỹ năng tốt
+    function calculateProbability(applicantARate, applicantBRate, applicantCRate, goodSkillsA, goodSkillsB, goodSkillsC) {
+        const P_A = applicantARate;
+        const P_B = applicantBRate;
+        const P_C = applicantCRate;
+        const P_G_given_A = goodSkillsA;
+        const P_G_given_B = goodSkillsB;
+        const P_G_given_C = goodSkillsC;
+
+        const P_G = (P_G_given_A * P_A) + (P_G_given_B * P_B) + (P_G_given_C * P_C);
+
+        return P_G.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const applicantARate = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất trúng tuyển của ứng viên A
+    const applicantBRate = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất trúng tuyển của ứng viên B
+    const applicantCRate = parseFloat(generateRandomPercentage(0.20, 0.05)); // Xác suất trúng tuyển của ứng viên C
+    const goodSkillsA = parseFloat(generateRandomPercentage(0.80, 0.05)); // Xác suất ứng viên A có kỹ năng tốt
+    const goodSkillsB = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất ứng viên B có kỹ năng tốt
+    const goodSkillsC = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất ứng viên C có kỹ năng tốt
+
+    // Tính xác suất một ứng viên ngẫu nhiên có kỹ năng tốt
+    const P_G = calculateProbability(applicantARate, applicantBRate, applicantCRate, goodSkillsA, goodSkillsB, goodSkillsC);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty có ba loại ứng viên là $A$, $B$, và $C$. Xác suất trúng tuyển của mỗi loại ứng viên lần lượt là $${(applicantARate * 100).toFixed(2)}\\%$, $${(applicantBRate * 100).toFixed(2)}\\%$ và $${(applicantCRate * 100).toFixed(2)}\\%$. Xác suất ứng viên A có kỹ năng tốt là $${(goodSkillsA * 100).toFixed(2)}\\%$, ứng viên B là $${(goodSkillsB * 100).toFixed(2)}\\%$ và ứng viên C là $${(goodSkillsC * 100).toFixed(2)}\\%$. Tính xác suất một ứng viên ngẫu nhiên có kỹ năng tốt.
+\\shortans{$${(P_G * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $A$ là sự kiện ứng viên loại A.
+    \\item $B$ là sự kiện ứng viên loại B.
+    \\item $C$ là sự kiện ứng viên loại C.
+    \\item $G$ là sự kiện ứng viên có kỹ năng tốt.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất trúng tuyển của ứng viên loại A: $P(A) = ${applicantARate}$.
+    \\item Xác suất trúng tuyển của ứng viên loại B: $P(B) = ${applicantBRate}$.
+    \\item Xác suất trúng tuyển của ứng viên loại C: $P(C) = ${applicantCRate}$.
+    \\item Xác suất ứng viên A có kỹ năng tốt: $P(G|A) = ${goodSkillsA}$.
+    \\item Xác suất ứng viên B có kỹ năng tốt: $P(G|B) = ${goodSkillsB}$.
+    \\item Xác suất ứng viên C có kỹ năng tốt: $P(G|C) = ${goodSkillsC}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất ứng viên có kỹ năng tốt $P(G)$}\\\\
+Ứng viên có kỹ năng tốt có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Ứng viên loại A có kỹ năng tốt.
+    \\item Ứng viên loại B có kỹ năng tốt.
+    \\item Ứng viên loại C có kỹ năng tốt.
+\\end{enumerate}
+Ta tính xác suất ứng viên có kỹ năng tốt bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(G) = P(G|A)P(A) + P(G|B)P(B) + P(G|C)P(C)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(A) = ${applicantARate}$
+    \\item $P(B) = ${applicantBRate}$
+    \\item $P(C) = ${applicantCRate}$
+    \\item $P(G|A) = ${goodSkillsA}$
+    \\item $P(G|B) = ${goodSkillsB}$
+    \\item $P(G|C) = ${goodSkillsC}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(G) = ${goodSkillsA} \\times ${applicantARate} + ${goodSkillsB} \\times ${applicantBRate} + ${goodSkillsC} \\times ${applicantCRate}
+\\]
+\\[
+P(G) = ${(goodSkillsA * applicantARate).toFixed(4)} + ${(goodSkillsB * applicantBRate).toFixed(4)} + ${(goodSkillsC * applicantCRate).toFixed(4)}
+\\]
+\\[
+P(G) = ${((goodSkillsA * applicantARate) + (goodSkillsB * applicantBRate) + (goodSkillsC * applicantCRate)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một ứng viên ngẫu nhiên có kỹ năng tốt là khoảng $${(P_G * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất trúng tuyển của mỗi loại ứng viên là khác nhau, và xác suất mỗi ứng viên có kỹ năng tốt cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một ứng viên ngẫu nhiên có kỹ năng tốt.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_nguoi_bi_benh(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất phát hiện bệnh
+    function calculateProbability(lightRate, severeRate, healthyRate, detectLight, detectSevere, detectHealthy) {
+        const P_L = lightRate;
+        const P_S = severeRate;
+        const P_H = healthyRate;
+        const P_D_given_L = detectLight;
+        const P_D_given_S = detectSevere;
+        const P_D_given_H = detectHealthy;
+
+        const P_D = (P_D_given_L * P_L) + (P_D_given_S * P_S) + (P_D_given_H * P_H);
+
+        return P_D.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const lightRate = parseFloat(generateRandomPercentage(0.10, 0.05)); // Xác suất bệnh nhân mắc bệnh nhẹ
+    const severeRate = parseFloat(generateRandomPercentage(0.20, 0.05)); // Xác suất bệnh nhân mắc bệnh nặng
+    const healthyRate = 1 - (lightRate + severeRate); // Xác suất bệnh nhân không mắc bệnh
+    const detectLight = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất phát hiện bệnh khi mắc bệnh nhẹ
+    const detectSevere = parseFloat(generateRandomPercentage(0.95, 0.05)); // Xác suất phát hiện bệnh khi mắc bệnh nặng
+    const detectHealthy = parseFloat(generateRandomPercentage(0.05, 0.02)); // Xác suất phát hiện bệnh khi không mắc bệnh
+
+    // Tính xác suất một bệnh nhân được phát hiện mắc bệnh
+    const P_D = calculateProbability(lightRate, severeRate, healthyRate, detectLight, detectSevere, detectHealthy);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một bệnh viện có ba loại bệnh nhân: mắc bệnh nhẹ (L), mắc bệnh nặng (S), và không mắc bệnh (H). Xác suất mỗi loại bệnh nhân lần lượt là $${(lightRate * 100).toFixed(2)}\\%$, $${(severeRate * 100).toFixed(2)}\\%$ và $${(healthyRate * 100).toFixed(2)}\\%$. Xác suất phát hiện bệnh khi mắc bệnh nhẹ là $${(detectLight * 100).toFixed(2)}\\%$, khi mắc bệnh nặng là $${(detectSevere * 100).toFixed(2)}\\%$, và khi không mắc bệnh là $${(detectHealthy * 100).toFixed(2)}\\%$. Tính xác suất một bệnh nhân được phát hiện mắc bệnh.
+\\shortans{$${(P_D * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $L$ là sự kiện bệnh nhân mắc bệnh nhẹ.
+    \\item $S$ là sự kiện bệnh nhân mắc bệnh nặng.
+    \\item $H$ là sự kiện bệnh nhân không mắc bệnh.
+    \\item $D$ là sự kiện bệnh nhân được phát hiện mắc bệnh.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất bệnh nhân mắc bệnh nhẹ: $P(L) = ${lightRate}$.
+    \\item Xác suất bệnh nhân mắc bệnh nặng: $P(S) = ${severeRate}$.
+    \\item Xác suất bệnh nhân không mắc bệnh: $P(H) = ${healthyRate}$.
+    \\item Xác suất phát hiện bệnh khi mắc bệnh nhẹ: $P(D|L) = ${detectLight}$.
+    \\item Xác suất phát hiện bệnh khi mắc bệnh nặng: $P(D|S) = ${detectSevere}$.
+    \\item Xác suất phát hiện bệnh khi không mắc bệnh: $P(D|H) = ${detectHealthy}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất phát hiện bệnh $P(D)$}\\\\
+Bệnh nhân được phát hiện mắc bệnh có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Bệnh nhân mắc bệnh nhẹ và được phát hiện mắc bệnh.
+    \\item Bệnh nhân mắc bệnh nặng và được phát hiện mắc bệnh.
+    \\item Bệnh nhân không mắc bệnh nhưng vẫn bị phát hiện mắc bệnh.
+\\end{enumerate}
+Ta tính xác suất bệnh nhân được phát hiện mắc bệnh bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(D) = P(D|L)P(L) + P(D|S)P(S) + P(D|H)P(H)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(L) = ${lightRate}$
+    \\item $P(S) = ${severeRate}$
+    \\item $P(H) = ${healthyRate}$
+    \\item $P(D|L) = ${detectLight}$
+    \\item $P(D|S) = ${detectSevere}$
+    \\item $P(D|H) = ${detectHealthy}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(D) = ${detectLight} \\times ${lightRate} + ${detectSevere} \\times ${severeRate} + ${detectHealthy} \\times ${healthyRate}
+\\]
+\\[
+P(D) = ${(detectLight * lightRate).toFixed(4)} + ${(detectSevere * severeRate).toFixed(4)} + ${(detectHealthy * healthyRate).toFixed(4)}
+\\]
+\\[
+P(D) = ${((detectLight * lightRate) + (detectSevere * severeRate) + (detectHealthy * healthyRate)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một bệnh nhân được phát hiện mắc bệnh là khoảng $${(P_D * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất bệnh nhân thuộc mỗi loại là khác nhau, và xác suất phát hiện bệnh khi mắc các loại bệnh hoặc không mắc bệnh cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một bệnh nhân được phát hiện mắc bệnh.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_sp_chat_luong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất sản phẩm ngẫu nhiên đạt chất lượng
+    function calculateProbability(rateX, rateY, rateZ, qualityX, qualityY, qualityZ) {
+        const P_X = rateX;
+        const P_Y = rateY;
+        const P_Z = rateZ;
+        const P_Q_given_X = qualityX;
+        const P_Q_given_Y = qualityY;
+        const P_Q_given_Z = qualityZ;
+
+        const P_Q = (P_Q_given_X * P_X) + (P_Q_given_Y * P_Y) + (P_Q_given_Z * P_Z);
+
+        return P_Q.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateX = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất sản phẩm X
+    const rateY = parseFloat(generateRandomPercentage(0.35, 0.05)); // Xác suất sản phẩm Y
+    const rateZ = 1 - (rateX + rateY); // Xác suất sản phẩm Z
+    const qualityX = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất sản phẩm X đạt chất lượng
+    const qualityY = parseFloat(generateRandomPercentage(0.85, 0.05)); // Xác suất sản phẩm Y đạt chất lượng
+    const qualityZ = parseFloat(generateRandomPercentage(0.70, 0.05)); // Xác suất sản phẩm Z đạt chất lượng
+
+    // Tính xác suất một sản phẩm ngẫu nhiên đạt chất lượng
+    const P_Q = calculateProbability(rateX, rateY, rateZ, qualityX, qualityY, qualityZ);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty sản xuất ba loại sản phẩm: X, Y và Z. Xác suất một sản phẩm X là $${(rateX * 100).toFixed(2)}\\%$, sản phẩm Y là $${(rateY * 100).toFixed(2)}\\%$ và sản phẩm Z là $${(rateZ * 100).toFixed(2)}\\%$. Xác suất một sản phẩm đạt chất lượng khi là sản phẩm X là $${(qualityX * 100).toFixed(2)}\\%$, khi là sản phẩm Y là $${(qualityY * 100).toFixed(2)}\\%$ và khi là sản phẩm Z là $${(qualityZ * 100).toFixed(2)}\\%$. Tính xác suất một sản phẩm ngẫu nhiên đạt chất lượng.
+\\shortans{$${(P_Q * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item $X$ là sự kiện sản phẩm loại X.
+    \\item $Y$ là sự kiện sản phẩm loại Y.
+    \\item $Z$ là sự kiện sản phẩm loại Z.
+    \\item $Q$ là sự kiện sản phẩm đạt chất lượng.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất sản phẩm loại X: $P(X) = ${rateX}$.
+    \\item Xác suất sản phẩm loại Y: $P(Y) = ${rateY}$.
+    \\item Xác suất sản phẩm loại Z: $P(Z) = ${rateZ}$.
+    \\item Xác suất sản phẩm loại X đạt chất lượng: $P(Q|X) = ${qualityX}$.
+    \\item Xác suất sản phẩm loại Y đạt chất lượng: $P(Q|Y) = ${qualityY}$.
+    \\item Xác suất sản phẩm loại Z đạt chất lượng: $P(Q|Z) = ${qualityZ}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất sản phẩm đạt chất lượng $P(Q)$}\\\\
+Sản phẩm đạt chất lượng có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Sản phẩm loại X đạt chất lượng.
+    \\item Sản phẩm loại Y đạt chất lượng.
+    \\item Sản phẩm loại Z đạt chất lượng.
+\\end{enumerate}
+Ta tính xác suất sản phẩm đạt chất lượng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(Q) = P(Q|X)P(X) + P(Q|Y)P(Y) + P(Q|Z)P(Z)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(X) = ${rateX}$
+    \\item $P(Y) = ${rateY}$
+    \\item $P(Z) = ${rateZ}$
+    \\item $P(Q|X) = ${qualityX}$
+    \\item $P(Q|Y) = ${qualityY}$
+    \\item $P(Q|Z) = ${qualityZ}$
+\\end{itemize}
+
+Thay các giá trị vào, ta có:
+\\[
+P(Q) = ${qualityX} \\times ${rateX} + ${qualityY} \\times ${rateY} + ${qualityZ} \\times ${rateZ}
+\\]
+\\[
+P(Q) = ${(qualityX * rateX).toFixed(4)} + ${(qualityY * rateY).toFixed(4)} + ${(qualityZ * rateZ).toFixed(4)}
+\\]
+\\[
+P(Q) = ${((qualityX * rateX) + (qualityY * rateY) + (qualityZ * rateZ)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một sản phẩm ngẫu nhiên đạt chất lượng là khoảng $${(P_Q * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại sản phẩm khác nhau, và xác suất mỗi loại sản phẩm đạt chất lượng cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một sản phẩm ngẫu nhiên đạt chất lượng.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_danh_gia_phim(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất khán giả ngẫu nhiên đánh giá cao bộ phim
+    function calculateProbability(rateC, rateA, rateS, ratingC, ratingA, ratingS) {
+        const P_C = rateC;
+        const P_A = rateA;
+        const P_S = rateS;
+        const P_R_given_C = ratingC;
+        const P_R_given_A = ratingA;
+        const P_R_given_S = ratingS;
+
+        const P_R = (P_R_given_C * P_C) + (P_R_given_A * P_A) + (P_R_given_S * P_S);
+
+        return P_R.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateC = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất khán giả là trẻ em
+    const rateA = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất khán giả là người lớn
+    const rateS = 1 - (rateC + rateA); // Xác suất khán giả là người già
+    const ratingC = parseFloat(generateRandomPercentage(0.70, 0.05)); // Xác suất trẻ em đánh giá cao bộ phim
+    const ratingA = parseFloat(generateRandomPercentage(0.80, 0.05)); // Xác suất người lớn đánh giá cao bộ phim
+    const ratingS = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất người già đánh giá cao bộ phim
+
+    // Tính xác suất một khán giả ngẫu nhiên đánh giá cao bộ phim
+    const P_R = calculateProbability(rateC, rateA, rateS, ratingC, ratingA, ratingS);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một rạp chiếu phim phân loại khán giả thành ba nhóm: trẻ em (C), người lớn (A) và người già (S). Xác suất mỗi nhóm khán giả lần lượt là $${(rateC * 100).toFixed(2)}\\%$, $${(rateA * 100).toFixed(2)}\\%$ và $${(rateS * 100).toFixed(2)}\\%$. Xác suất khán giả đánh giá cao bộ phim khi họ là trẻ em là $${(ratingC * 100).toFixed(2)}\\%$, khi là người lớn là $${(ratingA * 100).toFixed(2)}\\%$ và khi là người già là $${(ratingS * 100).toFixed(2)}\\%$. Tính xác suất một khán giả ngẫu nhiên đánh giá cao bộ phim.
+\\shortans{$${(P_R * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $C$ là sự kiện khán giả là trẻ em.
+    \\item $A$ là sự kiện khán giả là người lớn.
+    \\item $S$ là sự kiện khán giả là người già.
+    \\item $R$ là sự kiện khán giả đánh giá cao bộ phim.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất khán giả là trẻ em: $P(C) = ${rateC}$.
+    \\item Xác suất khán giả là người lớn: $P(A) = ${rateA}$.
+    \\item Xác suất khán giả là người già: $P(S) = ${rateS}$.
+    \\item Xác suất trẻ em đánh giá cao bộ phim: $P(R|C) = ${ratingC}$.
+    \\item Xác suất người lớn đánh giá cao bộ phim: $P(R|A) = ${ratingA}$.
+    \\item Xác suất người già đánh giá cao bộ phim: $P(R|S) = ${ratingS}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất khán giả đánh giá cao bộ phim $P(R)$}\\\\
+Khán giả đánh giá cao bộ phim có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Trẻ em đánh giá cao bộ phim.
+    \\item Người lớn đánh giá cao bộ phim.
+    \\item Người già đánh giá cao bộ phim.
+\\end{enumerate}
+Ta tính xác suất khán giả đánh giá cao bộ phim bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(R) = P(R|C)P(C) + P(R|A)P(A) + P(R|S)P(S)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(C) = ${rateC}$
+    \\item $P(A) = ${rateA}$
+    \\item $P(S) = ${rateS}$
+    \\item $P(R|C) = ${ratingC}$
+    \\item $P(R|A) = ${ratingA}$
+    \\item $P(R|S) = ${ratingS}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(R) = ${ratingC} \\times ${rateC} + ${ratingA} \\times ${rateA} + ${ratingS} \\times ${rateS}
+\\]
+\\[
+P(R) = ${(ratingC * rateC).toFixed(4)} + ${(ratingA * rateA).toFixed(4)} + ${(ratingS * rateS).toFixed(4)}
+\\]
+\\[
+P(R) = ${((ratingC * rateC) + (ratingA * rateA) + (ratingS * rateS)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khán giả ngẫu nhiên đánh giá cao bộ phim là khoảng $${(P_R * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi nhóm khán giả khác nhau, và xác suất mỗi nhóm khán giả đánh giá cao bộ phim cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một khán giả ngẫu nhiên đánh giá cao bộ phim.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_kinh_doanh_thanhcong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất dự án ngẫu nhiên thành công
+    function calculateProbability(rateL, rateM, rateS, successL, successM, successS) {
+        const P_L = rateL;
+        const P_M = rateM;
+        const P_S = rateS;
+        const P_S_given_L = successL;
+        const P_S_given_M = successM;
+        const P_S_given_S = successS;
+
+        const P_Success = (P_S_given_L * P_L) + (P_S_given_M * P_M) + (P_S_given_S * P_S);
+
+        return P_Success.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateL = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất dự án lớn
+    const rateM = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất dự án vừa
+    const rateS = 1 - (rateL + rateM); // Xác suất dự án nhỏ
+    const successL = parseFloat(generateRandomPercentage(0.80, 0.05)); // Xác suất dự án lớn thành công
+    const successM = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất dự án vừa thành công
+    const successS = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất dự án nhỏ thành công
+
+    // Tính xác suất một dự án ngẫu nhiên thành công
+    const P_Success = calculateProbability(rateL, rateM, rateS, successL, successM, successS);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một doanh nghiệp có ba loại dự án: dự án lớn (L), dự án vừa (M), và dự án nhỏ (S). Xác suất mỗi loại dự án lần lượt là $${(rateL * 100).toFixed(2)}\\%$, $${(rateM * 100).toFixed(2)}\\%$ và $${(rateS * 100).toFixed(2)}\\%$. Xác suất một dự án thành công khi là dự án lớn là $${(successL * 100).toFixed(2)}\\%$, khi là dự án vừa là $${(successM * 100).toFixed(2)}\\%$ và khi là dự án nhỏ là $${(successS * 100).toFixed(2)}\\%$. Tính xác suất một dự án ngẫu nhiên thành công.
+\\shortans{$${(P_Success * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $L$ là sự kiện dự án lớn.
+    \\item $M$ là sự kiện dự án vừa.
+    \\item $S$ là sự kiện dự án nhỏ.
+    \\item $S$ là sự kiện dự án thành công.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất dự án lớn: $P(L) = ${rateL}$.
+    \\item Xác suất dự án vừa: $P(M) = ${rateM}$.
+    \\item Xác suất dự án nhỏ: $P(S) = ${rateS}$.
+    \\item Xác suất dự án lớn thành công: $P(S|L) = ${successL}$.
+    \\item Xác suất dự án vừa thành công: $P(S|M) = ${successM}$.
+    \\item Xác suất dự án nhỏ thành công: $P(S|S) = ${successS}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất dự án thành công $P(S)$}\\\\
+Dự án thành công có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Dự án lớn thành công.
+    \\item Dự án vừa thành công.
+    \\item Dự án nhỏ thành công.
+\\end{enumerate}
+Ta tính xác suất dự án thành công bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|L)P(L) + P(S|M)P(M) + P(S|S)P(S)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(L) = ${rateL}$
+    \\item $P(M) = ${rateM}$
+    \\item $P(S) = ${rateS}$
+    \\item $P(S|L) = ${successL}$
+    \\item $P(S|M) = ${successM}$
+    \\item $P(S|S) = ${successS}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${successL} \\times ${rateL} + ${successM} \\times ${rateM} + ${successS} \\times ${rateS}
+\\]
+\\[
+P(S) = ${(successL * rateL).toFixed(4)} + ${(successM * rateM).toFixed(4)} + ${(successS * rateS).toFixed(4)}
+\\]
+\\[
+P(S) = ${((successL * rateL) + (successM * rateM) + (successS * rateS)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một dự án ngẫu nhiên thành công là khoảng $${(P_Success * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại dự án khác nhau, và xác suất mỗi loại dự án thành công cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một dự án ngẫu nhiên thành công.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_khach_hang_hai_long(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất khách hàng ngẫu nhiên hài lòng
+    function calculateProbability(rateN, rateR, rateV, satisfactionN, satisfactionR, satisfactionV) {
+        const P_N = rateN;
+        const P_R = rateR;
+        const P_V = rateV;
+        const P_S_given_N = satisfactionN;
+        const P_S_given_R = satisfactionR;
+        const P_S_given_V = satisfactionV;
+
+        const P_S = (P_S_given_N * P_N) + (P_S_given_R * P_R) + (P_S_given_V * P_V);
+
+        return P_S.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateN = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất khách hàng mới
+    const rateR = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất khách hàng thường xuyên
+    const rateV = 1 - (rateN + rateR); // Xác suất khách hàng VIP
+    const satisfactionN = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất khách hàng mới hài lòng
+    const satisfactionR = parseFloat(generateRandomPercentage(0.80, 0.05)); // Xác suất khách hàng thường xuyên hài lòng
+    const satisfactionV = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất khách hàng VIP hài lòng
+
+    // Tính xác suất một khách hàng ngẫu nhiên hài lòng
+    const P_S = calculateProbability(rateN, rateR, rateV, satisfactionN, satisfactionR, satisfactionV);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một cửa hàng có ba loại khách hàng: khách hàng mới (N), khách hàng thường xuyên (R), và khách hàng VIP (V). Xác suất mỗi loại khách hàng lần lượt là $${(rateN * 100).toFixed(2)}\\%$, $${(rateR * 100).toFixed(2)}\\%$ và $${(rateV * 100).toFixed(2)}\\%$. Xác suất khách hàng hài lòng khi họ là khách hàng mới là $${(satisfactionN * 100).toFixed(2)}\\%$, khi là khách hàng thường xuyên là $${(satisfactionR * 100).toFixed(2)}\\%$ và khi là khách hàng VIP là $${(satisfactionV * 100).toFixed(2)}\\%$. Tính xác suất một khách hàng ngẫu nhiên hài lòng.
+\\shortans{$${(P_S * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $N$ là sự kiện khách hàng mới.
+    \\item $R$ là sự kiện khách hàng thường xuyên.
+    \\item $V$ là sự kiện khách hàng VIP.
+    \\item $S$ là sự kiện khách hàng hài lòng.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất khách hàng mới: $P(N) = ${rateN}$.
+    \\item Xác suất khách hàng thường xuyên: $P(R) = ${rateR}$.
+    \\item Xác suất khách hàng VIP: $P(V) = ${rateV}$.
+    \\item Xác suất khách hàng mới hài lòng: $P(S|N) = ${satisfactionN}$.
+    \\item Xác suất khách hàng thường xuyên hài lòng: $P(S|R) = ${satisfactionR}$.
+    \\item Xác suất khách hàng VIP hài lòng: $P(S|V) = ${satisfactionV}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất khách hàng hài lòng $P(S)$}\\\\
+Khách hàng hài lòng có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Khách hàng mới hài lòng.
+    \\item Khách hàng thường xuyên hài lòng.
+    \\item Khách hàng VIP hài lòng.
+\\end{enumerate}
+Ta tính xác suất khách hàng hài lòng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|N)P(N) + P(S|R)P(R) + P(S|V)P(V)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(N) = ${rateN}$
+    \\item $P(R) = ${rateR}$
+    \\item $P(V) = ${rateV}$
+    \\item $P(S|N) = ${satisfactionN}$
+    \\item $P(S|R) = ${satisfactionR}$
+    \\item $P(S|V) = ${satisfactionV}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${satisfactionN} \\times ${rateN} + ${satisfactionR} \\times ${rateR} + ${satisfactionV} \\times ${rateV}
+\\]
+\\[
+P(S) = ${(satisfactionN * rateN).toFixed(4)} + ${(satisfactionR * rateR).toFixed(4)} + ${(satisfactionV * rateV).toFixed(4)}
+\\]
+\\[
+P(S) = ${((satisfactionN * rateN) + (satisfactionR * rateR) + (satisfactionV * rateV)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng ngẫu nhiên hài lòng là khoảng $${(P_S * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại khách hàng khác nhau, và xác suất mỗi loại khách hàng hài lòng cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một khách hàng ngẫu nhiên hài lòng.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_du_an_thanh_cong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất dự án ngẫu nhiên thành công
+    function calculateProbability(rateL, rateM, rateS, rateXS, successL, successM, successS, successXS) {
+        const P_L = rateL;
+        const P_M = rateM;
+        const P_S = rateS;
+        const P_XS = rateXS;
+        const P_Success_given_L = successL;
+        const P_Success_given_M = successM;
+        const P_Success_given_S = successS;
+        const P_Success_given_XS = successXS;
+
+        const P_Success = (P_Success_given_L * P_L) + (P_Success_given_M * P_M) + (P_Success_given_S * P_S) + (P_Success_given_XS * P_XS);
+
+        return P_Success.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateL = parseFloat(generateRandomPercentage(0.10, 0.05)); // Xác suất dự án lớn
+    const rateM = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất dự án vừa
+    const rateS = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất dự án nhỏ
+    const rateXS = 1 - (rateL + rateM + rateS); // Xác suất dự án rất nhỏ
+    const successL = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất dự án lớn thành công
+    const successM = parseFloat(generateRandomPercentage(0.70, 0.05)); // Xác suất dự án vừa thành công
+    const successS = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất dự án nhỏ thành công
+    const successXS = parseFloat(generateRandomPercentage(0.20, 0.05)); // Xác suất dự án rất nhỏ thành công
+
+    // Tính xác suất một dự án ngẫu nhiên thành công
+    const P_Success = calculateProbability(rateL, rateM, rateS, rateXS, successL, successM, successS, successXS);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một công ty có bốn loại dự án: dự án lớn (L), dự án vừa (M), dự án nhỏ (S), và dự án rất nhỏ (XS). Xác suất mỗi loại dự án lần lượt là $${(rateL * 100).toFixed(2)}\\%$, $${(rateM * 100).toFixed(2)}\\%$, $${(rateS * 100).toFixed(2)}\\%$ và $${(rateXS * 100).toFixed(2)}\\%$. Xác suất thành công khi là dự án lớn là $${(successL * 100).toFixed(2)}\\%$, khi là dự án vừa là $${(successM * 100).toFixed(2)}\\%$, khi là dự án nhỏ là $${(successS * 100).toFixed(2)}\\%$ và khi là dự án rất nhỏ là $${(successXS * 100).toFixed(2)}\\%$. Tính xác suất một dự án ngẫu nhiên thành công.
+\\shortans{$${(P_Success * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $L$ là sự kiện dự án lớn.
+    \\item $M$ là sự kiện dự án vừa.
+    \\item $S$ là sự kiện dự án nhỏ.
+    \\item $XS$ là sự kiện dự án rất nhỏ.
+    \\item $Success$ là sự kiện dự án thành công.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất dự án lớn: $P(L) = ${rateL}$.
+    \\item Xác suất dự án vừa: $P(M) = ${rateM}$.
+    \\item Xác suất dự án nhỏ: $P(S) = ${rateS}$.
+    \\item Xác suất dự án rất nhỏ: $P(XS) = ${rateXS}$.
+    \\item Xác suất dự án lớn thành công: $P(Success|L) = ${successL}$.
+    \\item Xác suất dự án vừa thành công: $P(Success|M) = ${successM}$.
+    \\item Xác suất dự án nhỏ thành công: $P(Success|S) = ${successS}$.
+    \\item Xác suất dự án rất nhỏ thành công: $P(Success|XS) = ${successXS}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất dự án thành công $P(Success)$}\\\\
+Dự án thành công có thể xảy ra theo bốn cách:
+\\begin{enumerate}
+    \\item Dự án lớn thành công.
+    \\item Dự án vừa thành công.
+    \\item Dự án nhỏ thành công.
+    \\item Dự án rất nhỏ thành công.
+\\end{enumerate}
+Ta tính xác suất dự án thành công bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(Success) = P(Success|L)P(L) + P(Success|M)P(M) + P(Success|S)P(S) + P(Success|XS)P(XS)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(L) = ${rateL}$
+    \\item $P(M) = ${rateM}$
+    \\item $P(S) = ${rateS}$
+    \\item $P(XS) = ${rateXS}$
+    \\item $P(Success|L) = ${successL}$
+    \\item $P(Success|M) = ${successM}$
+    \\item $P(Success|S) = ${successS}$
+    \\item $P(Success|XS) = ${successXS}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(Success) = ${successL} \\times ${rateL} + ${successM} \\times ${rateM} + ${successS} \\times ${rateS} + ${successXS} \\times ${rateXS}
+\\]
+\\[
+P(Success) = ${(successL * rateL).toFixed(4)} + ${(successM * rateM).toFixed(4)} + ${(successS * rateS).toFixed(4)} + ${(successXS * rateXS).toFixed(4)}
+\\]
+\\[
+P(Success) = ${((successL * rateL) + (successM * rateM) + (successS * rateS) + (successXS * rateXS)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một dự án ngẫu nhiên thành công là khoảng $${(P_Success * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại dự án khác nhau, và xác suất mỗi loại dự án thành công cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một dự án ngẫu nhiên thành công.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_trung_thuong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất vé ngẫu nhiên trúng thưởng
+    function calculateProbability(rateA, rateB, rateC, winA, winB, winC) {
+        const P_A = rateA;
+        const P_B = rateB;
+        const P_C = rateC;
+        const P_W_given_A = winA;
+        const P_W_given_B = winB;
+        const P_W_given_C = winC;
+
+        const P_Win = (P_W_given_A * P_A) + (P_W_given_B * P_B) + (P_W_given_C * P_C);
+
+        return P_Win.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateA = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất vé loại A
+    const rateB = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất vé loại B
+    const rateC = 1 - (rateA + rateB); // Xác suất vé loại C
+    const winA = parseFloat(generateRandomPercentage(0.10, 0.05)); // Xác suất vé loại A trúng thưởng
+    const winB = parseFloat(generateRandomPercentage(0.20, 0.05)); // Xác suất vé loại B trúng thưởng
+    const winC = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất vé loại C trúng thưởng
+
+    // Tính xác suất một vé ngẫu nhiên trúng thưởng
+    const P_Win = calculateProbability(rateA, rateB, rateC, winA, winB, winC);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một chương trình khuyến mãi có ba loại vé: vé loại A, vé loại B, và vé loại C. Xác suất mỗi loại vé lần lượt là $${(rateA * 100).toFixed(2)}\\%$, $${(rateB * 100).toFixed(2)}\\%$ và $${(rateC * 100).toFixed(2)}\\%$. Xác suất trúng thưởng khi là vé loại A là $${(winA * 100).toFixed(2)}\\%$, khi là vé loại B là $${(winB * 100).toFixed(2)}\\%$ và khi là vé loại C là $${(winC * 100).toFixed(2)}\\%$. Tính xác suất một vé ngẫu nhiên trúng thưởng.
+\\shortans{$${(P_Win * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $A$ là sự kiện vé loại A.
+    \\item $B$ là sự kiện vé loại B.
+    \\item $C$ là sự kiện vé loại C.
+    \\item $W$ là sự kiện vé trúng thưởng.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất vé loại A: $P(A) = ${rateA}$.
+    \\item Xác suất vé loại B: $P(B) = ${rateB}$.
+    \\item Xác suất vé loại C: $P(C) = ${rateC}$.
+    \\item Xác suất vé loại A trúng thưởng: $P(W|A) = ${winA}$.
+    \\item Xác suất vé loại B trúng thưởng: $P(W|B) = ${winB}$.
+    \\item Xác suất vé loại C trúng thưởng: $P(W|C) = ${winC}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất vé trúng thưởng $P(W)$}\\\\
+Vé trúng thưởng có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Vé loại A trúng thưởng.
+    \\item Vé loại B trúng thưởng.
+    \\item Vé loại C trúng thưởng.
+\\end{enumerate}
+Ta tính xác suất vé trúng thưởng bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(W) = P(W|A)P(A) + P(W|B)P(B) + P(W|C)P(C)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(A) = ${rateA}$
+    \\item $P(B) = ${rateB}$
+    \\item $P(C) = ${rateC}$
+    \\item $P(W|A) = ${winA}$
+    \\item $P(W|B) = ${winB}$
+    \\item $P(W|C) = ${winC}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(W) = ${winA} \\times ${rateA} + ${winB} \\times ${rateB} + ${winC} \\times ${rateC}
+\\]
+\\[
+P(W) = ${(winA * rateA).toFixed(4)} + ${(winB * rateB).toFixed(4)} + ${(winC * rateC).toFixed(4)}
+\\]
+\\[
+P(W) = ${((winA * rateA) + (winB * rateB) + (winC * rateC)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một vé ngẫu nhiên trúng thưởng là khoảng $${(P_Win * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại vé khác nhau, và xác suất mỗi loại vé trúng thưởng cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một vé ngẫu nhiên trúng thưởng.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_thinghiem_thanhcong(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất thí nghiệm ngẫu nhiên thành công
+    function calculateProbability(rateL1, rateL2, rateL3, successL1, successL2, successL3) {
+        const P_L1 = rateL1;
+        const P_L2 = rateL2;
+        const P_L3 = rateL3;
+        const P_S_given_L1 = successL1;
+        const P_S_given_L2 = successL2;
+        const P_S_given_L3 = successL3;
+
+        const P_Success = (P_S_given_L1 * P_L1) + (P_S_given_L2 * P_L2) + (P_S_given_L3 * P_L3);
+
+        return P_Success.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateL1 = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất thí nghiệm loại 1
+    const rateL2 = parseFloat(generateRandomPercentage(0.40, 0.05)); // Xác suất thí nghiệm loại 2
+    const rateL3 = 1 - (rateL1 + rateL2); // Xác suất thí nghiệm loại 3
+    const successL1 = parseFloat(generateRandomPercentage(0.70, 0.05)); // Xác suất thí nghiệm loại 1 thành công
+    const successL2 = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất thí nghiệm loại 2 thành công
+    const successL3 = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất thí nghiệm loại 3 thành công
+
+    // Tính xác suất một thí nghiệm ngẫu nhiên thành công
+    const P_Success = calculateProbability(rateL1, rateL2, rateL3, successL1, successL2, successL3);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một phòng thí nghiệm thực hiện ba loại thí nghiệm: thí nghiệm loại 1 (L1), thí nghiệm loại 2 (L2), và thí nghiệm loại 3 (L3). Xác suất mỗi loại thí nghiệm lần lượt là $${(rateL1 * 100).toFixed(2)}\\%$, $${(rateL2 * 100).toFixed(2)}\\%$ và $${(rateL3 * 100).toFixed(2)}\\%$. Xác suất thí nghiệm thành công khi là loại 1 là $${(successL1 * 100).toFixed(2)}\\%$, khi là loại 2 là $${(successL2 * 100).toFixed(2)}\\%$ và khi là loại 3 là $${(successL3 * 100).toFixed(2)}\\%$. Tính xác suất một thí nghiệm ngẫu nhiên thành công.
+\\shortans{$${(P_Success * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $L1$ là sự kiện thí nghiệm loại 1.
+    \\item $L2$ là sự kiện thí nghiệm loại 2.
+    \\item $L3$ là sự kiện thí nghiệm loại 3.
+    \\item $S$ là sự kiện thí nghiệm thành công.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất thí nghiệm loại 1: $P(L1) = ${rateL1}$.
+    \\item Xác suất thí nghiệm loại 2: $P(L2) = ${rateL2}$.
+    \\item Xác suất thí nghiệm loại 3: $P(L3) = ${rateL3}$.
+    \\item Xác suất thí nghiệm loại 1 thành công: $P(S|L1) = ${successL1}$.
+    \\item Xác suất thí nghiệm loại 2 thành công: $P(S|L2) = ${successL2}$.
+    \\item Xác suất thí nghiệm loại 3 thành công: $P(S|L3) = ${successL3}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất thí nghiệm thành công $P(S)$}\\\\
+Thí nghiệm thành công có thể xảy ra theo ba cách:
+\\begin{enumerate}
+    \\item Thí nghiệm loại 1 thành công.
+    \\item Thí nghiệm loại 2 thành công.
+    \\item Thí nghiệm loại 3 thành công.
+\\end{enumerate}
+Ta tính xác suất thí nghiệm thành công bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(S) = P(S|L1)P(L1) + P(S|L2)P(L2) + P(S|L3)P(L3)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(L1) = ${rateL1}$
+    \\item $P(L2) = ${rateL2}$
+    \\item $P(L3) = ${rateL3}$
+    \\item $P(S|L1) = ${successL1}$
+    \\item $P(S|L2) = ${successL2}$
+    \\item $P(S|L3) = ${successL3}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(S) = ${successL1} \\times ${rateL1} + ${successL2} \\times ${rateL2} + ${successL3} \\times ${rateL3}
+\\]
+\\[
+P(S) = ${(successL1 * rateL1).toFixed(4)} + ${(successL2 * rateL2).toFixed(4)} + ${(successL3 * rateL3).toFixed(4)}
+\\]
+\\[
+P(S) = ${((successL1 * rateL1) + (successL2 * rateL2) + (successL3 * rateL3)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một thí nghiệm ngẫu nhiên thành công là khoảng $${(P_Success * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại thí nghiệm khác nhau, và xác suất mỗi loại thí nghiệm thành công cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một thí nghiệm ngẫu nhiên thành công.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_mua_sp(e) {
+    // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
+    function generateRandomPercentage(base, range) {
+        return (base + (Math.random() * range * 2 - range)).toFixed(4);
+    }
+
+    // Hàm tính xác suất khách hàng ngẫu nhiên mua sản phẩm
+    function calculateProbability(rateN, rateR, rateF, rateV, purchaseN, purchaseR, purchaseF, purchaseV) {
+        const P_N = rateN;
+        const P_R = rateR;
+        const P_F = rateF;
+        const P_V = rateV;
+        const P_P_given_N = purchaseN;
+        const P_P_given_R = purchaseR;
+        const P_P_given_F = purchaseF;
+        const P_P_given_V = purchaseV;
+
+        const P_Purchase = (P_P_given_N * P_N) + (P_P_given_R * P_R) + (P_P_given_F * P_F) + (P_P_given_V * P_V);
+
+        return P_Purchase.toFixed(4);
+    }
+
+    // Tạo các tỷ lệ phần trăm ngẫu nhiên trong lân cận
+    const rateN = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất khách hàng mới
+    const rateR = parseFloat(generateRandomPercentage(0.30, 0.05)); // Xác suất khách hàng quay lại
+    const rateF = parseFloat(generateRandomPercentage(0.20, 0.05)); // Xác suất khách hàng thường xuyên
+    const rateV = 1 - (rateN + rateR + rateF); // Xác suất khách hàng VIP
+    const purchaseN = parseFloat(generateRandomPercentage(0.50, 0.05)); // Xác suất khách hàng mới mua sản phẩm
+    const purchaseR = parseFloat(generateRandomPercentage(0.60, 0.05)); // Xác suất khách hàng quay lại mua sản phẩm
+    const purchaseF = parseFloat(generateRandomPercentage(0.80, 0.05)); // Xác suất khách hàng thường xuyên mua sản phẩm
+    const purchaseV = parseFloat(generateRandomPercentage(0.90, 0.05)); // Xác suất khách hàng VIP mua sản phẩm
+
+    // Tính xác suất một khách hàng ngẫu nhiên mua sản phẩm
+    const P_Purchase = calculateProbability(rateN, rateR, rateF, rateV, purchaseN, purchaseR, purchaseF, purchaseV);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX
+    let question = `
+\\begin{ex}
+Một cửa hàng có bốn loại khách hàng: khách hàng mới (N), khách hàng quay lại (R), khách hàng thường xuyên (F), và khách hàng VIP (V). Xác suất mỗi loại khách hàng lần lượt là $${(rateN * 100).toFixed(2)}\\%$, $${(rateR * 100).toFixed(2)}\\%$, $${(rateF * 100).toFixed(2)}\\%$ và $${(rateV * 100).toFixed(2)}\\%$. Xác suất mua sản phẩm khi là khách hàng mới là $${(purchaseN * 100).toFixed(2)}\\%$, khi là khách hàng quay lại là $${(purchaseR * 100).toFixed(2)}\\%$, khi là khách hàng thường xuyên là $${(purchaseF * 100).toFixed(2)}\\%$ và khi là khách hàng VIP là $${(purchaseV * 100).toFixed(2)}\\%$. Tính xác suất một khách hàng ngẫu nhiên mua sản phẩm.
+\\shortans{$${(P_Purchase * 100).toFixed(1)}\\%$}
+\\loigiai{
+Gọi
+\\begin{itemize}
+    \\item $N$ là sự kiện khách hàng mới.
+    \\item $R$ là sự kiện khách hàng quay lại.
+    \\item $F$ là sự kiện khách hàng thường xuyên.
+    \\item $V$ là sự kiện khách hàng VIP.
+    \\item $P$ là sự kiện khách hàng mua sản phẩm.
+\\end{itemize}
+Chúng ta có các thông tin sau:
+\\begin{itemize}
+    \\item Xác suất khách hàng mới: $P(N) = ${rateN}$.
+    \\item Xác suất khách hàng quay lại: $P(R) = ${rateR}$.
+    \\item Xác suất khách hàng thường xuyên: $P(F) = ${rateF}$.
+    \\item Xác suất khách hàng VIP: $P(V) = ${rateV}$.
+    \\item Xác suất khách hàng mới mua sản phẩm: $P(P|N) = ${purchaseN}$.
+    \\item Xác suất khách hàng quay lại mua sản phẩm: $P(P|R) = ${purchaseR}$.
+    \\item Xác suất khách hàng thường xuyên mua sản phẩm: $P(P|F) = ${purchaseF}$.
+    \\item Xác suất khách hàng VIP mua sản phẩm: $P(P|V) = ${purchaseV}$.
+\\end{itemize}
+\\textbf{Bước 1: Tính xác suất khách hàng mua sản phẩm $P(P)$}\\\\
+Khách hàng mua sản phẩm có thể xảy ra theo bốn cách:
+\\begin{enumerate}
+    \\item Khách hàng mới mua sản phẩm.
+    \\item Khách hàng quay lại mua sản phẩm.
+    \\item Khách hàng thường xuyên mua sản phẩm.
+    \\item Khách hàng VIP mua sản phẩm.
+\\end{enumerate}
+Ta tính xác suất khách hàng mua sản phẩm bằng cách dùng định lý xác suất toàn phần:
+\\[
+P(P) = P(P|N)P(N) + P(P|R)P(R) + P(P|F)P(F) + P(P|V)P(V)
+\\]
+Ở đây
+\\begin{itemize}
+    \\item $P(N) = ${rateN}$
+    \\item $P(R) = ${rateR}$
+    \\item $P(F) = ${rateF}$
+    \\item $P(V) = ${rateV}$
+    \\item $P(P|N) = ${purchaseN}$
+    \\item $P(P|R) = ${purchaseR}$
+    \\item $P(P|F) = ${purchaseF}$
+    \\item $P(P|V) = ${purchaseV}$
+\\end{itemize}
+Thay các giá trị vào, ta có:
+\\[
+P(P) = ${purchaseN} \\times ${rateN} + ${purchaseR} \\times ${rateR} + ${purchaseF} \\times ${rateF} + ${purchaseV} \\times ${rateV}
+\\]
+\\[
+P(P) = ${(purchaseN * rateN).toFixed(4)} + ${(purchaseR * rateR).toFixed(4)} + ${(purchaseF * rateF).toFixed(4)} + ${(purchaseV * rateV).toFixed(4)}
+\\]
+\\[
+P(P) = ${((purchaseN * rateN) + (purchaseR * rateR) + (purchaseF * rateF) + (purchaseV * rateV)).toFixed(4)}
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất một khách hàng ngẫu nhiên mua sản phẩm là khoảng $${(P_Purchase * 100).toFixed(1)}\\%$.\\\\
+\\textbf{Diễn giải}\\\\
+Xác suất mỗi loại khách hàng khác nhau, và xác suất mỗi loại khách hàng mua sản phẩm cũng khác nhau. Sử dụng định lý xác suất toàn phần, chúng ta có thể tính được xác suất tổng thể một khách hàng ngẫu nhiên mua sản phẩm.
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+
+
+
+
+
+
+
+
+
