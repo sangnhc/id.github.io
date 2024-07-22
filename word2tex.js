@@ -17,7 +17,8 @@ export function word2tex() {
     });
 
     // Chuyển đổi cấu trúc câu hỏi và đáp án
-    const questionPattern = /Câu (\d+)[:.]([\s\S]*?)(?:\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?))?(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
+    //const questionPattern = /Câu (\d+)[:.]([\s\S]*?)(?:\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?))?(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
+    const questionPattern = /Câu (\d+)[:.]([\s\S]*?)\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?)(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
     inputCode = inputCode.replace('Lò̀i giải','Lời giải')
     outputCode = inputCode.replace(questionPattern, (match, num, questionContent, choiceA, choiceB, choiceC, choiceD, solution) => {
         let errorHighlight = "";
