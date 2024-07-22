@@ -476,6 +476,170 @@
                                 }
 
                             ]
+                        },
+                        {
+                          "name": "Chương 4: Xác Suất Có Điều Kiện",
+                          "Bài": [
+                            {
+                            "name": "Bài 2: Xác Suất Cơ Bản",
+                              "baitoan":[
+                                {
+                                  "name": "Xác Suất Chọn Kẹo Có Hoàn Lại",
+                                  "content": "${xs_chon_keo({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chọn Kẹo Không Hoàn Lại",
+                                  "content": "${xs_chon_keo_no_return({e})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Công Thức Xác Suất Toàn Phần",
+                              "baitoan": [
+                                {
+                                  "name": "Xác Suất Người Bệnh Bị Dương Tính",
+                                  "content": "${xs_duong_tinh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sản Phẩm A,B Kiểm Tra Bị Lỗi",
+                                  "content": "${xs_sanpham_AB_hong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Trả Lời Đúng",
+                                  "content": "${xs_hocsinh_traloi_dung({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Đi Học Được Điểm Cao",
+                                  "content": "${xs_hoc_sinh_diem_cao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Làm Bài Tập Về Nhà",
+                                  "content": "${xs_hocsinh_lam_btvn({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Click Quảng Cáo Mua Sản Phẩm",
+                                  "content": "${xs_click_quangcao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khảo Sát Bán Sản Phẩm",
+                                  "content": "${xs_khao_sat_thi_truong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Bị Bệnh",
+                                  "content": "${xs_bi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Bầu Cử",
+                                  "content": "${xs_trung_bau_cu({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Nhân Viên Hoàn Thành Tốt",
+                                  "content": "${xs_nhanvien_hoanthanh_tot({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Tiêm Thuốc Khỏi Bệnh",
+                                  "content": "${xs_tiem_thuoc_khoibenh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chiến Thắng Trò Chơi",
+                                  "content": "${xs_thang_tro_choi({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trời Mưa Ngập Đường",
+                                  "content": "${xs_mua_ngap_duong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chi Trả Bảo Hiểm Khách Hàng",
+                                  "content": "${xs_chi_boi_thuong_bao_hiem({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Đầu Tư Chứng Khoán",
+                                  "content": "${xs_thang_chung_khoan({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sinh Viên Thi Qua Môn",
+                                  "content": "${xs_thi_qua_mon({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Thưởng Khuyến Mãi",
+                                  "content": "${xs_trung_thuong_khuyen_mai({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khỏi Bệnh",
+                                  "content": "${xs_khoi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Hàng Sau Khi Dự Hội Thảo",
+                                  "content": "${xs_tham_du_hoithao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khách Hàng Quay Lại",
+                                  "content": "${xs_khach_hang_quay_lai({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khảo Sát Mua Sản Phẩm",
+                                  "content": "${xs_khao_sat_mua_sanpham({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Bảo Hành Sản Phẩm Điện Tử",
+                                  "content": "${xs_baohanh_san_pham({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Sản Phẩm Hữu Cơ, Vô Cơ",
+                                  "content": "${xs_mua_sp_huuco_voco({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Thi Qua Môn",
+                                  "content": "${xs_hs_tb_gioi_quamon({e})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Xác Suất Nâng Cao",
+                              "baitoan": [
+                                {
+                                  "name": "Xác Suất Chọn Ứng Viên Tốt",
+                                  "content": "${xs_chon_nhan_vien_tot({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Người Bị Bệnh",
+                                  "content": "${xs_nguoi_bi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sản Phẩm Chất Lượng",
+                                  "content": "${xs_sp_chat_luong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Đánh Giá Phim",
+                                  "content": "${xs_danh_gia_phim({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Kinh Doanh Thành Công",
+                                  "content": "${xs_kinh_doanh_thanhcong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khách Hàng Hài Lòng",
+                                  "content": "${xs_khach_hang_hai_long({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Dự Án Thành Công",
+                                  "content": "${xs_du_an_thanh_cong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Thưởng",
+                                  "content": "${xs_trung_thuong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Thí Nghiệm Thành Công",
+                                  "content": "${xs_thinghiem_thanhcong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Sản Phẩm",
+                                  "content": "${xs_mua_sp({e})}"
+                                }
+                              ]
+                            }
+                          ]
                         }
                     ]
                 }
