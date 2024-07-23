@@ -129,5 +129,15 @@ export function xoa_2cham_sau_thila(text) {
         return `${keyword} `;
     });
 
+    // Biểu thức chính quy để tìm đoạn văn bản bên trong dấu $...$
+    const dollarPattern = /\$([^$]+)\$/g;
+
+    // Thay thế đoạn văn bản bên trong dấu $...$
+    text = text.replace(dollarPattern, (match, innerText) => {
+        // Loại bỏ tất cả khoảng trắng giữa các ký tự A-Z, dấu phẩy, dấu ngoặc vuông, và dấu chấm
+        innerText = innerText.replace(/\s*([A-Z,\[\]\.,])\s*/g, '$1');
+        return `$${innerText}$`;
+    });
+
     return text;
 }
