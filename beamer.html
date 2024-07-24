@@ -424,6 +424,7 @@
             }
 
             data = data_new.replace(/{nx}/g, "{luuy}");
+	    data = data_new.replace(/\\shortans\s?\[?[0-3]?\]?/g, "\\shortans");	
             data = data.replace(/{bt}/g, "{ex}");
             data = data.replace(/{listEX}/g, "{enumerate}");
             data = data.replace(/{enumEX}{1}/g, "{enumerate}");
