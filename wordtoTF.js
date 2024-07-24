@@ -8,6 +8,7 @@ export function word3tex() {
     let errors = [];
     // Xóa tất cả các dòng trống
     inputCode = inputCode.replace(/^\s*[\r\n]/gm, '');
+    
     // Tìm tất cả các câu hỏi và thêm từ khóa "Lời giải" nếu không có
     inputCode = inputCode.replace(/(Câu \d+:.*?)(?=(\nCâu \d+:.*?|$))/gs, (match, p1, p2) => {
         if (!/Lời giải/.test(match)) {
@@ -70,6 +71,7 @@ export function word3tex() {
      outputCode = xoa_khoangtrong_trong_ngoac(outputCode)
      outputCode = thay_haicham_colon(outputCode)
      outputCode = xoa_2cham_sau_thila(outputCode)
+     outputCode = them_dola_cho_so_new(outputCode)
     fetch('replace.json')
         .then(response => response.json())
         .then(data => {
@@ -81,7 +83,7 @@ export function word3tex() {
         })
         .catch(error => console.error('Error:', error));
 }
-export function word2tex() {
+export function wordtoTF() {
     let inputCode = document.getElementById('inputCode').value;
     let outputCode = "";
     let errors = [];
@@ -90,7 +92,6 @@ export function word2tex() {
     inputCode = inputCode.replace(/^\s*[\r\n]/gm, '');
     inputCode = them_dola_cho_so_new(inputCode)
     inputCode = inputCode.replace(/Câu\s+\$(\d+)\$\s*([.:])/g, 'Câu $1$2');
-
     // Sửa lỗi chính tả
     inputCode = inputCode.replace(/Lò̀i giải/g, 'Lời giải');
 
@@ -103,9 +104,9 @@ export function word2tex() {
     });
 
     // Chuyển đổi cấu trúc câu hỏi và đáp án
-    //const questionPattern = /Câu (\d+)[:.]([\s\S]*?)(?:\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?))?(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
+    const questionPattern = /Câu (\d+)[:.]([\s\S]*?)\n[Aa]\.?\)\s*(.*?)\n[Bb]\.?\)\s*(.*?)\n[Cc]\.?\)\s*(.*?)\n[Dd]\.?\)\s*(.*?)(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
     // Chuyển đổi cấu trúc câu hỏi và đáp án
-    const questionPattern = /Câu (\d+)[:.]([\s\S]*?)\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?)(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
+    //const questionPattern = /Câu (\d+)[:.]([\s\S]*?)\nA\.\s*(.*?)\nB\.\s*(.*?)\nC\.\s*(.*?)\nD\.\s*(.*?)(?:\nLời giải([\s\S]*?))?(?=\nCâu \d|$)/g;
 
     outputCode = inputCode.replace(questionPattern, (match, num, questionContent, choiceA, choiceB, choiceC, choiceD, solution) => {
         let errorHighlight = "";
@@ -113,27 +114,27 @@ export function word2tex() {
 
         if (!choiceA) {
             errorFlag = true;
-            errorHighlight += `A (missing) `;
+            errorHighlight += `a) (missing) `;
         } else {
-            errorHighlight += `A. ${choiceA.trim()} `;
+            errorHighlight += `a) ${choiceA.trim()} `;
         }
         if (!choiceB) {
             errorFlag = true;
-            errorHighlight += `B (missing) `;
+            errorHighlight += `b) (missing) `;
         } else {
-            errorHighlight += `B. ${choiceB.trim()} `;
+            errorHighlight += `b) ${choiceB.trim()} `;
         }
         if (!choiceC) {
             errorFlag = true;
-            errorHighlight += `C (missing) `;
+            errorHighlight += `c) (missing) `;
         } else {
-            errorHighlight += `C. ${choiceC.trim()} `;
+            errorHighlight += `c) ${choiceC.trim()} `;
         }
         if (!choiceD) {
             errorFlag = true;
-            errorHighlight += `D (missing) `;
+            errorHighlight += `d) (missing) `;
         } else {
-            errorHighlight += `D. ${choiceD.trim()} `;
+            errorHighlight += `d) ${choiceD.trim()} `;
         }
 
         if (errorFlag) {
@@ -141,7 +142,7 @@ export function word2tex() {
             return match;
         }
 
-        let result = `%% Câu ${num}:\n\\begin{ex}\n${questionContent.trim()}\n\\choice\n{${choiceA.trim()}}\n{${choiceB.trim()}}\n{${choiceC.trim()}}\n{${choiceD.trim()}}\n\\loigiai{\n${solution ? solution.trim() : ''}\n}\n\\end{ex}\n`;
+        let result = `%% Câu ${num}:\n\\begin{ex}\n${questionContent.trim()}\n\\choiceTF\n{${choiceA.trim()}}\n{${choiceB.trim()}}\n{${choiceC.trim()}}\n{${choiceD.trim()}}\n\\loigiai{\n${solution ? solution.trim() : ''}\n}\n\\end{ex}\n`;
         return result;
     });
 
@@ -156,7 +157,7 @@ export function word2tex() {
     outputCode = xoa_khoangtrong_trong_ngoac(outputCode);
     outputCode = thay_haicham_colon(outputCode);
     outputCode = xoa_2cham_sau_thila(outputCode);
-    
+
     fetch('replace.json')
         .then(response => response.json())
         .then(data => {

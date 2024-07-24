@@ -129,15 +129,31 @@ export function xoa_2cham_sau_thila(text) {
         return `${keyword} `;
     });
 
-    // Biểu thức chính quy để tìm đoạn văn bản bên trong dấu $...$
-    const dollarPattern = /\$([^$]+)\$/g;
+    return text;
+}
+export function them_dola_cho_so_new(text) {
+    // Step 1: Escape math environments
+    const mathEnvironments = /(\$[^$]*\$|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
+    let escapedText = [];
+    let lastIndex = 0;
+    let match;
 
-    // Thay thế đoạn văn bản bên trong dấu $...$
-    text = text.replace(dollarPattern, (match, innerText) => {
-        // Loại bỏ tất cả khoảng trắng giữa các ký tự A-Z, dấu phẩy, dấu ngoặc vuông, và dấu chấm
-        innerText = innerText.replace(/\s*([A-Z,\[\]\.,])\s*/g, '$1');
-        return `$${innerText}$`;
+    while ((match = mathEnvironments.exec(text)) !== null) {
+        escapedText.push({ text: text.slice(lastIndex, match.index), isMath: false });
+        escapedText.push({ text: match[0], isMath: true });
+        lastIndex = match.index + match[0].length;
+    }
+    escapedText.push({ text: text.slice(lastIndex), isMath: false });
+
+    // Step 2: Replace numbers in non-math environments
+    const numberPattern = /\b\d+\b/g;
+    escapedText = escapedText.map(part => {
+        if (!part.isMath) {
+            part.text = part.text.replace(numberPattern, match => `$${match}$`);
+        }
+        return part;
     });
 
-    return text;
+    // Step 3: Reassemble the text
+    return escapedText.map(part => part.text).join('');
 }

@@ -73,7 +73,14 @@
         .dropdown-submenu:hover .dropdown-content {
             display: block;
         }
-
+        .btn-third {
+        background-color: #9c157f; /* Màu nền cho nút thứ ba */
+        color: #fff; /* Màu chữ trắng */
+        }
+        .btn-secondary {
+        background-color: #09a368; /* Màu nền cho nút thứ ba */
+        color: #fff; /* Màu chữ trắng */
+        }
         /* CSS for the render result */
         #renderResult {
             min-height: 300px;
@@ -85,6 +92,21 @@
     </style>
 </head>
 <body>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
     <div class="menu">
         <a href="index.html">Home</a>
         <a href="tron_de.html">Trộn Đề</a>
@@ -92,11 +114,11 @@
         <div class="dropdown">
             <span class="dropbtn">Tiện ích</span>
             <div class="dropdown-content">
-                <a href="soat_loi.html">Soát Lỗi</a>
+                <a href="find_latex.html">Tìm Kiếm</a>
+                <a href="Ve_hinh.html">Vẽ Hình</a>
+                <a href="menu_tree.html">Menu ID</a>
                 <a href="symbols.html">Mathtype Latex</a>
-                <a href="giai_toan_demso_v2.html">Giải Toán Đếm Số</a>
-                <a href="giai_toan_xac-suat.html">Xác Suất Có Điều Kiện</a>
-                <a href="giai_thong_ke_v2.html">Giải Toán Thống Kê</a>
+                <a href="contact.html">Tác Giả</a>
                 <div class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle">Menu ID</a>
                     <div class="dropdown-content">
@@ -107,11 +129,13 @@
             </div>
         </div>
     </div>
+    
     <div class="container">
         <h1 class="mt-4">Fix Code</h1>
         <div class="buttons mb-3">
             <button class="btn btn-primary" onclick="word2tex()">Chuyển Câu Trắc Nghiệm</button>
             <button class="btn btn-secondary" onclick="wordtotex()">Chuyển Câu Tự Luận</button>
+            <button class="btn btn-third" onclick="wordtoTF()">Chuyển Câu Đúng-Sai</button>
             <button class="btn btn-success" onclick="fixCode()">Fix Mathpix</button>
         </div>
         <div class="form-group">
@@ -149,10 +173,12 @@
         import { wordtotex } from './wordtotex.js';
         import { word2tex } from './word2tex.js';
         import { fixCode } from './fixCode.js';
+        import { wordtoTF } from './wordtoTF.js';
         // Gắn các hàm vào window để có thể gọi từ HTML
         window.wordtotex = wordtotex;
         window.word2tex = word2tex;
         window.fixCode = fixCode;
+        window.wordtoTF = wordtoTF;
     
         function layCacNgoacLon(text) {
             let ngoacLon = [];

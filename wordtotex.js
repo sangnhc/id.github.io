@@ -1,7 +1,7 @@
 import { convertNumberToMathMode,xoa_2cham_sau_thila,thay_haicham_colon, themdolachoso, them_dola_cho_so,xoa_khoangtrong_trong_ngoac, removeLoiGiaiInEx } from './numberUtils.js';
 import { replaceTextWithJson } from './replaceUtils.js';
 import { convertArrayToHeva, convertArrayToHoac,removeSpacesInMathMode } from './replaceUtils.js';
-
+import { them_dola_cho_so_new} from './numberUtils.js';
 export function wordtotex() {
     let inputCode = document.getElementById('inputCode').value;
     let outputCode = "";
@@ -10,6 +10,8 @@ export function wordtotex() {
     // Chuyển đổi cấu trúc câu hỏi tự luận
     const questionPattern = /Câu (\d+)[.:\s]+([\s\S]*?)(?=\nCâu \d|$)/g;
     inputCode = inputCode.replace('Lò̀i giải','Lời giải')
+    inputCode = them_dola_cho_so_new(inputCode)
+    inputCode = inputCode.replace(/Câu\s+\$(\d+)\$\s*([.:])/g, 'Câu $1$2');
     outputCode = inputCode.replace(questionPattern, (match, num, questionContent) => {
         // Tách nội dung câu hỏi và lời giải
         const solutionPattern = /Lời giải([\s\S]*)/i;
@@ -54,6 +56,8 @@ export function wordtotex() {
     outputCode = xoa_khoangtrong_trong_ngoac(outputCode)
     outputCode = thay_haicham_colon(outputCode)
     outputCode = xoa_2cham_sau_thila(outputCode)
+    outputCode = them_dola_cho_so_new(outputCode)
+    outputCode = outputCode.replace(/\\loigiai/g, '\\shortans{$ $}\n\\loigiai');
     //thêm hàm mới
     fetch('replace.json')
         .then(response => response.json())
