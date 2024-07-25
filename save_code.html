@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Editor</title>
+    <style>
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a,
+        .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover,
+        .dropbtn:hover {
+            background-color: #555;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #controls {
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 5px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #splitter {
+            display: flex;
+        }
+
+        #tree,
+        #editor,
+        #output {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px;
+            background-color: white;
+            border-radius: 5px;
+        }
+
+        #tree {
+            width: 300px;
+            height: 600px;
+            overflow-y: auto;
+        }
+
+        #editor,
+        #output {
+            flex-grow: 1;
+            height: 600px;
+        }
+
+        .tree-item {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .tree-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .block-item {
+            font-weight: bold;
+            color: red;
+        }
+
+        .group-item {
+            margin-left: 10px;
+            color: blue;
+        }
+
+        .name-item {
+            margin-left: 20px;
+            color: green;
+        }
+
+        .tree-item .toggle {
+            width: 1em;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .tree-item .content {
+            flex-grow: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        #dialog h2 {
+            margin-top: 0;
+        }
+
+        #dialog button {
+            background-color: #d9534f;
+            margin-top: 20px;
+        }
+
+        #dialog button:hover {
+            background-color: #c9302c;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        input[type="text"] {
+    width: 300px; /* Điều chỉnh chiều rộng khung nhập liệu */
+    padding: 10px;
+    margin: 5px 2px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="menu">
+        <a href="index.html">Quay Lại Trang Chủ</a>
+    </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+    <div id="controls">
+        <input type="text" id="blockInput" placeholder="Tên Cấp 1">
+        <input type="text" id="groupInput" placeholder="Tên Cấp 2">
+        <input type="text" id="nameInput" placeholder="Tên Mã Code Cần Lưu">
+    </div>
+    <div id="controls">
+        <button onclick="saveCode()">Lưu Mã</button>
+        <button onclick="layCode()">Lấy Code</button>
+        <button onclick="saveCodeToFile()">Save</button>
+        <button onclick="updateCode()">Cập Nhật</button>
+        <button onclick="deleteCode()">Xoá</button>
+        <button onclick="exportData()">Tải Về</button>
+        <button onclick="document.getElementById('fileInput').click()">Tải Lên</button>
+        <button onclick="showDialog()">HDSD</button>
+        <input type="file" id="fileInput" style="display:none" onchange="importData(event)">
+    </div>
+    <div id="splitter">
+        <div id="tree"></div>
+     <!--   <textarea id="editor"></textarea> -->
+        <textarea id="editor" placeholder="Nhập nội dung code cần lưu ở đây"></textarea>
+        <textarea id="output"></textarea>
+    </div>
+
+    <div id="dialog">
+        <h2>Hướng Dẫn Sử Dụng</h2>
+        <p><strong>Lưu Mã:</strong> Lưu đoạn mã với tên chương, tên nhóm và tên mã.</p>
+        <p><strong>Lấy Code:</strong> Lấy đoạn mã từ editor và hiển thị ở output.</p>
+        <p><strong>Save:</strong> Lưu đoạn mã hiện tại từ output vào file .tex.</p>
+        <p><strong>Cập Nhật:</strong> Cập nhật đoạn mã với thông tin mới.</p>
+        <p><strong>Xoá:</strong> Xóa đoạn mã đã chọn.</p>
+        <p><strong>Tải Về:</strong> Xuất toàn bộ dữ liệu thành file JSON.</p>
+        <p><strong>Tải Lên:</strong> Tải dữ liệu từ file JSON vào ứng dụng.</p>
+        <button onclick="closeDialog()">Đóng</button>
+    </div>
+    <div id="overlay"></div>
+
+    <script>
+        let db;
+        const request = indexedDB.open('codeEditorDB', 1);
+
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            const objectStore = db.createObjectStore('codes', { keyPath: ['block', 'group', 'name'] });
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            loadBlocks();
+        };
+
+        function saveCode() {
+            const block = document.getElementById('blockInput').value.trim();
+            const group = document.getElementById('groupInput').value.trim();
+            const name = document.getElementById('nameInput').value.trim();
+            const code = document.getElementById('editor').value;
+
+            if (!block || !group || !name) {
+                alert('Vui lòng điền đầy đủ thông tin.');
+                return;
+            }
+
+            const transaction = db.transaction(['codes'], 'readwrite');
+            const objectStore = transaction.objectStore('codes');
+            const request = objectStore.put({ block, group, name, code });
+
+            request.onsuccess = () => {
+                loadBlocks();
+                alert('Lưu mã thành công!');
+            };
+
+            request.onerror = (event) => {
+                console.error('Lỗi lưu mã:', event.target.error);
+            };
+        }
+
+        function loadBlocks() {
+            const transaction = db.transaction(['codes'], 'readonly');
+            const objectStore = transaction.objectStore('codes');
+            const request = objectStore.getAll();
+
+            request.onsuccess = (event) => {
+                const codes = event.target.result;
+                const blocks = {};
+
+                codes.forEach((code) => {
+                    if (!blocks[code.block]) {
+                        blocks[code.block] = {};
+                    }
+                    if (!blocks[code.block][code.group]) {
+                        blocks[code.block][code.group] = [];
+                    }
+                    blocks[code.block][code.group].push(code.name);
+                });
+
+                const tree = document.getElementById('tree');
+                tree.innerHTML = '';
+
+                Object.keys(blocks).forEach((block) => {
+                    const blockItem = createTreeItem(block, 'block-item');
+                    tree.appendChild(blockItem.element);
+
+                    const groupContainer = document.createElement('div');
+                    groupContainer.className = 'hidden';
+                    tree.appendChild(groupContainer);
+
+                    Object.keys(blocks[block]).forEach((group) => {
+                        const groupItem = createTreeItem(group, 'group-item');
+                        groupContainer.appendChild(groupItem.element);
+
+                        const nameContainer = document.createElement('div');
+                        nameContainer.className = 'hidden';
+                        groupContainer.appendChild(nameContainer);
+
+                        blocks[block][group].forEach((name) => {
+                            const nameItem = createTreeItem(name, 'name-item');
+                            nameItem.element.onclick = () => loadCodeByName(block, group, name);
+                            nameContainer.appendChild(nameItem.element);
+                        });
+                    });
+                });
+            };
+
+            request.onerror = (event) => {
+                console.error('Lỗi tải mã:', event.target.error);
+            };
+        }
+
+        function createTreeItem(text, className) {
+            const item = document.createElement('div');
+            item.className = `tree-item ${className}`;
+
+            const toggle = document.createElement('span');
+            toggle.className = 'toggle';
+            toggle.textContent = '▶';
+            item.appendChild(toggle);
+
+            const content = document.createElement('span');
+            content.className = 'content';
+            content.textContent = text;
+            item.appendChild(content);
+
+            toggle.onclick = () => {
+                const nextElement = item.nextElementSibling;
+                if (nextElement && nextElement.classList.contains('hidden')) {
+                    nextElement.classList.remove('hidden');
+                    toggle.textContent = '▼';
+                } else if (nextElement) {
+                    nextElement.classList.add('hidden');
+                    toggle.textContent = '▶';
+                }
+            };
+
+            return { element: item, toggle, content };
+        }
+
+        function loadCodeByName(block, group, name) {
+            const transaction = db.transaction(['codes'], 'readonly');
+            const objectStore = transaction.objectStore('codes');
+            const request = objectStore.get([block, group, name]);
+
+            request.onsuccess = (event) => {
+                const code = event.target.result;
+                if (code) {
+                    document.getElementById('editor').value = code.code;
+                    document.getElementById('blockInput').value = block;
+                    document.getElementById('groupInput').value = group;
+                    document.getElementById('nameInput').value = name;
+                } else {
+                    alert('Không tìm thấy mã.');
+                }
+            };
+
+            request.onerror = (event) => {
+                console.error('Lỗi tải mã:', event.target.error);
+            };
+        }
+
+        function updateCode() {
+            saveCode();
+        }
+
+        function deleteCode() {
+            const block = document.getElementById('blockInput').value.trim();
+            const group = document.getElementById('groupInput').value.trim();
+            const name = document.getElementById('nameInput').value.trim();
+
+            const transaction = db.transaction(['codes'], 'readwrite');
+            const objectStore = transaction.objectStore('codes');
+            const request = objectStore.delete([block, group, name]);
+
+            request.onsuccess = () => {
+                loadBlocks();
+                alert('Xóa mã thành công!');
+                clearInputs();
+            };
+
+            request.onerror = (event) => {
+                console.error('Lỗi xóa mã:', event.target.error);
+            };
+        }
+
+        function layCode() {
+            const editorContent = document.getElementById('editor').value;
+            const outputContent = document.getElementById('output').value;
+
+            document.getElementById('output').value = outputContent ? outputContent + '\n' + editorContent : editorContent;
+            document.getElementById('editor').value = '';
+        }
+
+        function saveCodeToFile() {
+            const content = document.getElementById('output').value;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'output.tex';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearInputs() {
+            document.getElementById('blockInput').value = '';
+            document.getElementById('groupInput').value = '';
+            document.getElementById('nameInput').value = '';
+            document.getElementById('editor').value = '';
+        }
+
+        function exportData() {
+            const transaction = db.transaction(['codes'], 'readonly');
+            const objectStore = transaction.objectStore('codes');
+            const request = objectStore.getAll();
+
+            request.onsuccess = (event) => {
+                const codes = event.target.result;
+                const blob = new Blob([JSON.stringify(codes)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'codes_backup.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            request.onerror = (event) => {
+                console.error('Lỗi tải dữ liệu:', event.target.error);
+            };
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = JSON.parse(e.target.result);
+
+                const transaction = db.transaction(['codes'], 'readwrite');
+                const objectStore = transaction.objectStore('codes');
+
+                data.forEach((code) => {
+                    objectStore.put(code);
+                });
+
+                transaction.oncomplete = () => {
+                    loadBlocks();
+                    alert('Tải dữ liệu thành công!');
+                };
+
+                transaction.onerror = (event) => {
+                    console.error('Lỗi tải dữ liệu:', event.target.error);
+                };
+            };
+            reader.readAsText(file);
+        }
+
+        function showDialog() {
+            document.getElementById('dialog').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closeDialog() {
+            document.getElementById('dialog').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
