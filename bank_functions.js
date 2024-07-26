@@ -3116,7 +3116,7 @@ function hsb3_find_area(e) {
     }
 
     let x1 = 0; // Nghiệm thứ nhất
-    let x2 = -2 * b / (2 * 3 * a); // Nghiệm thứ hai
+    let x2 = -2 * b / ( 3 * a); // Nghiệm thứ hai
 
     // Tính tọa độ các điểm cực trị
     let y1 = a * x1 ** 3 + b * x1 ** 2 + c;
@@ -3140,7 +3140,7 @@ function hsb3_find_area(e) {
     \\loigiai{
         Ta có $y'=${3 * a}x^2${2 * b < 0 ? '' : '+'}${2 * b}x$ và $y'=0 \\Leftrightarrow x=${x1}$ hoặc $x=${x2}$.\\\\
         Do đó hai điểm cực trị của đồ thị hàm số là $A(${x1};${y1}), B(${x2};${y2})$.\\\\
-        Diện tích tam giác vuông $OAB$ là $S_{\\triangle OAB}=\\dfrac{1}{2}|OA \\cdot OB|=${area}$.
+        Diện tích tam giác $OAB$ là $S_{\\triangle OAB}=\\dfrac{1}{2} |x_1 y_2 - x_2 y_1|=${area}$.
     }
 \\end{ex}`;
 
