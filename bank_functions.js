@@ -4509,6 +4509,8 @@ function thuc_te_thue_can_ho(e) {
     return question;
 }
 
+
+
 ///XÁC SUẤT CÓ ĐK
 function xs_duong_tinh(e) {
     // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
@@ -7926,11 +7928,310 @@ Xác suất mỗi loại khách hàng khác nhau, và xác suất mỗi loại k
     return question;
 }
 
+function min_R_thung_hinhtru_biet_V(e) {
+  function solve() {
+    const min = 1000;
+    const max = 2000;
+    const step = 100;
+    const pi = Math.PI;
 
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1000 đến 2000 với bước là 100
+    const range = Math.floor((max - min) / step) + 1;
+    const volume = min + Math.floor(Math.random() * range) * step;
 
+    // Tính bán kính tối ưu
+    const optimalRadius = Math.cbrt(volume / (2 * pi));
+    const optimalRadiusRounded = optimalRadius.toFixed(2);
 
+    const debai = `
+\\begin{ex}
+Một nhà máy sản xuất cần thiết kế một thùng dạng hình trụ có nắp đậy với dung tích $${volume}$ cm$^3$. Tính bán kính của nắp đậy để nhà sản xuất tiết kiệm nguyên vật liệu nhất, kết quả làm tròn đến hàng phần trăm.
+\\shortans{$${optimalRadiusRounded}$}
+\\loigiai{
+Gọi $r$, $(r>0)$ là bán kính đáy của thùng.\\\\
+Khi đó $V=\\pi r^2h \\Rightarrow h=\\dfrac{V}{\\pi r^2}$. \\\\
+Diện tích toàn phần của thùng là\\\\
+$S(r)=2\\pi rh+2\\pi r^2=2\\pi r\\dfrac{V}{\\pi r^2}+2\\pi r^2=\\dfrac{2V}{r}+2\\pi r^2$\\\\
+Bài toán quy về tìm GTNN của hàm số: $S(r)=\\dfrac{2V}{r}+2\\pi r^2$, $(r>0)$.\\\\
+$S'(r)=-\\dfrac{2V}{r^2}+4\\pi r$.\\\\
+$S'(r)=0 \\Leftrightarrow 4\\pi r=\\dfrac{2V}{r^2} \\Leftrightarrow r=\\sqrt[3]{\\dfrac{V}{2\\pi}}$ $\\Leftrightarrow r=\\sqrt[3]{\\dfrac{${volume}}{2\\pi}}=\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}$. \\\\
+Bảng biến thiên của hàm số $S(r)=\\dfrac{2V}{r}+2\\pi r^2(r>0)$
+\\begin{center}
+\\begin{tikzpicture}
+\\tkzTabInit[nocadre=false,lgt=1.2,espcl=3.5,deltacl=.6]
+{$r$/1.2,$S'(r)$/0.6,$S(r)$/2.0}
+{$0$,$\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}$,$+\\infty$}
+\\tkzTabLine{,-,0,+,}
+\\tkzTabVar{+/$ $,-/$ $,+/$ $}
+\\end{tikzpicture}
+\\end{center}
+Từ bảng biến thiên suy ra $S(r)$ đạt giá trị nhỏ nhất khi $r=\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}\\approx ${optimalRadiusRounded}$ cm.
+}
+\\end{ex}
+    `;
 
+    return debai;
+  }
 
+  // Gọi hàm chính để giải
+  return solve();
+}
+function tim_h_thung_hinhtru_biet_V(e) {
+  function solve() {
+    const min = 1000;
+    const max = 2000;
+    const step = 100;
+    const pi = Math.PI;
+
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1000 đến 2000 với bước là 100
+    const range = Math.floor((max - min) / step) + 1;
+    const volume = min + Math.floor(Math.random() * range) * step;
+
+    // Tính bán kính tối ưu
+    const optimalRadius = Math.cbrt(volume / (2 * pi));
+    const optimalRadiusRounded = optimalRadius.toFixed(2);
+
+    // Tính chiều cao tương ứng
+    const height = volume / (pi * Math.pow(optimalRadius, 2));
+    const heightRounded = height.toFixed(1);
+
+    const debai = `
+\\begin{ex}
+Một nhà máy sản xuất cần thiết kế một thùng dạng hình trụ có nắp đậy với dung tích $${volume}$ cm$^3$. Tính chiều cao của thùng để nhà sản xuất tiết kiệm nguyên vật liệu nhất, kết quả làm tròn đến hàng phần chục.
+\\shortans{$${heightRounded}$}
+\\loigiai{
+Gọi $r$, $(r>0)$ là bán kính đáy của thùng.\\\\
+Khi đó $V=\\pi r^2h \\Rightarrow h=\\dfrac{V}{\\pi r^2}$. \\\\
+Diện tích toàn phần của thùng là\\\\
+$S(r)=2\\pi rh+2\\pi r^2=2\\pi r\\dfrac{V}{\\pi r^2}+2\\pi r^2=\\dfrac{2V}{r}+2\\pi r^2$\\\\
+Bài toán quy về tìm GTNN của hàm số: $S(r)=\\dfrac{2V}{r}+2\\pi r^2$, $(r>0)$.\\\\
+$S'(r)=-\\dfrac{2V}{r^2}+4\\pi r$.\\\\
+$S'(r)=0 \\Leftrightarrow 4\\pi r=\\d\dfrac{2V}{r^2} \\Leftrightarrow r=\\sqrt[3]{\\dfrac{V}{2\\pi}}$ $\\Leftrightarrow r=\\sqrt[3]{\\dfrac{${volume}}{2\\pi}}=\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}$. \\\\
+Chiều cao tương ứng là: $h=\\dfrac{${volume}}{\\pi r^2}=\\dfrac{${volume}}{\\pi \\left(\\sqrt[3]{\\dfrac{${volume}}{2\\pi}}\\right)^2}=\\dfrac{${volume}}{\\pi \\left(\\dfrac{${volume}}{2\\pi}\\right)^{2/3}} \\approx ${heightRounded}$.\\\\
+Bảng biến thiên của hàm số $S(r)=\\dfrac{2V}{r}+2\\pi r^2(r>0)$
+\\begin{center}
+\\begin{tikzpicture}
+\\tkzTabInit[nocadre=false,lgt=1.2,espcl=3.5,deltacl=.6]
+{$r$/1.2,$S'(r)$/0.6,$S(r)$/2.0}
+{$0$,$\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}$,$+\\infty$}
+\\tkzTabLine{,-,0,+,}
+\\tkzTabVar{+/$ $,-/$ $,+/$ $}
+\\end{tikzpicture}
+\\end{center}
+Từ bảng biến thiên suy ra $S(r)$ đạt giá trị nhỏ nhất khi $r=\\sqrt[3]{\\dfrac{${volume / 2}}{\\pi}}\\approx ${optimalRadiusRounded}$ cm và $h \\approx ${heightRounded} cm.
+}
+\\end{ex}
+    `;
+
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+function min_S_xq_biet_V(e) {
+  function solve() {
+    const min = 1;
+    const max = 10;
+    const step = 1;
+    const pi = Math.PI;
+
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1 đến 10 với bước là 1
+    const range = Math.floor((max - min) / step) + 1;
+    const volume = min + Math.floor(Math.random() * range) * step;
+
+    // Tính bán kính tối ưu r0 dựa trên thể tích ngẫu nhiên
+    const optimalRadius = Math.pow((3 * volume) / (pi * Math.sqrt(2)), 1 / 3);
+
+    // Tính chiều cao tương ứng
+    const height = (3 * volume) / (pi * Math.pow(optimalRadius, 2));
+
+    // Tính diện tích xung quanh nhỏ nhất
+    const minSurfaceArea = pi * optimalRadius * Math.sqrt(optimalRadius * optimalRadius + height * height);
+    const minSurfaceAreaRounded = minSurfaceArea.toFixed(1);
+
+    const debai = `
+\\begin{ex}
+\\immini{
+  Khi sản xuất cái phễu hình nón (không có nắp) bằng nhôm, các nhà thiết kế luôn đạt mục tiêu sao cho chi phí nguyên liệu là phễu ít nhất, tức là diện tích xung quanh của hình nón nhỏ nhất. Hỏi nếu muốn sản xuất một cái phễu có thể tích $${volume}$ dm$^3$ thì diện tích xung quanh của cái phễu, kết quả làm tròn đến hàng phần mười.
+}
+{ \\begin{tikzpicture}[line join=round, line cap=round, >=stealth, scale=0.9, font=\\footnotesize]
+% Khởi tạo các điểm
+\\coordinate (A) at (0,0);
+\\coordinate (B) at (4,0);
+\\coordinate (M) at (2,0);
+\\coordinate (C) at (2,-3);
+\\coordinate (D) at (2,-1.5);
+\\coordinate (E) at (3,-1.5);
+\\coordinate (F) at (2.7,0);
+% Vẽ các cung tròn
+\\draw (0,0) arc (180:360:2 and 0.4);
+\\draw (4,0) arc (0:180:2 and 0.4);
+% Vẽ các đoạn thẳng
+\\draw (A) -- (B);
+\\draw (A) -- (C);
+\\draw (B) -- (C);
+% Vẽ đoạn thẳng đứt nét
+\\draw[dashed] (M) -- (C);
+% Ghi nhãn các điểm
+\\node at (D) [right] {$h$};
+\\node at (E) [right] {$l$};
+\\node at (F) [xshift=0.1cm,yshift=0.15cm] {$r$};
+\\end{tikzpicture}
+}
+\\shortans{${minSurfaceAreaRounded}}
+\\loigiai{
+Gọi $r$ là bán kính đáy, $l$ là đường sinh và $h$ là chiều cao hình nón, ta có $l=\\sqrt{r^2+h^2}$.\\\\
+Từ công thức thể tích khối nón $V=\\dfrac{1}{3}\\pi r^2h$, ta suy ra $h=\\dfrac{3V}{\\pi r^2}$.\\\\
+Diện tích xung quanh của mặt nón $S=\\pi r l=\\pi r \\sqrt{r^2+h^2}=\\pi r\\sqrt{r^2+\\dfrac{9V^2}{\\pi^2r^4}}=\\pi\\sqrt{r^4+\\dfrac{9V^2}{\\pi^2r^2}}$.\\\\
+Xét hàm số $f(r)=r^4+\\dfrac{9V^2}{\\pi^2r^2}$ xác định trên $(0;+\\infty)$.\\\\
+Đạo hàm $f'(r)=4r^3-\\dfrac{18V^2}{\\pi^2r^3}$.\\\\
+\\allowdisplaybreaks{
+\\begin{eqnarray*}
+f'(r)=0\\Leftrightarrow &4\\pi^2r^6=18V^2\\\\
+\\Leftrightarrow & r^6=\\dfrac{18V^2}{4\\pi^2}\\\\
+\\Leftrightarrow & r=r_0=\\sqrt[6]{\\dfrac{18\\times ${volume^2}}{4\\pi^2}}.
+\\end{eqnarray*}}
+Ta có bảng biến thiên
+\\begin{center}
+\\begin{tikzpicture}[>=stealth]
+\\tkzTabInit[nocadre=false,lgt=1.2,espcl=2.5,deltacl=0.6]
+{$r$ /0.6,$f’(r)$ /0.6,$f(r)$ /2}
+{$0$,$r_0$,$+\\infty$}
+\\tkzTabLine{d,-,0,+,} 
+\\tkzTabVar{D+/,-/$f(r_0)$,+/$+\\infty$,}
+\\end{tikzpicture}
+\\end{center}
+Dựa vào bảng biến thiên, hàm số $f(r)$ đạt giá trị nhỏ nhất là $f(r_0)$. Do đó $ S=\\pi\\sqrt{f(r)} $ đạt giá trị nhỏ nhất khi $ r=r_0 $.\\\\
+Vậy diện tích xung quanh nhỏ nhất bằng $\\pi \\sqrt{r_0^4+\\dfrac{9\\times ${volume^2}}{\\pi^2 r_0^2}}\\approx ${minSurfaceAreaRounded}$ dm$^2$.
+}
+\\end{ex}
+    `;
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+function min_h_chop_ngoai_tiep_cau(r) {
+  function solve() {
+    const min = 1;
+    const max = 20;
+    const step = 1;
+    const pi = Math.PI;
+
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1 đến 20 với bước là 1
+    const range = Math.floor((max - min) / step) + 1;
+    const radius = min + Math.floor(Math.random() * range) * step;        
+    // Tính chiều cao tối ưu
+    const optimalHeight = 4 * radius;
+    const optimalHeightRounded = optimalHeight.toFixed(0);
+
+    const debai = `
+\\begin{ex}
+Trong tất cả các khối chóp tam giác đều ngoại tiếp mặt cầu $(S)$ tâm $O$, bán kính $r = ${radius}$. Tính chiều cao $h$ của khối chóp khi diện tích toàn phần của khối chóp nhỏ nhất.
+\\shortans{${optimalHeightRounded}}
+\\loigiai{
+Kí hiệu cạnh đáy của hình chóp là $a$, chiều cao là $h$, thể tích khối chóp là $V$, diện tích toàn phần là $S_{\\mathrm{tp}}$ thì $r=\\dfrac{3 V}{S_{\\mathrm{tp}}}$, tức là $S_{\\mathrm{tp}}=\\dfrac{3 V}{r}$.\\\\
+Vậy $S_{\\mathrm{tp}}$ nhỏ nhất khi và chỉ khi $V$ nhỏ nhất.\\\\
+Mặt khác, cũng từ hệ thức $S_{\\mathrm{tp}}=\\dfrac{3 V}{r}$, ta có hệ thức liên hệ giữa $a, h$ và $r$ là\\\\
+$$r=\\dfrac{a h}{a+\\sqrt{a^{2}+12 h^{2}}}
+\,\,\\left(V=\\dfrac{1}{3} \\cdot \\dfrac{a^{2} \\sqrt{3}}{4} \\cdot h=\\dfrac{\\sqrt{3}}{12} a^{2} \\cdot h\\right).$$\\\\
+Gọi $M$ là trung điểm của $BC$ và đặt $\\widehat{SMH}=\\varphi$ (đó là góc giữa $mp(SBC)$ và $mp(ABC)$, cũng là góc giữa mặt bên và mặt đáy của hình chóp). \\\\
+Khi ấy $h=\\dfrac{a \\sqrt{3}}{6} \\tan \\varphi$.\\\\
+Thay vào, ta có $a=\\dfrac{6 r(\\cos \\varphi+1)}{\\sqrt{3} \\sin \\varphi}$, từ đó thay vào, ta có $h=\\dfrac{r(\\cos \\varphi+1)}{\\cos \\varphi}$\\\\
+Suy ra $a^{2}=12 r^{2} \\dfrac{1+\\cos \\varphi}{1-\\cos \\varphi}$.\\\\
+Nên $$\\\\
+\\begin{aligned}
+V &=\\dfrac{\\sqrt{3}}{12} \\cdot 12 r^{2} \\cdot \\dfrac{1+\\cos \\varphi}{1-\\cos \\varphi} \\cdot r \\cdot \\dfrac{1+\\cos \\varphi}{\\cos \\varphi} \\\\
+&=\\sqrt{3} \\cdot r^{3} \\dfrac{(1+\\cos \\varphi)^{2}}{\\cos \\varphi(1-\\cos \\varphi)}=\\sqrt{3} \\cdot r^{3} \\dfrac{(1+t)^{2}}{t(1-t)}.
+\\end{aligned}
+$$\\\\
+Với $0<t<1$, $f(t)=\\dfrac{(1+t)^{2}}{t(1-t)}$ có bảng biến thiên như sau:
+\\begin{center}
+\\begin{tikzpicture}[>=stealth]
+\\tkzTabInit[nocadre=false,lgt=1.5,espcl=2,deltacl=0.5]
+{$t$/.7 ,$f'(t)$/.7,$f(t)$/2} {$0$ ,$\\frac{1}{3}$ , $1$}
+\\tkzTabLine{ , +, 0, -}
+\\tkzTabVar{D+/ , +/$ \\infty$ , -/$ \\infty$}
+\\end{tikzpicture}
+\\end{center}
+Vậy $f(t)$ đạt giá trị nhỏ nhất khi và chỉ khi $t=\\dfrac{1}{3}$, tức là $\\cos \\varphi=\\dfrac{1}{3}$. \\\\
+Khi đó $h=4 r$, $\\tan \\varphi=2 \\sqrt{2}$, từ đó $a=2 r \\sqrt{6}$.\\\\
+Vậy khi $a=2 r \\sqrt{6}$, $h=4 r\\approx ${optimalHeightRounded} thì diện tích toàn phần của hình chóp đạt giá trị nhỏ nhất.
+}
+\\end{ex}
+    `;
+
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+function min_V_chop_ngoai_tiep_cau(r) {
+  function solve() {
+    const min = 1;
+    const max = 9;
+    const step = 0.5;        
+    const pi = Math.PI;     
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1 đến 20 với bước là 1
+    const range = Math.floor((max - min) / step) + 1;
+    const radius = min + Math.floor(Math.random() * range) * step;
+
+    // Tính chiều cao tối ưu
+    const optimalHeight = 4 * radius;
+    const optimalHeightRounded = optimalHeight.toFixed(0);
+
+    // Tính thể tích khối chóp
+    const volume = (Math.sqrt(3) / 12) * Math.pow(2 * radius * Math.sqrt(6), 2) * optimalHeight;
+    const volumeRounded = volume.toFixed(0);
+
+    const debai = `
+\\begin{ex}
+Trong tất cả các khối chóp tam giác đều ngoại tiếp mặt cầu $(S)$ tâm $O$, bán kính $r = ${radius}$. Tính thể tích $V$ của khối chóp khi diện tích toàn phần của khối chóp nhỏ nhất, kết quả làm tròn đến phần nguyên.                       
+\\shortans{$${volumeRounded}$}
+\\loigiai{
+Kí hiệu cạnh đáy của hình chóp là $a$, chiều cao là $h$, thể tích khối chóp là $V$, diện tích toàn phần là $S_{\\mathrm{tp}}$ thì $r=\\dfrac{3 V}{S_{\\mathrm{tp}}}$, tức là $S_{\\mathrm{tp}}=\\dfrac{3 V}{r}$.\\\\
+Vậy $S_{\\mathrm{tp}}$ nhỏ nhất khi và chỉ khi $V$ nhỏ nhất.\\\\
+Mặt khác, cũng từ hệ thức $S_{\\mathrm{tp}}=\\dfrac{3 V}{r}$, ta có hệ thức liên hệ giữa $a, h$ và $r$ là\\\\
+$$r=\\dfrac{a h}{a+\\sqrt{a^{2}+12 h^{2}}}
+\,\,\\left(V=\\dfrac{1}{3} \\cdot \\dfrac{a^{2} \\sqrt{3}}{4} \\cdot h=\\dfrac{\\sqrt{3}}{12} a^{2} \\cdot h\\right).$$\\\\
+Gọi $M$ là trung điểm của $BC$ và đặt $\\widehat{SMH}=\\varphi$ (đó là góc giữa $mp(SBC)$ và $mp(ABC)$, cũng là góc giữa mặt bên và mặt đáy của hình chóp). \\\\
+Khi ấy $h=\\dfrac{a \\sqrt{3}}{6} \\tan \\varphi$.\\\\
+Thay vào, ta có $a=\\dfrac{6 r(\\cos \\varphi+1)}{\\sqrt{3} \\sin \\varphi}$, từ đó thay vào, ta có $h=\\dfrac{r(\\cos \\varphi+1)}{\\cos \\varphi}$\\\\
+Suy ra $a^{2}=12 r^{2} \\dfrac{1+\\cos \\varphi}{1-\\cos \\varphi}$.\\\\
+Nên $$\\\\
+\\begin{aligned}
+V &=\\dfrac{\\sqrt{3}}{12} \\cdot 12 r^{2} \\cdot \\dfrac{1+\\cos \\varphi}{1-\\cos \\varphi} \\cdot r \\cdot \\dfrac{1+\\cos \\varphi}{\\cos \\varphi} \\\\
+&=\\sqrt{3} \\cdot r^{3} \\dfrac{(1+\\cos \\varphi)^{2}}{\\cos \\varphi(1-\\cos \\varphi)}=\\sqrt{3} \\cdot r^{3} \\dfrac{(1+t)^{2}}{t(1-t)}.
+\\end{aligned}
+$$\\\\
+Với $0<t<1$, $f(t)=\\dfrac{(1+t)^{2}}{t(1-t)}$ có bảng biến thiên như sau:
+\\begin{center}
+\\begin{tikzpicture}[>=stealth]
+\\tkzTabInit[nocadre=false,lgt=1.5,espcl=2,deltacl=0.5]
+{$t$/.7 ,$f'(t)$/.7,$f(t)$/2} {$0$ ,$\\frac{1}{3}$ , $1$}
+\\tkzTabLine{ , +, 0, -}
+\\tkzTabVar{D+/ , +/$ \\infty$ , -/$ \\infty$}
+\\end{tikzpicture}                  
+\\end{center}
+Vậy $f(t)$ đạt giá trị nhỏ nhất khi và chỉ khi $t=\\dfrac{1}{3}$, tức là $\\cos \\varphi=\\dfrac{1}{3}$. \\\\
+Khi đó $h=4 r$, $\\tan \\varphi=2 \\sqrt{2}$, từ đó $a=2 r \\sqrt{6}$.\\\\
+Vậy khi $a=2 r \\sqrt{6}$, $h=4 r= ${optimalHeightRounded} thì diện tích toàn phần của hình chóp đạt giá trị nhỏ nhất.\\\\
+Thể tích khối chóp là $$V = \\dfrac{\\sqrt{3}}{12} \\cdot a^2 \\cdot h \\approx ${volumeRounded}.$$
+}
+\\end{ex}
+    `;
+
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+ 
+          
 
 
 

@@ -76,6 +76,25 @@
             "name": "Câu Tự Luận",
             "K12": [
                 {
+                  "name": "Khối 10",
+                  "Chương": [
+                    {
+                      "name": "Chương 10: Xác Suất",
+                            "Bài": [
+                                {
+                                    "name": "Bài 2: Xác Suất Của Biến Cố",
+                                    "baitoan": [
+                                        {
+                                          "name": "Xác Suất Hai Người Hẹn Gặp Nhau",
+                                          "content": "${xs_hai_nguoi_gap_nhau({X+})}"
+                                        }
+                                    ]
+                                }
+                            ]  
+                    }
+                  ]
+                },
+                {
                     "name": "Khối 12",
                     "Chương": [
                         {
@@ -85,7 +104,7 @@
                                     "name": "Bài 1: Hàm Bậc 3 Cực Trị Cơ Bản",
                                     "baitoan": [
                                         {
-                                            "name": "Tính S_OAB với AB là 2 cực trị - đẹp",
+                                            "name": "Tính S_OAB với AB là 2 cực trị",
                                             "content": "${hsb3_find_area({X+})}"
                                         },
                                         {
@@ -234,6 +253,31 @@
                                             "content": "${min_max_phan_thuc_bacnhat_duong({K+})}"
                                         }
                                     ]
+                                },
+                                {
+                                  "name": "Bài 2: Min Max Thực Tế Chủ Đề Khối Tròn Xoay",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm Bán Kính Min Khi Thể Tích Trụ Cố Định",
+                                      "content": "${min_R_thung_hinhtru_biet_V({S+})}"
+                                    },
+                                    {
+                                      "name": "Tìm chiều cao h Khi Thể Tích Trụ Cố Định",
+                                      "content": "${tim_h_thung_hinhtru_biet_V({S+})}"
+                                    },
+                                    {
+                                      "name": "Tìm S_xq Biết Thể Tích Trụ Cố Định",
+                                      "content": "${min_S_xq_biet_V({A+})}"
+                                    },
+                                    {
+                                      "name": "Tìm chiều cao chóp ngoại tiếp cầu",
+                                      "content": "${min_h_chop_ngoai_tiep_cau({R+})}"
+                                    },
+                                    {
+                                      "name": "Tìm thể tích chóp ngoại tiếp cầu",
+                                      "content": "${min_V_chop_ngoai_tiep_cau({R+})}"
+                                    }
+                                  ]
                                 }
                             ]
                         },
