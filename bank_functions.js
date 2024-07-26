@@ -8213,12 +8213,12 @@ Với $0<t<1$, $f(t)=\\dfrac{(1+t)^{2}}{t(1-t)}$ có bảng biến thiên như s
 \\tkzTabInit[nocadre=false,lgt=1.5,espcl=2,deltacl=0.5]
 {$t$/.7 ,$f'(t)$/.7,$f(t)$/2} {$0$ ,$\\frac{1}{3}$ , $1$}
 \\tkzTabLine{ , +, 0, -}
-\\tkzTabVar{D+/ , +/$ \\infty$ , -/$ \\infty$}
+\\tkzTabVar{D-/ , +/$ \\infty$ , -/$ \\infty$}
 \\end{tikzpicture}                  
 \\end{center}
 Vậy $f(t)$ đạt giá trị nhỏ nhất khi và chỉ khi $t=\\dfrac{1}{3}$, tức là $\\cos \\varphi=\\dfrac{1}{3}$. \\\\
 Khi đó $h=4 r$, $\\tan \\varphi=2 \\sqrt{2}$, từ đó $a=2 r \\sqrt{6}$.\\\\
-Vậy khi $a=2 r \\sqrt{6}$, $h=4 r= ${optimalHeightRounded} thì diện tích toàn phần của hình chóp đạt giá trị nhỏ nhất.\\\\
+Vậy khi $a=2 r \\sqrt{6}$, $h=4 r= ${optimalHeightRounded}$ thì diện tích toàn phần của hình chóp đạt giá trị nhỏ nhất.\\\\
 Thể tích khối chóp là $$V = \\dfrac{\\sqrt{3}}{12} \\cdot a^2 \\cdot h \\approx ${volumeRounded}.$$
 }
 \\end{ex}
