@@ -85,7 +85,7 @@
                                     "name": "Bài 1: Hàm Bậc 3 Cực Trị Cơ Bản",
                                     "baitoan": [
                                         {
-                                            "name": "Tính S_OAB với AB là 2 cực trị",
+                                            "name": "Tính S_OAB với AB là 2 cực trị - đẹp",
                                             "content": "${hsb3_find_area({X+})}"
                                         },
                                         {
