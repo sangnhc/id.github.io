@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiểm Soát Lỗi LaTeX</title>
+    <title>Kiểm Soát Lỗi LaTeX - Gán ID</title>
     <style>
         /* CSS for the menu */
         .menu {
@@ -14,16 +15,19 @@
             padding: 10px 0;
         }
 
-        .menu a, .dropbtn {
+        .menu a,
+        .dropbtn {
             color: #fff;
             text-decoration: none;
             padding: 10px 20px;
             display: inline-block;
         }
 
-        .menu a:hover, .dropbtn:hover {
+        .menu a:hover,
+        .dropbtn:hover {
             background-color: #555;
         }
+
         body {
             display: flex;
             flex-direction: column;
@@ -31,37 +35,61 @@
             margin: 0;
             font-family: Arial, sans-serif;
         }
+
         .container {
             flex: 1;
             display: flex;
             flex-direction: column;
         }
+
         textarea {
             width: 100%;
-            height: 200px; /* Chỉnh chiều cao của textarea */
+            height: 200px;
+            /* Chỉnh chiều cao của textarea */
             box-sizing: border-box;
             padding: 10px;
             border: 1px solid #ccc;
             outline: none;
             resize: none;
         }
+
         table {
             border-collapse: collapse;
             width: 100%;
             flex: 1;
         }
-        td, th {
+
+        td,
+        th {
             border: 1px solid #ccc;
             padding: 5px;
             vertical-align: top;
         }
+
         th {
             background: #f0f0f0;
         }
-        th:nth-child(1) { width: 5%; } /* Chỉnh tỷ lệ cột STT */
-        th:nth-child(2) { width: 60%; } /* Chỉnh tỷ lệ cột Đoạn mã */
-        th:nth-child(3) { width: 17.5%; } /* Chỉnh tỷ lệ cột Lỗi */
-        th:nth-child(4) { width: 17.5%; } /* Chỉnh tỷ lệ cột Gợi ý sửa lỗi */
+
+        th:nth-child(1) {
+            width: 5%;
+        }
+
+        /* Chỉnh tỷ lệ cột STT */
+        th:nth-child(2) {
+            width: 60%;
+        }
+
+        /* Chỉnh tỷ lệ cột Đoạn mã */
+        th:nth-child(3) {
+            width: 17.5%;
+        }
+
+        /* Chỉnh tỷ lệ cột Lỗi */
+        th:nth-child(4) {
+            width: 17.5%;
+        }
+
+        /* Chỉnh tỷ lệ cột Gợi ý sửa lỗi */
         .toolbar {
             padding: 10px;
             background: #f0f0f0;
@@ -69,20 +97,25 @@
             display: flex;
             justify-content: space-between;
         }
+
         .error-message {
             color: red;
         }
+
         .suggestion {
             color: green;
         }
+
         .highlight {
             background-color: #ffffcc;
             color: red;
             font-weight: bold;
         }
+
         .fixed-size-textarea {
             width: 100%;
-            height: 150px; /* Chỉnh chiều cao của textarea trong bảng */
+            height: 150px;
+            /* Chỉnh chiều cao của textarea trong bảng */
             box-sizing: border-box;
             padding: 10px;
             border: 1px solid #ccc;
@@ -93,361 +126,1617 @@
             overflow-wrap: break-word;
             background: #fff;
         }
+
         #errorCount {
             margin-top: 10px;
             font-weight: bold;
             color: red;
         }
+
+        .dialog-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: white;
+    box-shadow: 2px 2px 12px #aaa;
+    padding: 20px;
+    z-index: 1000;
+    border-radius: 5px;
+    width: 300px;
+    height: auto;
+}
+
+.dialog-header {
+    cursor: move;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+}
+
+
+
+        .dialog-container .form-container {
+            width: 100%;
+        }
+
+        .dialog-container .form-container select,
+        .dialog-container .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .dialog-container .form-container button {
+            background-color: #FFD700;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dialog-container .form-container button:hover {
+            background-color: #FFC107;
+        }
+
+        .dialog-header {
+            cursor: move;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ccc;
+        }
     </style>
 </head>
+
 <body>
     <div class="menu">
         <a href="index.html">Home</a>
     </div>
-<div class="toolbar">
-    <button id="loadButton">Load File</button>
-    <button id="copyButton">Copy</button>
-    <button id="saveButton">Save</button>
-    <button id="beautifyButton">Làm đẹp code</button>
-    <input type="file" id="fileInput" accept=".tex" style="display: none;">
-</div>
-<div class="container">
-    <textarea id="inputText" placeholder="Dán mã LaTeX vào đây..."></textarea>
-    <table id="outputTable">
-        <thead>
-            <tr>
-                <th>STT</th>
-                <th>Đoạn mã</th>
-                <th>Lỗi</th>
-                <th>Gợi ý sửa lỗi</th>
-            </tr>
-        </thead>
-        <tbody id="outputBody"></tbody>
-    </table>
-    <div id="errorCount">Số câu có lỗi cần xem lại: 0</div>
-</div>
+    <div class="toolbar">
+        <button id="loadButton">Load File</button>
+        <button id="copyButton">Copy</button>
+        <button id="saveButton">Save</button>
+        <button id="beautifyButton">Làm đẹp code</button>
+        <button id="assignIdButton">Gán ID</button>
+        <input type="file" id="fileInput" accept=".tex" style="display: none;">
+    </div>
+    <div class="container">
+        <textarea id="inputText" placeholder="Dán mã LaTeX vào đây..."></textarea>
+        <table id="outputTable">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Đoạn mã</th>
+                    <th>Lỗi</th>
+                    <th>Gợi ý sửa lỗi</th>
+                </tr>
+            </thead>
+            <tbody id="outputBody"></tbody>
+        </table>
+        <div id="errorCount">Số câu có lỗi cần xem lại: 0</div>
+    </div>
 
-<script>
-    function layCacNgoacLon(text) {
-        let ngoacLon = [];
-        let demNgoac = 0;
-        let batDau = null;
+    <script>
+        let currentTextarea = null;
 
-        for (let i = 0; i < text.length; i++) {
-            let kyTu = text[i];
-            if (kyTu === "{") {
-                if (demNgoac === 0) {
-                    batDau = i;
-                }
-                demNgoac += 1;
-            } else if (kyTu === "}") {
-                demNgoac -= 1;
-                if (demNgoac === 0 && batDau !== null) {
-                    let ketThuc = i;
-                    ngoacLon.push([batDau, ketThuc]);
-                    batDau = null;
+        function layCacNgoacLon(text) {
+            let ngoacLon = [];
+            let demNgoac = 0;
+            let batDau = null;
+
+            for (let i = 0; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        let ketThuc = i;
+                        ngoacLon.push([batDau, ketThuc]);
+                        batDau = null;
+                    }
                 }
             }
+
+            return ngoacLon;
         }
 
-        return ngoacLon;
-    }
+        function highlightErrors(content) {
+            let sections = [];
+            let exPattern = /\\begin{(ex|bt|vd)}.*?\\end{\1}/gs;
+            let idPattern = /(\[[0-9]\]|[A-Z][0-9])([NHVC])[0-9]-[0-9]/;
+            let tikzPattern = /\\begin{tikzpicture}.*?\\end{tikzpicture}/gs;
+            let mathFunctionsPattern = /\b(sin|cos|tan|cot|log)\b/g;
+            let choicePattern = /\\choice\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}/gs;
+            let primePattern = /\bprime\b/gi;
+            let index = 1;
+            let exMatch;
+            let errorCount = 0;
 
-    function highlightErrors(content) {
-        let sections = [];
-        let exPattern = /\\begin{(ex|bt|vd)}.*?\\end{\1}/gs;
-        let idPattern = /(\[[0-9]\]|[A-Z][0-9])([NHVC])[0-9]-[0-9]/;
-        let tikzPattern = /\\begin{tikzpicture}.*?\\end{tikzpicture}/gs;
-        let mathFunctionsPattern = /\b(sin|cos|tan|cot|log)\b/g;
-        let choicePattern = /\\choice\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}\s*{[^}]*}/gs;
-        let primePattern = /\bprime\b/gi;
-        let index = 1;
-        let exMatch;
-        let errorCount = 0;
+            while ((exMatch = exPattern.exec(content)) !== null) {
+                let exContent = exMatch[0];
+                let sectionErrors = [];
+                let suggestions = [];
 
-        while ((exMatch = exPattern.exec(content)) !== null) {
-            let exContent = exMatch[0];
-            let sectionErrors = [];
-            let suggestions = [];
-
-            // Kiểm tra lỗi số 1: Thiếu ID
-            if (!idPattern.test(exContent)) {
-                sectionErrors.push("Thiếu ID");
-                suggestions.push("Thêm ID vào \\begin{ex}, \\begin{bt}, hoặc \\begin{vd}");
-            }
-
-            // Kiểm tra lỗi số 2: TikZ khai báo thiếu
-            let tikzMatch;
-            while ((tikzMatch = tikzPattern.exec(exContent)) !== null) {
-                let tikzErrors = [];
-                let tikzSuggestions = [];
-                if (!/line join=round/.test(tikzMatch[0])) {
-                    tikzErrors.push("Thiếu 'line join=round'");
-                    tikzSuggestions.push("Thêm 'line join=round'");
+                // Kiểm tra lỗi số 1: Thiếu ID
+                if (!idPattern.test(exContent)) {
+                    sectionErrors.push("Thiếu ID");
+                    suggestions.push("Thêm ID vào \\begin{ex}, \\begin{bt}, hoặc \\begin{vd}");
                 }
-                if (!/line cap=round/.test(tikzMatch[0])) {
-                    tikzErrors.push("Thiếu 'line cap=round'");
-                    tikzSuggestions.push("Thêm 'line cap=round'");
-                }
-                if (!/>=stealth/.test(tikzMatch[0])) {
-                    tikzErrors.push("Thiếu '>=stealth'");
-                    tikzSuggestions.push("Thêm '>=stealth'");
-                }
-                if (!/font=\\footnotesize/.test(tikzMatch[0])) {
-                    tikzErrors.push("Thiếu 'font=\\footnotesize'");
-                    tikzSuggestions.push("Thêm 'font=\\footnotesize'");
-                }
-                if (tikzErrors.length) {
-                    sectionErrors.push(`Lỗi TikZ: ${tikzErrors.join(', ')}`);
-                    suggestions.push(tikzSuggestions.join(', '));
-                }
-            }
 
-            // Kiểm tra lỗi số 3: TikZ Euclide không hợp lệ
-            if (/\\tkz(?!T)/.test(exContent)) {
-                sectionErrors.push("Có tikz Euclide (không phải \\tkzTab)");
-                suggestions.push("Thay thế bằng \\tkzTab");
-            }
+                // Kiểm tra lỗi số 2: TikZ khai báo thiếu
+                let tikzMatch;
+                while ((tikzMatch = tikzPattern.exec(exContent)) !== null) {
+                    let tikzErrors = [];
+                    let tikzSuggestions = [];
+                    if (!/line join=round/.test(tikzMatch[0])) {
+                        tikzErrors.push("Thiếu 'line join=round'");
+                        tikzSuggestions.push("Thêm 'line join=round'");
+                    }
+                    if (!/line cap=round/.test(tikzMatch[0])) {
+                        tikzErrors.push("Thiếu 'line cap=round'");
+                        tikzSuggestions.push("Thêm 'line cap=round'");
+                    }
+                    if (!/>=stealth/.test(tikzMatch[0])) {
+                        tikzErrors.push("Thiếu '>=stealth'");
+                        tikzSuggestions.push("Thêm '>=stealth'");
+                    }
+                    if (!/font=\\footnotesize/.test(tikzMatch[0])) {
+                        tikzErrors.push("Thiếu 'font=\\footnotesize'");
+                        tikzSuggestions.push("Thêm 'font=\\footnotesize'");
+                    }
+                    if (tikzErrors.length) {
+                        sectionErrors.push(`Lỗi TikZ: ${tikzErrors.join(', ')}`);
+                        suggestions.push(tikzSuggestions.join(', '));
+                    }
+                }
 
-            // Kiểm tra lỗi số 4: Đúng một lệnh \\True trong \choice (không phải \choiceTF)
-            let choiceMatch;
-            while ((choiceMatch = choicePattern.exec(exContent)) !== null) {
-                let choiceContent = choiceMatch[0];
-                let ngoacLon = layCacNgoacLon(choiceContent);
-                if (ngoacLon.length < 4) {
-                    sectionErrors.push("");
-                    suggestions.push("");
-                } else {
-                    let trueCount = 0;
-                    for (let i = 0; i < 4; i++) {
-                        let [start, end] = ngoacLon[i];
-                        if (choiceContent.slice(start + 1, end).includes("\\True")) { // Thêm +1 để bỏ qua dấu {
-                            trueCount++;
+                // Kiểm tra lỗi số 3: TikZ Euclide không hợp lệ
+                if (/\\tkz(?!T)/.test(exContent)) {
+                    sectionErrors.push("Có tikz Euclide (không phải \\tkzTab)");
+                    suggestions.push("Thay thế bằng \\tkzTab");
+                }
+
+                // Kiểm tra lỗi số 4: Đúng một lệnh \\True trong \choice (không phải \choiceTF)
+                let choiceMatch;
+                while ((choiceMatch = choicePattern.exec(exContent)) !== null) {
+                    let choiceContent = choiceMatch[0];
+                    let ngoacLon = layCacNgoacLon(choiceContent);
+                    if (ngoacLon.length < 4) {
+                        sectionErrors.push("");
+                        suggestions.push("");
+                    } else {
+                        let trueCount = 0;
+                        for (let i = 0; i < 4; i++) {
+                            let [start, end] = ngoacLon[i];
+                            if (choiceContent.slice(start + 1, end).includes("\\True")) { // Thêm +1 để bỏ qua dấu {
+                                trueCount++;
+                            }
+                        }
+                        if (trueCount !== 1) {
+                            sectionErrors.push("\\choice phải chứa duy nhất một từ khóa \\True");
+                            suggestions.push("Thêm một và chỉ một từ khóa \\True vào \\choice");
                         }
                     }
-                    if (trueCount !== 1) {
-                        sectionErrors.push("\\choice phải chứa duy nhất một từ khóa \\True");
-                        suggestions.push("Thêm một và chỉ một từ khóa \\True vào \\choice");
+                }
+
+                // Kiểm tra lỗi số 5: Nếu không có \choice thì phải có \shortans hoặc \sh
+                if (!/\\choice/.test(exContent) && !/\\shortans|\\sh/.test(exContent)) {
+                    sectionErrors.push("Thiếu \\shortans hoặc \\sh khi không có \\choice");
+                    suggestions.push("Thêm \\shortans hoặc \\sh khi không có \\choice");
+                }
+
+                // Kiểm tra lỗi số 6: Dư dấu ':' sau 'thì', 'là', 'bằng'
+                let sentences = exContent.match(/(?:thì|là|bằng)\s*:\s*/g) || [];
+                sentences.forEach(sentence => {
+                    if (/:/.test(sentence)) {
+                        sectionErrors.push(`Dư dấu ':' sau '${sentence.trim()}'`);
+                        suggestions.push("Loại bỏ dấu ':' dư thừa");
+                    }
+                });
+
+                // Kiểm tra lỗi số 7: Hàm toán học thiếu dấu '\'
+                let mathEnvironmentsPattern = /(\$[^\$]*\$|\\\[.*?\\\])/g;
+                let mathEnvironments = [];
+                let match;
+
+                // Tìm tất cả các môi trường toán học
+                while ((match = mathEnvironmentsPattern.exec(exContent)) !== null) {
+                    mathEnvironments.push({ start: match.index, end: match.index + match[0].length, content: match[0] });
+                }
+
+                // Kiểm tra các hàm toán học trong các môi trường toán học
+                mathEnvironments.forEach(env => {
+                    while ((match = mathFunctionsPattern.exec(env.content)) !== null) {
+                        let funcMatch = match[0];
+                        // Kiểm tra nếu hàm toán học thiếu dấu '\'
+                        if (!env.content.slice(match.index - 1, match.index).includes("\\")) {
+                            sectionErrors.push(`Hàm toán học thiếu dấu '\\': ${funcMatch}`);
+                            suggestions.push(`Thêm '\\' trước hàm toán học: \\${funcMatch}`);
+                        }
+                    }
+                });
+
+                // Kiểm tra lỗi số 8: Kiểm tra dấu "
+                let invalidQuotePattern = /[^yfg]"[^ygf]/;
+                if (invalidQuotePattern.test(exContent)) {
+                    sectionErrors.push('Sử dụng dấu " không hợp lệ');
+                    suggestions.push('Thay thế dấu " bằng \\lq\\lq...\\rq\\rq');
+                }
+
+                // Kiểm tra lỗi số 9: Kiểm tra \begin{array}
+                if (/\\begin{array}/.test(exContent)) {
+                    sectionErrors.push('Sử dụng \\begin{array} không được phép');
+                    suggestions.push('Thay thế \\begin{array} bằng heva, hoac, eqarray,...');
+                }
+
+                // Kiểm tra lỗi số 10: Kiểm tra từ "prime"
+                if (primePattern.test(exContent)) {
+                    sectionErrors.push('Sử dụng từ "prime" không được phép');
+                    suggestions.push('Thay prime bằng \' ');
+                }
+
+                // Kiểm tra lỗi số 11: Kiểm tra trong \shortans{...} mà phần ... thiếu dấu $
+                let shortansPattern = /\\shortans\s*{([^}]*)}/g;
+                let shortansMatch;
+                while ((shortansMatch = shortansPattern.exec(exContent)) !== null) {
+                    let shortansContent = shortansMatch[1];
+                    if (!shortansContent.includes('$')) {
+                        sectionErrors.push('Lỗi đáp án tự luận');
+                        suggestions.push('Xem lại nội dung của \\shortans');
                     }
                 }
-            }
 
-            // Kiểm tra lỗi số 5: Nếu không có \choice thì phải có \shortans hoặc \sh
-            if (!/\\choice/.test(exContent) && !/\\shortans|\\sh/.test(exContent)) {
-                sectionErrors.push("Thiếu \\shortans hoặc \\sh khi không có \\choice");
-                suggestions.push("Thêm \\shortans hoặc \\sh khi không có \\choice");
-            }
-
-            // Kiểm tra lỗi số 6: Dư dấu ':' sau 'thì', 'là', 'bằng'
-            let sentences = exContent.match(/(?:thì|là|bằng)\s*:\s*/g) || [];
-            sentences.forEach(sentence => {
-                if (/:/.test(sentence)) {
-                    sectionErrors.push(`Dư dấu ':' sau '${sentence.trim()}'`);
-                    suggestions.push("Loại bỏ dấu ':' dư thừa");
+                if (sectionErrors.length > 0) {
+                    errorCount++;
                 }
-            });
 
-            // Kiểm tra lỗi số 7: Hàm toán học thiếu dấu '\'
-            let mathEnvironmentsPattern = /(\$[^\$]*\$|\\\[.*?\\\])/g;
-            let mathEnvironments = [];
-            let match;
-
-            // Tìm tất cả các môi trường toán học
-            while ((match = mathEnvironmentsPattern.exec(exContent)) !== null) {
-                mathEnvironments.push({ start: match.index, end: match.index + match[0].length, content: match[0] });
+                sections.push({ content: exContent, errors: sectionErrors, suggestions: suggestions, index: index++ });
             }
 
-            // Kiểm tra các hàm toán học trong các môi trường toán học
-            mathEnvironments.forEach(env => {
-                while ((match = mathFunctionsPattern.exec(env.content)) !== null) {
-                    let funcMatch = match[0];
-                    // Kiểm tra nếu hàm toán học thiếu dấu '\'
-                    if (!env.content.slice(match.index - 1, match.index).includes("\\")) {
-                        sectionErrors.push(`Hàm toán học thiếu dấu '\\': ${funcMatch}`);
-                        suggestions.push(`Thêm '\\' trước hàm toán học: \\${funcMatch}`);
-                    }
-                }
-            });
+            document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${errorCount}`;
 
-            // Kiểm tra lỗi số 8: Kiểm tra dấu "
-            let invalidQuotePattern = /[^yfg]"[^ygf]/;
-            if (invalidQuotePattern.test(exContent)) {
-                sectionErrors.push('Sử dụng dấu " không hợp lệ');
-                suggestions.push('Thay thế dấu " bằng \\lq\\lq...\\rq\\rq');
-            }
-
-            // Kiểm tra lỗi số 9: Kiểm tra \begin{array}
-            if (/\\begin{array}/.test(exContent)) {
-                sectionErrors.push('Sử dụng \\begin{array} không được phép');
-                suggestions.push('Thay thế \\begin{array} bằng heva, hoac, eqarray,...');
-            }
-
-            // Kiểm tra lỗi số 10: Kiểm tra từ "prime"
-            if (primePattern.test(exContent)) {
-                sectionErrors.push('Sử dụng từ "prime" không được phép');
-                suggestions.push('Thay prime bằng \' ');
-            }
-
-            // Kiểm tra lỗi số 11: Kiểm tra trong \shortans{...} mà phần ... thiếu dấu $
-            let shortansPattern = /\\shortans\s*{([^}]*)}/g;
-            let shortansMatch;
-            while ((shortansMatch = shortansPattern.exec(exContent)) !== null) {
-                let shortansContent = shortansMatch[1];
-                if (!shortansContent.includes('$')) {
-                    sectionErrors.push('Lỗi đáp án tự luận');
-                    suggestions.push('Xem lại nội dung của \\shortans');
-                }
-            }
-
-            if (sectionErrors.length > 0) {
-                errorCount++;
-            }
-
-            sections.push({ content: exContent, errors: sectionErrors, suggestions: suggestions, index: index++ });
+            return sections;
         }
 
-        document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${errorCount-1}`;
+        function renderErrors(sections) {
+            let tbody = document.getElementById('outputBody');
+            tbody.innerHTML = '';
+            sections.forEach((section, idx) => {
+                let tr = document.createElement('tr');
+                let tdIndex = document.createElement('td');
+                let tdCode = document.createElement('td');
+                let tdErrors = document.createElement('td');
+                let tdSuggestions = document.createElement('td');
 
-        return sections;
-    }
+                tdIndex.textContent = section.index;
+                tdCode.innerHTML = `<textarea class="fixed-size-textarea" data-index="${idx}" onfocus="setCurrentTextarea(this)" oninput="handleTextareaInput(event)">${section.content}</textarea>`;
+                tdErrors.innerHTML = section.errors.map(error => `<div class="error-message">${error}</div>`).join('');
+                tdSuggestions.innerHTML = section.suggestions.map(suggestion => `<div class="suggestion">${suggestion}</div>`).join('');
 
-    function renderErrors(sections) {
-        let tbody = document.getElementById('outputBody');
-        tbody.innerHTML = '';
-        sections.forEach((section, idx) => {
-            let tr = document.createElement('tr');
-            let tdIndex = document.createElement('td');
-            let tdCode = document.createElement('td');
-            let tdErrors = document.createElement('td');
-            let tdSuggestions = document.createElement('td');
+                tr.appendChild(tdIndex);
+                tr.appendChild(tdCode);
+                tr.appendChild(tdErrors);
+                tr.appendChild(tdSuggestions);
+                tbody.appendChild(tr);
+            });
+        }
 
-            tdIndex.textContent = section.index;
-            tdCode.innerHTML = `<textarea class="fixed-size-textarea" data-index="${idx}" oninput="handleTextareaInput(event)">${section.content}</textarea>`;
+        function handleTextareaInput(event) {
+            const index = event.target.getAttribute('data-index');
+            const updatedContent = event.target.value;
+
+            let sections = highlightErrors(updatedContent);
+            const section = sections[0];
+
+            const tdErrors = event.target.parentElement.nextElementSibling;
+            const tdSuggestions = tdErrors.nextElementSibling;
+
             tdErrors.innerHTML = section.errors.map(error => `<div class="error-message">${error}</div>`).join('');
             tdSuggestions.innerHTML = section.suggestions.map(suggestion => `<div class="suggestion">${suggestion}</div>`).join('');
 
-            tr.appendChild(tdIndex);
-            tr.appendChild(tdCode);
-            tr.appendChild(tdErrors);
-            tr.appendChild(tdSuggestions);
-            tbody.appendChild(tr);
+            event.target.value = section.content;
+
+            // Cập nhật số câu có lỗi
+            document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${sections.filter(s => s.errors.length > 0).length}`;
+        }
+        function beautifyCode(content) {
+            const indent = '    '; // Đặt 4 dấu cách làm indent
+            const subIndent = indent + indent; // Indent cho môi trường con
+            const lines = content.split('\n');
+            let beautifiedLines = [];
+
+            let inEnvironment = false;
+            let environmentName = '';
+            let subEnvironmentPattern = /\\begin{(tikzpicture|itemize|enumerate|cases|eqnarray)}/;
+            let subEnvironmentName = '';
+            let inSubEnvironment = false;
+
+            for (let line of lines) {
+                // Xoá các khoảng trống thừa, chỉ giữ lại 1 khoảng trống giữa các từ
+                line = line.replace(/\s+/g, ' ');
+                // Xoá khoảng trống trước dấu phẩy
+                line = line.replace(/\s+,/g, ',');
+                // Loại bỏ khoảng trắng ở đầu và cuối mỗi dòng
+                line = line.trim();
+
+                if (line.startsWith('\\begin{') && (line.includes('{ex}') || line.includes('{bt}') || line.includes('{vd}'))) {
+                    beautifiedLines.push(line);
+                    inEnvironment = true;
+                    environmentName = line.match(/\\begin{(.*?)}/)[1];
+                } else if (line.startsWith(`\\end{${environmentName}}`)) {
+                    beautifiedLines.push(line);
+                    inEnvironment = false;
+                    environmentName = '';
+                } else if (inEnvironment && subEnvironmentPattern.test(line)) {
+                    beautifiedLines.push(indent + line);
+                    inSubEnvironment = true;
+                    subEnvironmentName = line.match(/\\begin{(.*?)}/)[1];
+                } else if (inSubEnvironment && line.startsWith(`\\end{${subEnvironmentName}}`)) {
+                    beautifiedLines.push(indent + line);
+                    inSubEnvironment = false;
+                    subEnvironmentName = '';
+                } else if (inSubEnvironment) {
+                    beautifiedLines.push(subIndent + line);
+                } else if (inEnvironment) {
+                    beautifiedLines.push(indent + line);
+                } else {
+                    beautifiedLines.push(line);
+                }
+            }
+
+            return beautifiedLines.join('\n');
+        }
+        function beautifyCodeGoc(content) {
+            const indent = '    '; // Đặt 4 dấu cách làm indent
+            const subIndent = indent + indent; // Indent cho môi trường con
+            const lines = content.split('\n');
+            let beautifiedLines = [];
+            let inEnvironment = false;
+            let environmentName = '';
+            let subEnvironmentPattern = /\\begin{(tikzpicture|itemize|enumerate|cases|eqnarray)}/;
+            let subEnvironmentName = '';
+            let inSubEnvironment = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.startsWith('\\begin{') && (line.includes('{ex}') || line.includes('{bt}') || line.includes('{vd}'))) {
+                    beautifiedLines.push(line);
+                    inEnvironment = true;
+                    environmentName = line.match(/\\begin{(.*?)}/)[1];
+                } else if (line.startsWith(`\\end{${environmentName}}`)) {
+                    beautifiedLines.push(line);
+                    inEnvironment = false;
+                    environmentName = '';
+                } else if (inEnvironment && subEnvironmentPattern.test(line)) {
+                    beautifiedLines.push(indent + line);
+                    inSubEnvironment = true;
+                    subEnvironmentName = line.match(/\\begin{(.*?)}/)[1];
+                } else if (inSubEnvironment && line.startsWith(`\\end{${subEnvironmentName}}`)) {
+                    beautifiedLines.push(indent + line);
+                    inSubEnvironment = false;
+                    subEnvironmentName = '';
+                } else if (inSubEnvironment) {
+                    beautifiedLines.push(subIndent + line);
+                } else if (inEnvironment) {
+                    beautifiedLines.push(indent + line);
+                } else {
+                    beautifiedLines.push(line);
+                }
+            });
+
+            return beautifiedLines.join('\n');
+        }
+
+        function saveContent() {
+            const textareas = document.querySelectorAll('.fixed-size-textarea');
+            const output = Array.from(textareas).map(el => el.value).join('\n\n');
+            const blob = new Blob([output], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'latex_content.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('inputText').addEventListener('input', function () {
+            const inputContent = this.value;
+            const sections = highlightErrors(inputContent);
+            renderErrors(sections);
         });
-    }
 
-    function handleTextareaInput(event) {
-        const index = event.target.getAttribute('data-index');
-        const updatedContent = event.target.value;
+        document.getElementById('loadButton').addEventListener('click', function () {
+            document.getElementById('fileInput').click();
+        });
 
-        let sections = highlightErrors(updatedContent);
-        const section = sections[0];
-
-        const tdErrors = event.target.parentElement.nextElementSibling;
-        const tdSuggestions = tdErrors.nextElementSibling;
-
-        tdErrors.innerHTML = section.errors.map(error => `<div class="error-message">${error}</div>`).join('');
-        tdSuggestions.innerHTML = section.suggestions.map(suggestion => `<div class="suggestion">${suggestion}</div>`).join('');
-
-        event.target.value = section.content;
-
-        // Cập nhật số câu có lỗi
-        document.getElementById('errorCount').innerText = `Số câu có lỗi cần xem lại: ${sections.filter(s => s.errors.length > 0).length}`;
-    }
-
-    function beautifyCode(content) {
-        const indent = '    '; // Đặt 4 dấu cách làm indent
-        const subIndent = indent + indent; // Indent cho môi trường con
-        const lines = content.split('\n');
-        let beautifiedLines = [];
-        let inEnvironment = false;
-        let environmentName = '';
-        let subEnvironmentPattern = /\\begin{(tikzpicture|itemize|enumerate|cases|eqnarray)}/;
-        let subEnvironmentName = '';
-        let inSubEnvironment = false;
-
-        lines.forEach(line => {
-            line = line.trim();
-            if (line.startsWith('\\begin{') && (line.includes('{ex}') || line.includes('{bt}') || line.includes('{vd}'))) {
-                beautifiedLines.push(line);
-                inEnvironment = true;
-                environmentName = line.match(/\\begin{(.*?)}/)[1];
-            } else if (line.startsWith(`\\end{${environmentName}}`)) {
-                beautifiedLines.push(line);
-                inEnvironment = false;
-                environmentName = '';
-            } else if (inEnvironment && subEnvironmentPattern.test(line)) {
-                beautifiedLines.push(indent + line);
-                inSubEnvironment = true;
-                subEnvironmentName = line.match(/\\begin{(.*?)}/)[1];
-            } else if (inSubEnvironment && line.startsWith(`\\end{${subEnvironmentName}}`)) {
-                beautifiedLines.push(indent + line);
-                inSubEnvironment = false;
-                subEnvironmentName = '';
-            } else if (inSubEnvironment) {
-                beautifiedLines.push(subIndent + line);
-            } else if (inEnvironment) {
-                beautifiedLines.push(indent + line);
-            } else {
-                beautifiedLines.push(line);
+        document.getElementById('fileInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('inputText').value = e.target.result;
+                    const sections = highlightErrors(e.target.result);
+                    renderErrors(sections);
+                };
+                reader.readAsText(file);
             }
         });
 
-        return beautifiedLines.join('\n');
-    }
-
-    function saveContent() {
-        const textareas = document.querySelectorAll('.fixed-size-textarea');
-        const output = Array.from(textareas).map(el => el.value).join('\n\n');
-        const blob = new Blob([output], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'latex_content.txt';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    document.getElementById('inputText').addEventListener('input', function() {
-        const inputContent = this.value;
-        const sections = highlightErrors(inputContent);
-        renderErrors(sections);
-    });
-
-    document.getElementById('loadButton').addEventListener('click', function() {
-        document.getElementById('fileInput').click();
-    });
-
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('inputText').value = e.target.result;
-                const sections = highlightErrors(e.target.result);
-                renderErrors(sections);
-            };
-            reader.readAsText(file);
-        }
-    });
-
-    document.getElementById('copyButton').addEventListener('click', function() {
-        const outputText = document.getElementById('outputBody').innerText;
-        navigator.clipboard.writeText(outputText).then(() => {
-            alert('Đã sao chép nội dung!');
-        }).catch(err => {
-            alert('Không thể sao chép nội dung!');
+        document.getElementById('copyButton').addEventListener('click', function () {
+            const outputText = document.getElementById('outputBody').innerText;
+            navigator.clipboard.writeText(outputText).then(() => {
+                alert('Đã sao chép nội dung!');
+            }).catch(err => {
+                alert('Không thể sao chép nội dung!');
+            });
         });
-    });
 
-    document.getElementById('saveButton').addEventListener('click', saveContent);
+        document.getElementById('saveButton').addEventListener('click', saveContent);
 
-    document.getElementById('beautifyButton').addEventListener('click', function() {
-        let inputContent = document.getElementById('inputText').value;
-        let beautifiedContent = beautifyCode(inputContent);
-        document.getElementById('inputText').value = beautifiedContent;
-        const sections = highlightErrors(beautifiedContent);
-        renderErrors(sections);
-    });
-</script>
+        document.getElementById('beautifyButton').addEventListener('click', function () {
+            let inputContent = document.getElementById('inputText').value;
+            let beautifiedContent = beautifyCode(inputContent);
+            document.getElementById('inputText').value = beautifiedContent;
+            const sections = highlightErrors(beautifiedContent);
+            renderErrors(sections);
+        });
 
+        function setCurrentTextarea(textarea) {
+            currentTextarea = textarea;
+        }
+    </script>
+    <!-- Dialog for assigning ID -->
+    <div class="dialog-container" id="dialogContainer">
+        <div class="dialog-header">Gán ID</div>
+        <div class="form-container">
+            <label for="class">Lớp</label>
+            <select id="class">
+                <option value="0">Lớp 10</option>
+                <option value="1">Lớp 11</option>
+                <option value="2">Lớp 12</option>
+            </select>
+            <label for="subject">Môn</label>
+            <select id="subject">
+                <option value="D">Đại Số - Giải Tích</option>
+                <option value="H">Hình Học</option>
+                <option value="X">Thống Kê - Xác Suất</option>
+            </select>
+            <label for="chapter">Chương</label>
+            <select id="chapter"></select>
+            <label for="lesson">Bài</label>
+            <select id="lesson"></select>
+            <label for="type">Dạng</label>
+            <select id="type"></select>
+            <label for="level">Mức Độ</label>
+            <select id="level">
+                <option value="N">Nhận Biết</option>
+                <option value="H">Thông Hiểu</option>
+                <option value="V">Vận Dụng</option>
+                <option value="C">Vận Dụng Cao</option>
+            </select>
+            <button id="generate-id">Gán ID</button>
+        </div>
+        <button onclick="closeDialog()">Đóng</button>
+    </div>
+
+    <script>
+        const data = {
+                0: {
+                    D: {
+                    chapters: [
+                        { name: 'Chương 1. Mệnh đề. Tập hợp', value: '1' },
+                        { name: 'Chương 2. BPT và hệ BPT bậc nhất hai ẩn', value: '2' },
+                        { name: 'Chương 3. Hàm số bậc hai và đồ thị', value: '3' },
+                        { name: 'Chương 7. Bất phương trình bậc 2 một ẩn', value: '7' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Mệnh đề', value: '1', types: [
+                                    { name: 'Xác định mệnh đề, mệnh đề chứa biến', value: '1' },
+                                    { name: 'Tính đúng-sai của mệnh đề', value: '2' },
+                                    { name: 'Phủ định của một mệnh đề', value: '3' },
+                                    { name: 'Mệnh đề kéo theo, mệnh đề đảo, mệnh đề tương đương', value: '4' },
+                                    { name: 'Mệnh đề với mọi, tồn tại (và phủ định chúng)', value: '5' },
+                                    { name: 'Áp dụng mệnh đề vào suy luận có lí', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Tập hợp', value: '2', types: [
+                                    { name: 'Tập hợp và phần tử của tập hợp', value: '1' },
+                                    { name: 'Tập hợp con. Hai tập hợp bằng nhau', value: '2' },
+                                    { name: 'Ký hiệu khoảng, đoạn, nửa khoảng', value: '3' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Các phép toán tập hợp', value: '3', types: [
+                                    { name: 'Giao và hợp của hai tập hợp (rời rạc)', value: '1' },
+                                    { name: 'Hiệu và phần bù của hai tập hợp (rời rạc)', value: '2' },
+                                    { name: 'Giao và hợp (dùng đoạn, khoảng)', value: '3' },
+                                    { name: 'Hiệu và phần bù (dùng đoạn, khoảng)', value: '4' },
+                                    { name: 'Toán thực tế ứng dụng của tập hợp', value: '5' }
+                                ]
+                            }
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Bất phương trình bậc nhất hai ẩn', value: '1', types: [
+                                    { name: 'Các khái niệm về BPT bậc nhất hai ẩn', value: '1' },
+                                    { name: 'Miền nghiệm của BPT bậc nhất hai ẩn', value: '2' },
+                                    { name: 'Toán thực tế về BPT bậc nhất hai ẩn', value: '3' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Hệ bất phương trình bậc nhất hai ẩn', value: '2', types: [
+                                    { name: 'Các khái niệm về Hệ BPT bậc nhất hai ẩn', value: '1' },
+                                    { name: 'Miền nghiệm của Hệ BPT bậc nhất hai ẩn', value: '2' },
+                                    { name: 'Toán thực tế về Hệ BPT bậc nhất hai ẩn', value: '3' }
+                                ]
+                            }
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Hàm số', value: '1', types: [
+                                    { name: 'Xác định một hàm số', value: '1' },
+                                    { name: 'Tập xác định của hàm số', value: '2' },
+                                    { name: 'Giá trị của hàm số', value: '3' },
+                                    { name: 'Đồ thị của hàm số', value: '4' },
+                                    { name: 'Tính đồng biến, nghịch biến', value: '5' },
+                                    { name: 'Tính chẵn, lẻ', value: '6' },
+                                    { name: 'Toán thực tế về hàm số', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Hàm số bậc hai', value: '2', types: [
+                                    { name: 'Xác định hàm số bậc hai', value: '1' },
+                                    { name: 'Bảng biến thiên, tính đơn điệu, max, min', value: '2' },
+                                    { name: 'Đồ thị của hàm số bậc hai', value: '3' },
+                                    { name: 'Bài toán về sự tương giao', value: '4' },
+                                    { name: 'Hàm số chứa dấu giá trị tuyệt đối', value: '5' },
+                                    { name: 'Toán thực tế ứng dụng hàm số bậc hai', value: '6' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Dấu của tam thức bậc 2', value: '1', types: [
+                                    { name: 'Xác định tam thức bậc 2', value: '1' },
+                                    { name: 'Dấu của tam thức bậc 2 và ứng dụng', value: '2' },
+                                    { name: 'Bài toán xét dấu biết BXD, đồ thị', value: '3' },
+                                    { name: 'Xét dấu biểu thức dạng tích, thương', value: '4' },
+                                    { name: 'Toán thực tế ứng dụng dấu tam thức bậc 2', value: '5' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Giải bất phương trình bậc 2 một ẩn', value: '2', types: [
+                                    { name: 'Bất phương trình bậc 2 và ứng dụng', value: '1' },
+                                    { name: 'Giải bất phương trình bậc hai biết BXD, đồ thị', value: '2' },
+                                    { name: 'Bất phương trình dạng tích, thương', value: '3' },
+                                    { name: 'Hệ bất phương trình BPT bậc 2', value: '4' },
+                                    { name: 'Bất phương trình chứa căn, | · |', value: '5' },
+                                    { name: 'Bài toán có tham số m', value: '6' },
+                                    { name: 'Toán thực tế ứng dụng bất phương trình bậc 2 một ẩn', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Phương trình quy về phương trình bậc hai', value: '3', types: [
+                                    { name: 'Phương trình căn √f(x) = √g(x) và mở rộng', value: '1' },
+                                    { name: 'Phương trình căn √f(x) = g(x) và mở rộng', value: '2' },
+                                    { name: 'Phương trình căn thức có tham số', value: '3' },
+                                    { name: 'Phương trình căn thức (dạng khác)', value: '4' },
+                                    { name: 'Phương trình khác quy về phương trình bậc 2', value: '5' },
+                                    { name: 'Toán hình, toán thực tế ứng dụng phương trình quy về bậc 2', value: '6' }
+                                ]
+                            }
+                        ]
+                    ]
+                    },
+                    H: {
+                    chapters: [
+                        { name: 'Chương 4. Hệ thức lượng trong tam giác', value: '4' },
+                        { name: 'Chương 5. Véctơ (chưa xét tọa độ)', value: '5' },
+                        { name: 'Chương 9. Phương pháp toạ độ trong mặt phẳng (Oxy)', value: '9' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Giá trị lượng giác của góc (0 -> 180∘)', value: '1', types: [
+                                    { name: 'Xét dấu của biểu thức lượng giác', value: '1' },
+                                    { name: 'Tính các giá trị lượng giác', value: '2' },
+                                    { name: 'Biến đổi, rút gọn biểu thức lượng giác', value: '3' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Định lý sin và định lý côsin', value: '2', types: [
+                                    { name: 'Bài toán chỉ dùng định lý Sin, Côsin', value: '1' },
+                                    { name: 'Bài toán có dùng công thức diện tích', value: '2' },
+                                    { name: 'Biến đổi, rút gọn biểu thức', value: '3' },
+                                    { name: 'Nhận dạng tam giác', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Giải tam giác và ứng dụng thực tế', value: '3', types: [
+                                    { name: 'Giải tam giác', value: '1' },
+                                    { name: 'Các ứng dụng thực tế', value: '2' }
+                                ]
+                            }
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Khái niệm véctơ', value: '1', types: [
+                                    { name: 'Xác định một véctơ', value: '1' },
+                                    { name: 'Xét phương và hướng của các véctơ', value: '2' },
+                                    { name: 'Hai véctơ bằng nhau', value: '3' },
+                                    { name: 'Hai véctơ đối nhau', value: '4' },
+                                    { name: 'Độ dài của một véctơ', value: '5' },
+                                    { name: 'Toán thực tế áp dụng véctơ', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Tổng và hiệu của hai véctơ', value: '2', types: [
+                                    { name: 'Tính toán, thu gọn hiệu các véctơ', value: '1' },
+                                    { name: 'Tính đúng-sai của 1 đẳng thức véctơ', value: '2' },
+                                    { name: 'Tìm điểm nhờ đẳng thức véctơ', value: '3' },
+                                    { name: 'Tính độ dài của véctơ tổng, hiệu', value: '4' },
+                                    { name: 'Cực trị hình học', value: '5' },
+                                    { name: 'Toán thực tế áp dụng tổng hiệu véctơ', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Tích của một số với véctơ', value: '3', types: [
+                                    { name: 'Xác định k.→−a và độ dài của nó', value: '1' },
+                                    { name: 'Biến đổi, thu gọn 1 đẳng thức véctơ', value: '2' },
+                                    { name: 'Tìm điểm nhờ đẳng thức véctơ', value: '3' },
+                                    { name: 'Sự cùng phương của 2 véctơ và ứng dụng', value: '4' },
+                                    { name: 'Phân tích 1 véctơ theo 2 véctơ không cùng phương', value: '5' },
+                                    { name: 'Tính độ dài của véctơ tổng, hiệu', value: '6' },
+                                    { name: 'Tập hợp điểm', value: '7' },
+                                    { name: 'Cực trị hình học', value: '8' },
+                                    { name: 'Toán thực tế áp dụng tích 1 số với véctơ', value: '9' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 4: Tích vô hướng (chưa xét tọa độ)', value: '4', types: [
+                                    { name: 'Tích vô hướng, góc giữa 2 véctơ', value: '1' },
+                                    { name: 'Tìm góc nhờ tích vô hướng', value: '2' },
+                                    { name: 'Đẳng thức về tích vô hướng hoặc độ dài', value: '3' },
+                                    { name: 'Điều kiện vuông góc', value: '4' },
+                                    { name: 'Các bài toán tìm điểm và tập hợp điểm', value: '5' },
+                                    { name: 'Cực trị và chứng minh bất đẳng thức', value: '6' },
+                                    { name: 'Toán thực tế áp dụng tích vô hướng', value: '7' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Toạ độ của véctơ', value: '1', types: [
+                                    { name: 'Tọa độ điểm, độ dài đại số của véctơ trên 1 trục', value: '1' },
+                                    { name: 'Phép toán véctơ (tổng, hiệu, tích với số) trong Oxy', value: '2' },
+                                    { name: 'Tọa độ điểm và véctơ trên hệ trục Oxy', value: '3' },
+                                    { name: 'Sự cùng phương của 2 véctơ và ứng dụng', value: '4' },
+                                    { name: 'Phân tích một véctơ theo 2 véctơ không cùng phương', value: '5' },
+                                    { name: 'Toán thực tế dùng hệ toạ độ', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Tích vô hướng (theo tọa độ)', value: '2', types: [
+                                    { name: 'Tích vô hướng, góc giữa 2 véctơ', value: '1' },
+                                    { name: 'Tìm góc nhờ tích vô hướng', value: '2' },
+                                    { name: 'Đẳng thức về tích vô hướng hoặc độ dài', value: '3' },
+                                    { name: 'Điều kiện vuông góc', value: '4' },
+                                    { name: 'Các bài toán tìm điểm và tập hợp điểm', value: '5' },
+                                    { name: 'Cực trị và chứng minh bất đẳng thức', value: '6' },
+                                    { name: 'Toán thực tế, liên môn', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Đường thẳng trong mặt phẳng toạ độ', value: '3', types: [
+                                    { name: 'Điểm, véctơ, hệ số góc của đường thẳng', value: '1' },
+                                    { name: 'Phương trình đường thẳng', value: '2' },
+                                    { name: 'Vị trí tương đối giữa hai đường thẳng', value: '3' },
+                                    { name: 'Bài toán về góc giữa hai đường thẳng', value: '4' },
+                                    { name: 'Bài toán về khoảng cách', value: '5' },
+                                    { name: 'Bài toán tìm điểm', value: '6' },
+                                    { name: 'Bài toán dùng cho tam giác, tứ giác', value: '7' },
+                                    { name: 'Bài toán thực tế, PP tọa độ hóa', value: '8' },
+                                    { name: 'Bài toán có dùng PT chính tắc', value: '9' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 4: Đường tròn trong mặt phẳng toạ độ', value: '4', types: [
+                                    { name: 'Tìm tâm, bán kính và điều kiện là đường tròn', value: '1' },
+                                    { name: 'Phương trình đường tròn', value: '2' },
+                                    { name: 'Phương trình tiếp tuyến của đường tròn', value: '3' },
+                                    { name: 'Vị trí tương đối liên quan đường tròn', value: '4' },
+                                    { name: 'Toán tổng hợp đường thẳng và đường tròn', value: '5' },
+                                    { name: 'Bài toán dùng cho tam giác, tứ giác', value: '6' },
+                                    { name: 'Bài toán thực tế, PP tọa độ hóa', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 5: Ba đường conic trong mặt phẳng toạ độ', value: '5', types: [
+                                    { name: 'Xác định các yếu tố của elip', value: '1' },
+                                    { name: 'Phương trình chính tắc của elip', value: '2' },
+                                    { name: 'Bài toán điểm trên elip', value: '3' },
+                                    { name: 'Xác định các yếu tố của hypebol', value: '4' },
+                                    { name: 'Phương trình chính tắc của hypebol', value: '5' },
+                                    { name: 'Bài toán điểm trên hypebol', value: '6' },
+                                    { name: 'Xác định các yếu tố của parabol', value: '7' },
+                                    { name: 'Phương trình chính tắc của parabol', value: '8' },
+                                    { name: 'Bài toán điểm trên parabol', value: '9' },
+                                    { name: 'Bài toán tổng hợp/thực tế, PP tọa độ hóa 3 đường conic', value: '0' }
+                                ]
+                            }
+
+                        ],
+                    ]
+                    },
+                    X: 
+                    {
+                    chapters: [
+                        { name: 'Chương 6. Thống kê', value: '6' },
+                        { name: 'Chương 8. Đại số tổ hợp', value: '8' },
+                        { name: 'Chương 10. Xác suất', value: '0' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Số gần đúng. Sai số', value: '1', types: [
+                                    { name: 'Tính và ước lượng sai số tuyệt đối, tương đối', value: '1' },
+                                    { name: 'Tính và xác định độ chính xác của kết quả', value: '2' },
+                                    { name: 'Quy tròn số gần đúng', value: '3' },
+                                    { name: 'Viết số gần đúng cho số đúng biết độ chính xác', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Mô tả và biểu diễn dữ liệu trên các bảng và biểu đồ', value: '2', types: [
+                                    { name: 'Đọc và phân tích thông tin trên bảng số liệu', value: '1' },
+                                    { name: 'Đọc và phân tích thông tin trên biểu đồ', value: '2' },
+                                    { name: 'Số liệu bất thường trên bảng số liệu', value: '3' },
+                                    { name: 'Số liệu bất thường trên biểu đồ', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Các số đặc trưng đo xu thế trung tâm của mẫu số liệu', value: '3', types: [
+                                    { name: 'Câu hỏi lý thuyết', value: '1' },
+                                    { name: 'Số trung bình cộng', value: '2' },
+                                    { name: 'Số trung vị', value: '3' },
+                                    { name: 'Tứ phân vị', value: '4' },
+                                    { name: 'Mốt', value: '5' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 4: Các số đặc trưng đo mức độ phân tán của mẫu số liệu', value: '4', types: [
+                                    { name: 'Câu hỏi lý thuyết', value: '1' },
+                                    { name: 'Khoảng biến thiên, khoảng tứ phân vị', value: '2' },
+                                    { name: 'Giá trị bất thường của mẫu số liệu', value: '3' },
+                                    { name: 'Phương sai, độ lệch chuẩn của mẫu số liệu', value: '4' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Quy tắc cộng-quy tắc nhân', value: '1', types: [
+                                    { name: 'Bài toán chỉ sử dụng quy tắc cộng', value: '1' },
+                                    { name: 'Bài toán chỉ sử dụng quy tắc nhân', value: '2' },
+                                    { name: 'Bài toán kết hợp quy tắc cộng và quy tắc nhân', value: '3' },
+                                    { name: 'Bài toán dùng quy tắc bù trừ', value: '4' },
+                                    { name: 'Bài toán đếm số tự nhiên', value: '5' },
+                                    { name: 'Sơ đồ hình cây', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Hoán vị. Chỉnh hợp. Tổ hợp', value: '2', types: [
+                                    { name: 'Lý thuyết tổng hợp về P,C,A', value: '1' },
+                                    { name: 'Bài toán có biểu thức P,C,A', value: '2' },
+                                    { name: 'Bài toán đếm số tự nhiên', value: '3' },
+                                    { name: 'Bài toán chọn người', value: '4' },
+                                    { name: 'Bài toán chọn đối tượng khác', value: '5' },
+                                    { name: 'Bài toán có yếu tố hình học', value: '6' },
+                                    { name: 'Bài toán xếp chỗ (không tròn, không lặp)', value: '7' },
+                                    { name: 'Hoán vị bàn tròn', value: '8' },
+                                    { name: 'Hoán vị lặp', value: '9' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Nhị thức Newton', value: '3', types: [
+                                    { name: 'Các câu hỏi lý thuyết tổng hợp', value: '1' },
+                                    { name: 'Khai triển một nhị thức Newton', value: '2' },
+                                    { name: 'Tìm hệ số, số hạng trong khai triển bằng tam giác Pascal', value: '3' },
+                                    { name: 'Tìm hệ số, số hạng trong khai triển', value: '4' },
+                                    { name: 'Tính tổng nhờ khai triển nhị thức Newton', value: '5' },
+                                    { name: 'Toán tổ hợp có dùng nhị thức Newton', value: '6' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Không gian mẫu và biến cố', value: '1', types: [
+                                    { name: 'Các câu hỏi lý thuyết tổng hợp', value: '1' },
+                                    { name: 'Mô tả không gian mẫu, biến cố', value: '2' },
+                                    { name: 'Đếm phần tử không gian mẫu, biến cố', value: '3' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Xác suất của biến cố', value: '2', types: [
+                                    { name: 'Các câu hỏi lý thuyết tổng hợp', value: '1' },
+                                    { name: 'Liên quan xúc xắc, đồng tiền (PP liệt kê)', value: '2' },
+                                    { name: 'Liên quan việc sắp xếp chỗ', value: '3' },
+                                    { name: 'Liên quan việc chọn người', value: '4' },
+                                    { name: 'Liên quan việc chọn đối tượng khác', value: '5' },
+                                    { name: 'Liên quan hình học', value: '6' },
+                                    { name: 'Liên quan việc đếm số', value: '7' },
+                                    { name: 'Liên quan bàn tròn hoặc hoán vị lặp', value: '8' },
+                                    { name: 'Liên quan vấn đề khác', value: '9' }
+                                ]
+                            }
+
+                        ]
+
+                    ]
+                    }
+                },
+                1: {
+                    D: {
+                        chapters: [
+                            { name: 'Chương 1. Hàm số lượng giác và phương trình lượng giác', value: '1' },
+                            { name: 'Chương 2. Dãy số. Cấp số cộng. Cấp số nhân', value: '2' },
+                            { name: 'Chương 3. Giới hạn. Hàm số liên tục', value: '3' },
+                            { name: 'Chương 6. Hàm số mũ và hàm số lôgarít', value: '6' },
+                            { name: 'Chương 7. Đạo hàm', value: '7' }
+                        ],
+                        lessons: [
+                            [
+                                {
+                                    name: 'Bài 1: Góc lượng giác', value: '1', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Chuyển đổi đơn vị độ và radian', value: '2' },
+                                        { name: 'Số đo của một góc lượng giác', value: '3' },
+                                        { name: 'Độ dài của một cung tròn', value: '4' },
+                                        { name: 'Đường tròn lượng giác và ứng dụng', value: '5' },
+                                        { name: 'Toán thực tế áp dụng góc lượng giác', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Giá trị lượng giác của một góc lượng giác', value: '2', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Xét dấu giá trị lượng giác. Tính giá trị lượng giác của một góc', value: '2' },
+                                        { name: 'Biến đổi, rút gọn biểu thức lượng giác; chứng minh đẳng thức lượng giác', value: '3' },
+                                        { name: 'Các góc lượng giác có liên quan đặc biệt: bù nhau, phụ nhau, đối nhau, hơn kém nhau π', value: '4' },
+                                        { name: 'Toán thực tế áp dụng giá trị của một góc lượng giác', value: '5' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Các công thức lượng giác', value: '3', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Áp dụng công thức cộng', value: '2' },
+                                        { name: 'Áp dụng công thức nhân đôi - hạ bậc', value: '3' },
+                                        { name: 'Áp dụng công thức biến đổi tích <-> tổng', value: '4' },
+                                        { name: 'Kết hợp nhiều công thức lượng giác', value: '5' },
+                                        { name: 'Nhận dạng tam giác', value: '6' },
+                                        { name: 'Toán thực tế áp dụng công thức lượng giác', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 4: Hàm số lượng giác và đồ thị', value: '4', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Tìm tập xác định', value: '2' },
+                                        { name: 'Xét tính đơn điệu', value: '3' },
+                                        { name: 'Xét tính chẵn, lẻ', value: '4' },
+                                        { name: 'Xét tính tuần hoàn, tìm chu kỳ', value: '5' },
+                                        { name: 'Tìm tập giá trị và min, max', value: '6' },
+                                        { name: 'Bảng biến thiên và đồ thị', value: '7' },
+                                        { name: 'Toán thực tế áp dụng hàm số lượng giác', value: '8' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 5: Phương trình lượng giác cơ bản', value: '5', types: [
+                                        { name: 'Câu hỏi lý thuyết. Khái niệm phương trình tương đương', value: '1' },
+                                        { name: 'Điều kiện có nghiệm', value: '2' },
+                                        { name: 'Phương trình cơ bản dùng Radian', value: '3' },
+                                        { name: 'Phương trình cơ bản dùng Độ', value: '4' },
+                                        { name: 'Phương trình đưa về dạng cơ bản', value: '5' },
+                                        { name: 'Toán thực tế áp dụng phương trình lượng giác', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 6: Phương trình lượng giác thường gặp', value: '6', types: [
+                                        { name: 'Phương trình bậc n theo một hàm số lượng giác', value: '1' },
+                                        { name: 'Phương trình đẳng cấp bậc n đối với sinx và cosx', value: '2' },
+                                        { name: 'Phương trình bậc nhất đối với sinx và cosx', value: '3' },
+                                        { name: 'Phương trình đối xứng, phản đối xứng', value: '4' },
+                                        { name: 'Phương trình lượng giác không mẫu mực', value: '5' },
+                                        { name: 'Phương trình lượng giác có chứa ẩn ở mẫu số', value: '6' },
+                                        { name: 'Phương trình lượng giác có chứa tham số', value: '7' },
+                                        { name: 'Toán thực tế áp dụng phương trình lượng giác thường gặp', value: '8' }
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Dãy số', value: '1', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Số hạng tổng quát, biểu diễn dãy số', value: '2' },
+                                        { name: 'Tìm số hạng cụ thể của dãy số', value: '3' },
+                                        { name: 'Dãy số tăng, dãy số giảm', value: '4' },
+                                        { name: 'Dãy số bị chặn', value: '5' },
+                                        { name: 'Toán thực tế áp dụng dãy số', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Cấp số cộng', value: '2', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Nhận diện cấp số cộng, công sai d', value: '2' },
+                                        { name: 'Số hạng tổng quát của cấp số cộng', value: '3' },
+                                        { name: 'Tìm số hạng cụ thể trong cấp số cộng', value: '4' },
+                                        { name: 'Điều kiện để dãy số là cấp số cộng', value: '5' },
+                                        { name: 'Tính tổng của cấp số cộng', value: '6' },
+                                        { name: 'Toán thực tế áp dụng cấp số cộng', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Cấp số nhân', value: '3', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Nhận diện cấp số nhân, công bội q', value: '2' },
+                                        { name: 'Số hạng tổng quát của cấp số nhân', value: '3' },
+                                        { name: 'Tìm số hạng cụ thể trong cấp số nhân', value: '4' },
+                                        { name: 'Điều kiện để dãy số là cấp số nhân', value: '5' },
+                                        { name: 'Tính tổng của cấp số nhân', value: '6' },
+                                        { name: 'Kết hợp cấp số nhân và cấp số cộng', value: '7' },
+                                        { name: 'Toán thực tế áp dụng cấp số nhân', value: '8' }
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Giới hạn của dãy số', value: '1', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Phương pháp đặt thừa số chung (lim hữu hạn)', value: '2' },
+                                        { name: 'Phương pháp lượng liên hợp (lim hữu hạn)', value: '3' },
+                                        { name: 'Giới hạn vô cực', value: '4' },
+                                        { name: 'Cấp số nhân lùi vô hạn', value: '5' },
+                                        { name: 'Toán thực tế áp dụng giới hạn của dãy số', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Giới hạn của hàm số', value: '2', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Thay số trực tiếp', value: '2' },
+                                        { name: 'PP đặt thừa số chung, kết quả hữu hạn', value: '3' },
+                                        { name: 'PP đặt thừa số chung, kết quả vô cực', value: '4' },
+                                        { name: 'PP lượng liên hợp, kết quả hữu hạn', value: '5' },
+                                        { name: 'PP lượng liên hợp, kết quả vô cực', value: '6' },
+                                        { name: 'Giới hạn một bên', value: '7' },
+                                        { name: 'Toán thực tế áp dụng giới hạn của hàm số', value: '8' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Hàm số liên tục', value: '3', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Tính liên tục thể hiện qua đồ thị', value: '2' },
+                                        { name: 'Hàm số liên tục tại một điểm', value: '3' },
+                                        { name: 'Hàm số liên tục trên khoảng, đoạn', value: '4' },
+                                        { name: 'Bài toán phương trình có nghiệm', value: '5' },
+                                        { name: 'Toán thực tế áp dụng hàm số liên tục', value: '6' }
+                                    ]
+                                }
+
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Phép tính luỹ thừa', value: '1', types: [
+                                        { name: 'Tính giá trị của biểu thức chứa lũy thừa', value: '1' },
+                                        { name: 'Biến đổi, rút gọn biểu thức chứa lũy thừa', value: '2' },
+                                        { name: 'Điều kiện cho luỹ thừa, căn thức', value: '3' },
+                                        { name: 'So sánh các lũy thừa', value: '4' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Phép tính lôgarít', value: '2', types: [
+                                        { name: 'Tính giá trị biểu thức chứa lôgarít', value: '1' },
+                                        { name: 'Biến đổi, biểu diễn biểu thức chứa lôgarít', value: '2' },
+                                        { name: 'Rút gọn, chứng minh biểu thức lôgarít', value: '3' },
+                                        { name: 'Số e và bài toán lãi kép', value: '4' },
+                                        { name: 'Toán thực tế áp dụng phép tính lôgarít', value: '5' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Hàm số mũ. Hàm số lôgarít', value: '3', types: [
+                                        { name: 'Câu hỏi lý thuyết hàm số lũy thừa, mũ, lôgarít', value: '1' },
+                                        { name: 'Tập xác định của hàm số', value: '2' },
+                                        { name: 'Sự biến thiên và đồ thị của hàm số mũ, lôgarít', value: '3' },
+                                        { name: 'So sánh các luỹ thừa và lôgarít', value: '4' },
+                                        { name: 'Toán thực tế áp dụng hàm số mũ, lôgarít', value: '5' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 4: Phương trình, bất phương trình mũ và lôgarít', value: '4', types: [
+                                        { name: 'Điều kiện có nghiệm', value: '1' },
+                                        { name: 'Phương trình mũ, lôgarít cơ bản', value: '2' },
+                                        { name: 'Bất phương trình mũ, lôgarít cơ bản', value: '3' },
+                                        { name: 'Phương trình mũ, lôgarít đưa về cùng cơ số', value: '4' },
+                                        { name: 'Bất phương trình mũ, lôgarít đưa về cùng cơ số', value: '5' },
+                                        { name: 'Toán thực tế áp dụng phương trình mũ, lôgarít', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 5: Các phương pháp giải được giảm tải', value: '5', types: [
+                                        { name: 'Phương pháp đặt ẩn phụ cho PT mũ, lôgarít', value: '1' },
+                                        { name: 'Phương pháp lôgarít hóa, mũ cho PT mũ, lôgarít', value: '2' },
+                                        { name: 'Phương pháp hàm số, đánh giá cho PT mũ, lôgarít', value: '3' },
+                                        { name: 'Hệ PT mũ, lôgarít', value: '4' },
+                                        { name: 'Toán thực tế áp dụng phương trình mũ, lôgarít', value: '5' }
+                                    ]
+                                }
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Đạo hàm', value: '1', types: [
+                                        { name: 'Tính đạo hàm bằng định nghĩa', value: '1' },
+                                        { name: 'Số gia hàm số, số gia biến số', value: '2' },
+                                        { name: 'Ý nghĩa Hình học của đạo hàm', value: '3' },
+                                        { name: 'Ý nghĩa Vật lý của đạo hàm', value: '4' },
+                                        { name: 'Toán thực tế khác áp dụng định nghĩa đạo hàm', value: '5' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Các quy tắc đạo hàm', value: '2', types: [
+                                        { name: 'Tính đạo hàm', value: '1' },
+                                        { name: 'Đẳng thức có y và y\' ', value: '2' },
+                                        { name: 'Tiếp tuyến tại một điểm', value: '3' },
+                                        { name: 'Tiếp tuyến biết trước hệ số góc', value: '4' },
+                                        { name: 'Tiếp tuyến chưa biết tiếp điểm và hệ số góc', value: '5' },
+                                        { name: 'Giới hạn hàm số lượng giác, hàm số mũ, lôgarít', value: '6' },
+                                        { name: 'Dùng đạo hàm cho nhị thức Newton', value: '7' },
+                                        { name: 'Toán thực tế áp dụng quy tắc đạo hàm', value: '8' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Đạo hàm cấp hai', value: '3', types: [
+                                        { name: 'Tính đạo hàm cấp hai', value: '1' },
+                                        { name: 'Đẳng thức có y và (y\', y\'\')', value: '2' },
+                                        { name: 'Toán thực tế và Ý nghĩa Vật lý của đạo hàm cấp hai', value: '3' }
+                                    ]
+                                }
+
+                            ]
+
+                        ]
+                    },
+                    H: {
+                        chapters: [
+                            { name: 'Chương 4. Đường thẳng, mặt phẳng. Quan hệ song song trong không gian', value: '4' },
+                            { name: 'Chương 8. Quan hệ vuông góc trong không gian', value: '8' }
+                        ],
+                        lessons: [
+                            [
+                                {
+                                    name: 'Bài 1: Điểm, đường thẳng và mặt phẳng', value: '1', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Hình biểu diễn của một hình không gian', value: '2' },
+                                        { name: 'Tìm giao tuyến của hai mặt phẳng', value: '3' },
+                                        { name: 'Tìm giao điểm của đường thẳng và mặt phẳng', value: '4' },
+                                        { name: 'Xác định thiết diện', value: '5' },
+                                        { name: 'Ba điểm thẳng hàng, ba đường thẳng đồng quy', value: '6' },
+                                        { name: 'Toán thực tế áp dụng điểm, đường thẳng và mặt phẳng', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Hai đường thẳng song song', value: '2', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Hai đường thẳng song song', value: '2' },
+                                        { name: 'Tìm giao tuyến bằng cách kẻ song song', value: '3' },
+                                        { name: 'Tìm giao điểm của đường thẳng và mặt phẳng', value: '4' },
+                                        { name: 'Xác định thiết diện bằng cách kẻ song song', value: '5' },
+                                        { name: 'Ba điểm thẳng hàng', value: '6' },
+                                        { name: 'Bài toán quỹ tích và điểm cố định', value: '7' },
+                                        { name: 'Toán thực tế áp dụng hai đường thẳng song song', value: '8' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Đường thẳng và mặt phẳng song song', value: '3', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Đường thẳng song song với mặt phẳng', value: '2' },
+                                        { name: 'Tìm giao tuyến bằng cách kẻ song song', value: '3' },
+                                        { name: 'Tìm giao điểm của đường thẳng và mặt phẳng', value: '4' },
+                                        { name: 'Xác định thiết diện bằng cách kẻ song song', value: '5' },
+                                        { name: 'Ba điểm thẳng hàng', value: '6' },
+                                        { name: 'Bài toán quỹ tích và điểm cố định', value: '7' },
+                                        { name: 'Toán thực tế áp dụng đường thẳng song song mặt phẳng', value: '8' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 4: Hai mặt phẳng song song', value: '4', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Hai mặt phẳng song song', value: '2' },
+                                        { name: 'Chứng minh đường thẳng song song mặt phẳng', value: '3' },
+                                        { name: 'Xác định mặt phẳng đi qua một điểm và song song với một mặt phẳng', value: '4' },
+                                        { name: 'Xác định mặt phẳng chứa đường thẳng (hoặc đi qua hai điểm) và song song với một mặt phẳng', value: '5' },
+                                        { name: 'Bài toán tổng hợp', value: '6' },
+                                        { name: 'Toán thực tế áp dụng hai mặt phẳng song song', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 5: Hình lăng trụ và hình hộp (xiên)', value: '5', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Bài toán về hình lăng trụ (xiên)', value: '2' },
+                                        { name: 'Bài toán về hình hộp (xiên)', value: '3' },
+                                        { name: 'Toán thực tế áp dụng hình lăng trụ và hình hộp', value: '4' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 6: Phép chiếu song song', value: '6', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Hình biểu diễn của một hình không gian', value: '2' },
+                                        { name: 'Xác định yếu tố song song', value: '3' },
+                                        { name: 'Xác định phương chiếu', value: '4' },
+                                        { name: 'Tính tỉ số đoạn thẳng, diện tích qua phép chiếu', value: '5' }
+                                    ]
+                                }
+
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Hai đường thẳng vuông góc', value: '1', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Xác định hai đường thẳng vuông góc', value: '2' },
+                                        { name: 'Tìm góc giữa hai đường thẳng', value: '3' },
+                                        { name: 'Toán thực tế áp dụng hai đường thẳng vuông góc', value: '4' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Đường thẳng vuông góc với mặt phẳng', value: '2', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Xác định hoặc chứng minh đường thẳng và mặt phẳng vuông góc', value: '2' },
+                                        { name: 'Xác định hoặc chứng minh hai đường thẳng vuông góc', value: '3' },
+                                        { name: 'Dựng mặt phẳng, tìm thiết diện', value: '4' },
+                                        { name: 'Hình chiếu vuông góc của một hình trên mặt phẳng (tìm điểm, tìm đoạn thẳng, tính diện tích)', value: '5' },
+                                        { name: 'Toán thực tế áp dụng đường thẳng vuông góc mặt phẳng', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 3: Phép chiếu vuông góc', value: '3', types: [
+                                        { name: 'Lý thuyết về phép chiếu vuông góc', value: '1' },
+                                        { name: 'Hình chiếu vuông góc của đa giác trên mặt phẳng', value: '2' },
+                                        { name: 'Các bài toán thực tế áp dụng phép chiếu vuông góc', value: '3' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 4: Hai mặt phẳng vuông góc', value: '4', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Xác định/chứng minh đường thẳng vuông góc mặt phẳng, mặt phẳng vuông góc', value: '2' },
+                                        { name: 'Xác định góc giữa hai mặt phẳng', value: '3' },
+                                        { name: 'Dựng mặt phẳng, thiết diện', value: '4' },
+                                        { name: 'Nhận dạng và tính toán liên quan các hình thông dụng', value: '5' },
+                                        { name: 'Bài toán cho trước góc giữa d và (P)', value: '6' },
+                                        { name: 'Toán thực tế áp dụng hai mặt phẳng vuông góc', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 5: Khoảng cách', value: '5', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Khoảng cách giữa 2 điểm, từ 1 điểm đến 1 đường thẳng', value: '2' },
+                                        { name: 'Khoảng cách từ một điểm đến một mặt phẳng', value: '3' },
+                                        { name: 'Khoảng cách giữa hai đường thẳng chéo nhau', value: '4' },
+                                        { name: 'Đường vuông góc chung của hai đường thẳng chéo nhau', value: '5' },
+                                        { name: 'Toán thực tế áp dụng khoảng cách', value: '6' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 6: Góc giữa đường thẳng và mặt phẳng. Góc nhị diện', value: '6', types: [
+                                        { name: 'Góc giữa đường thẳng và mặt phẳng', value: '1' },
+                                        { name: 'Góc nhị diện, góc phẳng nhị diện', value: '2' },
+                                        { name: 'Góc giữa 2 mặt phẳng, biết trước góc (d,(P))', value: '3' },
+                                        { name: 'Khoảng cách giữa điểm, đường, biết trước góc (d,(P))', value: '4' },
+                                        { name: 'Khoảng cách giữa điểm - mặt phẳng, biết trước góc (d,(P))', value: '5' },
+                                        { name: 'Khoảng cách giữa 2 đường chéo nhau, biết trước góc (d,(P))', value: '6' },
+                                        { name: 'Toán thực tế về góc đường thẳng, mặt phẳng, góc nhị diện', value: '7' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 7: Hình lăng trụ đứng. Hình chóp đều. Thể tích', value: '7', types: [
+                                        { name: 'Câu hỏi lí thuyết, công thức', value: '1' },
+                                        { name: 'Thể tích khối chóp tam giác', value: '2' },
+                                        { name: 'Thể tích khối chóp tứ giác', value: '3' },
+                                        { name: 'Thể tích khối lăng trụ tam giác', value: '4' },
+                                        { name: 'Thể tích khối lăng trụ tứ giác', value: '5' },
+                                        { name: 'Thể tích khối chóp cụt và các khối khác', value: '6' },
+                                        { name: 'Tỉ số thể tích', value: '7' },
+                                        { name: 'Ứng dụng thể tích tính góc, khoảng cách,...', value: '8' },
+                                        { name: 'Toán thực tế hình lăng trụ đứng, chóp đều, thể tích', value: '9' }
+                                    ]
+                                }
+
+                            ]
+                        ]
+                    },
+                    X:
+                    {
+                        chapters: [
+                            { name: 'Chương 5. Các số đặc trưng đo xu thế trung tâm cho mẫu số liệu ghép nhóm', value: '5' },
+                            { name: 'Chương 9. Xác suất', value: '9' }
+                        ],
+                        lessons: [
+                            [
+                                {
+                                    name: 'Bài 1: Số trung bình và mốt của mẫu số liệu ghép nhóm', value: '1', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Mẫu số liệu ghép nhóm', value: '2' },
+                                        { name: 'Số trung bình', value: '3' },
+                                        { name: 'Mốt', value: '4' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Trung vị và tứ phân vị của mẫu số liệu ghép nhóm', value: '2', types: [
+                                        { name: 'Câu hỏi lý thuyết', value: '1' },
+                                        { name: 'Trung vị', value: '2' },
+                                        { name: 'Tứ phân vị', value: '3' }
+                                    ]
+                                }
+
+                            ],
+                            [
+                                {
+                                    name: 'Bài 1: Biến cố giao và quy tắc nhân xác suất', value: '1', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Xác định và đếm số phần tử biến cố giao', value: '2' },
+                                        { name: 'Công thức nhân xác suất cho 2 biến cố độc lập', value: '3' },
+                                        { name: 'Tính xác suất biến cố giao bằng sơ đồ hình cây', value: '4' }
+                                    ]
+                                },
+                                {
+                                    name: 'Bài 2: Biến cố hợp và quy tắc cộng xác suất', value: '2', types: [
+                                        { name: 'Câu hỏi lí thuyết', value: '1' },
+                                        { name: 'Xác định và đếm số phần tử biến cố hợp', value: '2' },
+                                        { name: 'Quy tắc cộng cho hai biến cố xung khắc', value: '3' },
+                                        { name: 'Quy tắc cộng cho hai biến cố bất kì', value: '4' },
+                                        { name: 'Tính xác suất biến cố hợp bằng sơ đồ hình cây', value: '5' }
+                                    ]
+                                }
+
+                            ]
+
+                        ]
+                    }
+                    
+                },
+                2: {
+                D: {
+                    chapters: [
+                        { name: 'Chương 1. Ứng dụng đạo hàm để khảo sát hàm số', value: '1' },
+                        { name: 'Chương 4. Nguyên hàm, tích phân và ứng dụng', value: '4' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Sự đồng biến và nghịch biến của hàm số', value: '1', types: [
+                                    { name: 'Xét tính đơn điệu của hàm số cho bởi công thức', value: '1' },
+                                    { name: 'Xét tính đơn điệu dựa vào bảng biến thiên, đồ thị', value: '2' },
+                                    { name: 'Tìm tham số m để hàm số đơn điệu', value: '3' },
+                                    { name: 'Ứng dụng tính đơn điệu để chứng minh bất phương trình,...', value: '4' },
+                                    { name: 'Toán thực tế ứng dụng sự đồng biến nghịch biến', value: '5' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Cực trị của hàm số', value: '2', types: [
+                                    { name: 'Tìm cực trị của hàm số cho bởi công thức', value: '1' },
+                                    { name: 'Tìm cực trị dựa vào BBT, đồ thị', value: '2' },
+                                    { name: 'Tìm m để hàm số đạt cực trị tại 1 điểm x0 cho trước', value: '3' },
+                                    { name: 'Tìm m để hàm số, đồ thị hàm số bậc ba có cực trị thỏa mãn điều kiện', value: '4' },
+                                    { name: 'Tìm m để hàm số, đồ thị hàm số trùng phương có cực trị thỏa mãn điều kiện', value: '5' },
+                                    { name: 'Tìm m để hàm số, đồ thị hàm số các hàm số khác có cực trị thỏa mãn điều kiện', value: '6' },
+                                    { name: 'Toán thực tế ứng dụng cực trị của hàm số', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Giá trị lớn nhất và giá trị nhỏ nhất của hàm số', value: '3', types: [
+                                    { name: 'GTLN, GTNN trên đoạn [a;b]', value: '1' },
+                                    { name: 'GTLN, GTNN trên khoảng', value: '2' },
+                                    { name: 'Sử dụng các đánh giá, bất đẳng thức cổ điển', value: '3' },
+                                    { name: 'Ứng dụng GTNN, GTLN trong bài toán phương trình, bất phương trình, hệ phương trình', value: '4' },
+                                    { name: 'GTLN, GTNN hàm nhiều biến', value: '5' },
+                                    { name: 'Toán thực tế ứng dụng GTLN, GTNN của hàm số', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 4: Đường tiệm cận', value: '4', types: [
+                                    { name: 'Bài toán xác định các đường tiệm cận của hàm số (không chứa tham số) hoặc biết BBT, đồ thị', value: '1' },
+                                    { name: 'Bài toán xác định các đường tiệm cận của hàm số có chứa tham số', value: '2' },
+                                    { name: 'Bài toán liên quan đến đồ thị hàm số và các đường tiệm cận', value: '3' },
+                                    { name: 'Toán thực tế ứng dụng tiệm cận', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 5: Khảo sát sự biến thiên và vẽ đồ thị hàm số', value: '5', types: [
+                                    { name: 'Nhận dạng đồ thị', value: '1' },
+                                    { name: 'Các phép biến đổi đồ thị', value: '2' },
+                                    { name: 'Biện luận số giao điểm dựa vào đồ thị, bảng biến thiên', value: '3' },
+                                    { name: 'Sự tương giao của hai đồ thị (liên quan đến tọa độ giao điểm)', value: '4' },
+                                    { name: 'Đồ thị của hàm đạo hàm', value: '5' },
+                                    { name: 'Phương trình tiếp tuyến của đồ thị hàm số', value: '6' },
+                                    { name: 'Điểm đặc biệt của đồ thị hàm số', value: '7' },
+                                    { name: 'Toán thực tế ứng dụng khảo sát hàm số', value: '8' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Nguyên hàm', value: '1', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Nguyên hàm cơ bản đa thức, phân thức', value: '2' },
+                                    { name: 'Nguyên hàm cơ bản hàm lượng giác', value: '3' },
+                                    { name: 'Nguyên hàm cơ bản hàm mũ, luỹ thừa', value: '4' },
+                                    { name: 'Phương pháp đổi biến số cơ bản', value: '5' },
+                                    { name: 'Toán thực tế áp dụng nguyên hàm', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Tích phân', value: '2', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tích phân cơ bản đa thức, phân thức', value: '2' },
+                                    { name: 'Tích phân cơ bản hàm lượng giác', value: '3' },
+                                    { name: 'Tích phân cơ bản hàm mũ, luỹ thừa', value: '4' },
+                                    { name: 'Phương pháp đổi biến số cơ bản', value: '5' },
+                                    { name: 'Toán thực tế áp dụng nguyên hàm', value: '6' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Ứng dụng thực tế và hình học của tích phân', value: '3', types: [
+                                    { name: 'Diện tích hình phẳng được giới hạn bởi các đồ thị', value: '1' },
+                                    { name: 'Bài toán thực tế sử dụng diện tích hình phẳng', value: '2' },
+                                    { name: 'Thể tích giới hạn bởi các đồ thị (tròn xoay)', value: '3' },
+                                    { name: 'Thể tích tính theo mặt cắt S(x)', value: '4' },
+                                    { name: 'Bài toán thực tế và ứng dụng thể tích tròn xoay, S(x)', value: '5' }
+                                ]
+                            }
+
+                        ]
+                    ]
+                },
+                X: {
+                    chapters: [
+                        { name: 'Chương 3. Các số đặc trưng đo mức độ phân tán cho mẫu số liệu ghép nhóm', value: '3' },
+                        { name: 'Chương 6. Một số yếu tố xác suất', value: '6' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Khoảng biến thiên, khoảng tứ phân vị của mẫu số liệu ghép nhóm', value: '1', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tìm khoảng biến thiên', value: '2' },
+                                    { name: 'Tìm khoảng tứ phân vị', value: '3' },
+                                    { name: 'Câu hỏi tổng hợp', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Phương sai, độ lệch chuẩn của mẫu số liệu ghép nhóm', value: '2', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tìm phương sai, độ lệch chuẩn', value: '2' },
+                                    { name: 'Câu hỏi tổng hợp', value: '3' }
+                                ]
+                            }
+
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Xác suất có điều kiện', value: '1', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tính xác suất có điều kiện bằng công thức', value: '2' },
+                                    { name: 'Tính xác suất có điều kiện bằng sơ đồ cây', value: '3' },
+                                    { name: 'Bài toán tổng hợp', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Công thức xác suất toàn phần. Công thức Bayes', value: '2', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tính xác suất bằng công thức xác suất toàn phần', value: '2' },
+                                    { name: 'Tính xác suất bằng công thức xác suất Bayes', value: '3' },
+                                    { name: 'Bài toán tổng hợp', value: '4' }
+                                ]
+                            }
+
+                        ]
+                    ]
+                },
+                H:
+                {
+                    chapters: [
+                        { name: 'Chương 2. Tọa độ của véc-tơ trong không gian', value: '2' },
+                        { name: 'Chương 5. Phương trình mặt phẳng, đường thẳng, mặt cầu trong không gian Oxyz', value: '5' }
+                    ],
+                    lessons: [
+                        [
+                            {
+                                name: 'Bài 1: Véc-tơ và các phép toán véc-tơ trong không gian (chưa toạ độ hoá)', value: '1', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tổng, hiệu, tích một số với véc-tơ', value: '2' },
+                                    { name: 'Tích vô hướng và ứng dụng', value: '3' },
+                                    { name: 'Toán thực tế áp dụng các phép toán véc-tơ', value: '4' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Toạ độ của véc-tơ và các công thức', value: '2', types: [
+                                    { name: 'Công thức lý thuyết', value: '1' },
+                                    { name: 'Tìm tọa độ điểm', value: '2' },
+                                    { name: 'Tìm tọa độ véc-tơ', value: '3' },
+                                    { name: 'Công thức toạ độ của tích vô hướng và ứng dụng', value: '4' },
+                                    { name: 'Công thức toạ độ của tích có hướng và ứng dụng', value: '5' },
+                                    { name: 'Toán thực tế áp dụng các phép toán toạ độ hoá véc-tơ', value: '6' }
+                                ]
+                            }
+                        ],
+                        [
+                            {
+                                name: 'Bài 1: Phương trình mặt phẳng', value: '1', types: [
+                                    { name: 'Câu hỏi lý thuyết', value: '1' },
+                                    { name: 'Xác định véc-tơ pháp tuyến, cặp véc-tơ chỉ phương', value: '2' },
+                                    { name: 'Viết phương trình tổng quát mặt phẳng', value: '3' },
+                                    { name: 'Vị trí tương đối giữa hai mặt phẳng (song song, vuông góc)', value: '4' },
+                                    { name: 'Khoảng cách điểm tới mặt phẳng', value: '5' },
+                                    { name: 'Góc giữa hai mặt phẳng', value: '6' },
+                                    { name: 'Toán thực tế áp dụng phương trình mặt phẳng', value: '7' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 2: Phương trình đường thẳng trong không gian', value: '2', types: [
+                                    { name: 'Câu hỏi lý thuyết', value: '1' },
+                                    { name: 'Xác định véc-tơ chỉ phương, cặp véc-tơ pháp tuyến', value: '2' },
+                                    { name: 'Viết phương trình tổng quát, chính tắc, tham số đường thẳng', value: '3' },
+                                    { name: 'Vị trí tương đối giữa hai đường thẳng', value: '4' },
+                                    { name: 'Vị trí tương đối giữa đường thẳng và mặt phẳng', value: '5' },
+                                    { name: 'Khoảng cách điểm tới đường thẳng', value: '6' },
+                                    { name: 'Góc giữa hai đường thẳng, đường thẳng và mặt phẳng', value: '7' },
+                                    { name: 'Toán thực tế áp dụng phương trình đường thẳng', value: '8' }
+                                ]
+                            },
+                            {
+                                name: 'Bài 3: Phương trình mặt cầu trong không gian', value: '3', types: [
+                                    { name: 'Câu hỏi lý thuyết', value: '1' },
+                                    { name: 'Xác định tâm, bán kính, đường kính mặt cầu', value: '2' },
+                                    { name: 'Viết phương trình tổng quát mặt cầu', value: '3' },
+                                    { name: 'Toán thực tế áp dụng phương trình mặt cầu', value: '4' }
+                                ]
+                            }
+
+                        ]
+                    ]
+                }
+                }
+
+            };
+
+        document.getElementById('class').addEventListener('change', updateForm);
+        document.getElementById('subject').addEventListener('change', updateForm);
+        document.getElementById('chapter').addEventListener('change', updateLessons);
+        document.getElementById('lesson').addEventListener('change', updateTypes);
+
+        function populateSelect(element, options) {
+            element.innerHTML = '';
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.value;
+                opt.innerHTML = option.name;
+                element.appendChild(opt);
+            });
+        }
+
+        function updateForm() {
+                const classValue = document.getElementById('class').value;
+                const subjectValue = document.getElementById('subject').value;
+
+                if (data[classValue] && data[classValue][subjectValue]) {
+                    const chapters = data[classValue][subjectValue].chapters;
+                    populateSelect(document.getElementById('chapter'), chapters);
+                    updateLessons();
+                } else {
+                    document.getElementById('chapter').innerHTML = '';
+                    document.getElementById('lesson').innerHTML = '';
+                    document.getElementById('type').innerHTML = '';
+                }
+            }
+
+            function updateLessons() {
+                const classValue = document.getElementById('class').value;
+                const subjectValue = document.getElementById('subject').value;
+                const chapterIndex = document.getElementById('chapter').selectedIndex;
+
+                if (data[classValue] && data[classValue][subjectValue] && data[classValue][subjectValue].lessons[chapterIndex]) {
+                    const lessons = data[classValue][subjectValue].lessons[chapterIndex];
+                    populateSelect(document.getElementById('lesson'), lessons);
+                    updateTypes();
+                } else {
+                    document.getElementById('lesson').innerHTML = '';
+                    document.getElementById('type').innerHTML = '';
+                }
+            }
+
+            function updateTypes() {
+                const classValue = document.getElementById('class').value;
+                const subjectValue = document.getElementById('subject').value;
+                const chapterIndex = document.getElementById('chapter').selectedIndex;
+                const lessonIndex = document.getElementById('lesson').selectedIndex;
+
+                if (data[classValue] && data[classValue][subjectValue] && data[classValue][subjectValue].lessons[chapterIndex] && data[classValue][subjectValue].lessons[chapterIndex][lessonIndex]) {
+                    const types = data[classValue][subjectValue].lessons[chapterIndex][lessonIndex].types;
+                    populateSelect(document.getElementById('type'), types);
+                } else {
+                    document.getElementById('type').innerHTML = '';
+                }
+            }
+
+        document.getElementById('generate-id').addEventListener('click', function () {
+            const classValue = document.getElementById('class').value;
+            const subjectValue = document.getElementById('subject').value;
+            const chapterValue = document.getElementById('chapter').value;
+            const lessonValue = document.getElementById('lesson').value;
+            const typeValue = document.getElementById('type').value;
+            const levelValue = document.getElementById('level').value;
+
+            const id = `%[${classValue}${subjectValue}${chapterValue}${levelValue}${lessonValue}-${typeValue}]`;
+            if (currentTextarea) {
+                insertAtCursor(currentTextarea, id);
+            }
+        });
+
+        function insertAtCursor(textarea, text) {
+            var cursorPos = textarea.selectionStart;
+            var textBefore = textarea.value.substring(0, cursorPos);
+            var textAfter = textarea.value.substring(cursorPos, textarea.value.length);
+
+            textarea.value = textBefore + text + textAfter;
+        }
+
+        function openDialog() {
+            document.getElementById('dialogContainer').style.display = 'block';
+        }
+
+        function closeDialog() {
+            document.getElementById('dialogContainer').style.display = 'none';
+        }
+
+        document.getElementById('assignIdButton').addEventListener('click', openDialog);
+
+        // JavaScript to make dialog draggable
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const dialog = document.getElementById('dialogContainer');
+            const dialogHeader = document.querySelector('.dialog-header');
+
+            dialogHeader.addEventListener('mousedown', function (e) {
+                isDragging = true;
+                offsetX = e.clientX - dialog.getBoundingClientRect().left;
+                offsetY = e.clientY - dialog.getBoundingClientRect().top;
+                document.addEventListener('mousemove', moveDialog);
+                document.addEventListener('mouseup', stopDragging);
+            });
+
+            function moveDialog(e) {
+                if (isDragging) {
+                    dialog.style.left = `${e.clientX - offsetX}px`;
+                    dialog.style.top = `${e.clientY - offsetY}px`;
+                    dialog.style.transform = 'none';  // Disable the initial centering transform
+                }
+            }
+
+            function stopDragging() {
+                isDragging = false;
+                document.removeEventListener('mousemove', moveDialog);
+                document.removeEventListener('mouseup', stopDragging);
+            }
+        });
+
+    </script>
 </body>
+
 </html>
