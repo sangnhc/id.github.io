@@ -175,5 +175,6 @@ function ham_bac4_dondieu_cb1(d) {
     }
 \\end{ex}`;
     question = cleanUpOutput(question)
+    question = lamdeppm(question)
     return question;
 }
