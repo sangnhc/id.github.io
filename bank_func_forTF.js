@@ -1,8 +1,30 @@
 // Hàm xử lý dấu + -, - - và - +
 function cleanUpOutput(output) {
-    return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
+    return output
+        .replace(/=\s*\+\s*/g, ' = ') // Remove "+ " right after "="
+        .replace(/\+\s*-/g, '-') // Change "+ -" to "-"
+        .replace(/-\s*-/g, '+') // Change "- -" to "+"
+        .replace(/-\s*\+/g, '-') // Change "- +" to "-"
+        .replace(/\+\s*\+/g, '+') // Change "+ +" to "+"
+        .replace(/\{\s*\+\s*/g, '{') // Remove "+" right after "{"
+        .replace(/^\+\s*/g, ''); // Remove leading "+"
 }
-
+function lamdeppm(expression) {
+    // Xóa các hệ số 1 và 0 cho bất kỳ biến nào
+    expression = expression.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
+    expression = expression.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
+    
+    // Xử lý các dấu ++, --, +-, -+
+    expression = expression.replace(/\+\+/g, '+'); // ++ -> +
+    expression = expression.replace(/--/g, '+'); // -- -> +
+    expression = expression.replace(/\+-/g, '-'); // +- -> -
+    expression = expression.replace(/-\+/g, '-'); // -+ -> -
+    
+    // Xóa các dấu + ở đầu biểu thức nếu có
+    expression = expression.replace(/^\+/, '');
+    
+    return expression;
+}
 function ham_bac3_dondieu_cb1(d) {
     // Sinh ngẫu nhiên các hệ số a, b, c
     let a = Math.floor(Math.random() * 5) + 1; // a từ 1 đến 5
@@ -50,18 +72,18 @@ function ham_bac3_dondieu_cb1(d) {
         \\end{center}
         \\begin{itemchoice} 
             \\itemch Hàm số không nghịch biến trên $\\mathbb{R}$.
-            \\itemch Hàm số đã cho đồng biến trên $(0;${x2Latex})$.
-            \\itemch Hàm số đã cho nghịch biến trên $(${x1};${x2Latex})$.
-            \\itemch Hàm số $g(x)=f(x)+${d}$ đồng biến trên $(-\\infty;0)$.
+            \\itemch Hàm số đã cho đồng biến trên $\\left(0;${x2Latex}\\right)$.
+            \\itemch Hàm số đã cho nghịch biến trên $\\left(${x1};${x2Latex}\\right)$.
+            \\itemch Hàm số $g(x)=f(x)+${d}$ đồng biến trên $\\left(-\\infty;0\\right)$.
         \\end{itemchoice}
     `;
 
     // Tạo các lựa chọn cho câu hỏi
     let choices = [
         { text: "Hàm số không nghịch biến trên $\\mathbb{R}$", isTrue: false },
-        { text: `Hàm số đã cho đồng biến trên $(0;${x2Latex})$`, isTrue: true },
-        { text: `Hàm số đã cho nghịch biến trên $(0;${x2Latex})$`, isTrue: true },
-        { text: `Hàm số $g(x)=f(x)+${c}$ đồng biến trên $(-\\infty;0)$`, isTrue: true }
+        { text: `Hàm số đã cho đồng biến trên $\\left(0;${x2Latex}\\right)$`, isTrue: true },
+        { text: `Hàm số đã cho nghịch biến trên $\\left(0;${x2Latex}\\right)$`, isTrue: true },
+        { text: `Hàm số $g(x)=f(x)+${c}$ đồng biến trên $\\left(-\\infty;0\\right)$`, isTrue: true }
     ];
 
     // Tạo chuỗi LaTeX cho phần câu hỏi
@@ -74,6 +96,7 @@ function ham_bac3_dondieu_cb1(d) {
     }
 \\end{ex}`;
     question = cleanUpOutput(question)
+    question = lamdeppm(question)
     return question;
 }
 function ham_bac4_dondieu_cb1(d) {
