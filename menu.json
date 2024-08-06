@@ -270,12 +270,16 @@
                                       "content": "${min_S_xq_biet_V({A+})}"
                                     },
                                     {
-                                      "name": "Tìm chiều cao chóp ngoại tiếp cầu",
+                                      "name": "Tìm Chiều Cao Chóp Tgoại Tiếp Cầu",
                                       "content": "${min_h_chop_ngoai_tiep_cau({R+})}"
                                     },
                                     {
-                                      "name": "Tìm thể tích chóp ngoại tiếp cầu",
+                                      "name": "Tìm Thể Tích Chóp Ngoại Tiếp Cầu",
                                       "content": "${min_V_chop_ngoai_tiep_cau({R+})}"
+                                    },
+                                    {
+                                      "name": "Tìm S_xq Trụ Max Trong Cầu",
+                                      "content": "${max_tru_in_cau({R+})}"
                                     }
                                   ]
                                 }
@@ -284,6 +288,15 @@
                         {
                             "name": "Chương HH Oxyz",
                             "Bài": [
+                                {
+                                    "name": "Bài 1: Vectơ",
+                                    "baitoan": [
+                                        {
+                                          "name": "Phân Tích VecTo Trong Tứ Diện",
+                                          "content": "${phan_tich_vecto_trong_tudien({f})}"
+                                        }
+                                    ]
+                                },
                                 {
                                     "name": "Bài 2: Nhóm 1-Toạ Độ Vectơ",
                                     "baitoan": [
@@ -521,6 +534,42 @@
 
                             ]
                         },
+                        {
+                            "name": "Chương 3: Thống Kê",
+                          "Bài": [
+                            {
+                                "name": "Bài Tập Tự Luận Tổng Hợp",
+                                "baitoan":[
+                                    {
+                                    "name": "Tính Tất Cả Các Giá Trị Thống Kê-1",
+                                    "content": "${thongke_4k_1(2024)}"
+                                    },
+                                    {
+                                      "name": "Tính Tất Cả Các Giá Trị Thống Kê-2",
+                                      "content": "${thongke_4k_2(2024)}"
+                                    },
+                                    {
+                                      "name": "Tính Tất Cả Các Giá Trị Thống Kê-3",
+                                      "content": "${thongke_4k_3(2024)}"
+                                    }
+                              ]
+                            },
+                            {
+                                "name": "Bài 1: Khoảng Biến Thiên - Khoảng Tứ Phân Vị",
+                                "baitoan":[
+                                    {
+                                    "name": "Trái Cây-Tìm Khoảng Tứ Phân Vị-Đẹp",
+                                    "content": "${thongke_tim_deltaQ({e})}"
+                                    },
+                                    {
+                                      "name": "Trái Cây-Tìm Khoảng Tứ Phân Vị",
+                                      "content": "${thongke_tim_deltaQ_R({e})}"
+                                    }
+                              ]
+                            }
+                          ]
+                        }
+                        ,
                         {
                           "name": "Chương 4: Xác Suất Có Điều Kiện",
                           "Bài": [
