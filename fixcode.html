@@ -294,13 +294,23 @@
 
     return text;
 }
+        
+         function processMathContent(input) {
+                // Tìm tất cả các nội dung bên trong dấu $
+                return input.replace(/\$([^$]+)\$/g, function (match, p1) {
+                    // Thay thế dấu . thành \cdot và dấu , thành {,}
+                    const processedContent = p1.replace(/\./g, '\\cdot ').replace(/,/g, '{,}');
+                    // Trả về nội dung đã xử lý kèm theo dấu $
+                    return `$${processedContent}$`;
+                });
+            }
         function processContent(content) {
             content = replaceHeva(content);
             content = replaceHoac(content);
             content = replaceChoice(content);
             content = convertNumberToMathMode(content)
-           
-            
+           // Xử lý các nội dung trong dấu $
+            content = processMathContent(content);            
             content = content.replace(/\\\\/g, '<br>');
 
             return content;
