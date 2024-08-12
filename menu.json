@@ -4,7 +4,7 @@
             "name": "Câu Trắc Nghiệm",
             "K12": [
                 {
-                    "name": "K12-1",
+                    "name": "Khối 12",
                     "Chương": [
                         {
                             "name": "Chương 1",
@@ -15,20 +15,30 @@
                                         {
                                             "name": "Bài toán 1",
                                             "content": "y = {a}x^2 + {b}"
-                                        },
-                                        {
-                                            "name": "Bài toán 2",
-                                            "content": "def({a} + {A}*2)"
-                                        },
-                                        {
-                                            "name": "Bài toán 3",
-                                            "content": "math.pow({a}, {A})"
-                                        },
-                                        {
-                                            "name": "Bài toán với Algebrite",
-                                            "content": "alg(integrate(x^2, x))"
                                         }
                                     ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
                                 }
                             ]
                         }
@@ -55,18 +65,53 @@
                                         {
                                             "name": "Hs $y=f(x)=ax^4-bx^2+c$",
                                             "content": "${ham_bac4_dondieu_cb1({e})}"
-                                        },
-                                        {
-                                            "name": "Bài toán 3",
-                                            "content": "math.pow({a}, {A})"
-                                        },
-                                        {
-                                            "name": "Bài toán với Algebrite",
-                                            "content": "alg(integrate(x^2, x))"
                                         }
                                     ]
                                 }
                             ]
+                        },
+                        {
+                          "name": "Chương 3: Thống Kê",
+                          "Bài": [
+                            {
+                              "name": "Bài 2: Thống Kê Tổng Hợp Một Mẫu Số Liệu",
+                              "baitoan": [
+                                {
+                                  "name": "Thống Kê Mẫu 1",
+                                  "content": "${thongkeTF_mau1({d})}"
+                                },
+                                {
+                                  "name": "Thống Kê Mẫu 2",
+                                  "content": "${thongkeTF_mau2({d})}"
+                                },
+                                {
+                                  "name": "Thống Kê Mẫu 3",
+                                  "content": "${thongkeTF_mau3({d})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Thống Kê Tổng Hợp Hai Mẫu Số Liệu",
+                              "baitoan": [
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 1",
+                                  "content": "${thongkeTF_4k_1({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 2",
+                                  "content": "${thongkeTF_4k_3A({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 3",
+                                  "content": "${thongkeTF_4k_3B({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 4",
+                                  "content": "${thongkeTF_4k_2({d})}"
+                                }
+                              ]
+                            }
+                          ]
                         }
                     ]
                 }
@@ -91,7 +136,22 @@
                                     ]
                                 }
                             ]  
+                    },
+                    {
+                      "name": "Chương Thống Kê",
+                      "Bài": [
+                        {
+                          "name": "Bài Tập Tổng Hợp Thống Kê",
+                          "baitoan": [
+                            {
+                              "name": "TL: Thống Kê Tự Nhập Số",
+                              "content": "${thong_ke_dulieu_don(numMin, numMax, n, tần số nhỏ nhất, tần số lớn nhất, nhập 0 hoặc 1)}"
+                            }
+                          ]
+                        }
+                      ]
                     }
+
                   ]
                 },
                 {
@@ -538,21 +598,105 @@
                             "name": "Chương 3: Thống Kê",
                           "Bài": [
                             {
-                                "name": "Bài Tập Tự Luận Tổng Hợp",
+                                "name": "Bài Tập Tự Luận Tổng Hợp - Không Phải TLN",
                                 "baitoan":[
-                                    {
-                                    "name": "Tính Tất Cả Các Giá Trị Thống Kê-1",
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 1",
                                     "content": "${thongke_4k_1(2024)}"
-                                    },
-                                    {
-                                      "name": "Tính Tất Cả Các Giá Trị Thống Kê-2",
-                                      "content": "${thongke_4k_2(2024)}"
-                                    },
-                                    {
-                                      "name": "Tính Tất Cả Các Giá Trị Thống Kê-3",
-                                      "content": "${thongke_4k_3(2024)}"
-                                    }
-                              ]
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 2",
+                                    "content": "${thongke_4k_2(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 3",
+                                    "content": "${thongke_4k_3(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 1",
+                                    "content": "${thongke_4k_1_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 2",
+                                    "content": "${thongke_4k_2_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 3",
+                                    "content": "${thongke_4k_3_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 1 Tự CHọn Số",
+                                    "content": "${thongke_4k_1_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 2 Tự CHọn Số",
+                                    "content": "${thongke_4k_2_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 3 Tự CHọn Số",
+                                    "content": "${thongke_4k_3_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 1",
+                                    "content": "${thongke_4k_1hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 2",
+                                    "content": "${thongke_4k_2hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 3",
+                                    "content": "${thongke_4k_3hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 1",
+                                    "content": "${thongke_4k_1_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 2",
+                                    "content": "${thongke_4k_2_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 3",
+                                    "content": "${thongke_4k_3_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1_2mau_hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2_2mau_hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3_2mau_hinh_tuchon(start,ranges,step)}"
+                                  }
+                                ]
                             },
                             {
                                 "name": "Bài 1: Khoảng Biến Thiên - Khoảng Tứ Phân Vị",

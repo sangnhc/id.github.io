@@ -7,9 +7,34 @@ function gcd(a, b) {
 }
 // Hàm xử lý dấu + -, - - và - +
 function cleanUpOutput(output) {
-    return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
+    // Tách biểu thức thành các dòng riêng biệt
+    let lines = output.split('\n');
+
+    // Duyệt qua từng dòng và áp dụng các thay thế nếu không bắt đầu bằng các từ khóa cần tránh
+    lines = lines.map(line => {
+        // Kiểm tra nếu dòng bắt đầu với \draw, \patch, hoặc \fill
+        if (/^\s*(\\draw|barChart|\\patch|\\fill)/.test(line)) {
+            return line; // Giữ nguyên dòng này
+        }
+
+        // Áp dụng các thay thế cho các dòng khác
+        line = line
+            .replace(/=\s*\+\s*/g, ' = ') // Remove "+ " right after "="
+            .replace(/\+\s*-/g, '-') // Change "+ -" to "-"
+            .replace(/-\s*-/g, '+') // Change "- -" to "+"
+            .replace(/-\s*\+/g, '-') // Change "- +" to "-"
+            .replace(/\+\s*\+/g, '+') // Change "+ +" to "+"
+            .replace(/\{\s*\+\s*/g, '{') // Remove "+" right after "{"
+            .replace(/^\+\s*/g, ''); // Remove leading "+"
+
+        return line; // Trả về dòng đã xử lý
+    });
+
+    // Ghép các dòng lại với nhau
+    return lines.join('\n');
 }
-function lamdeppm(expression) {
+
+function lamdeppmG(expression) {
     // Xóa các hệ số 1 và 0 cho bất kỳ biến nào
     expression = expression.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
     expression = expression.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
@@ -25,7 +50,43 @@ function lamdeppm(expression) {
     
     return expression;
 }
+function lamdeppm(expression) {
+    // Tách biểu thức thành các dòng riêng biệt
+    let lines = expression.split('\n');
 
+    // Duyệt qua từng dòng và áp dụng các thay thế nếu không bắt đầu bằng các từ khóa cần tránh
+    lines = lines.map(line => {
+        // Kiểm tra nếu dòng bắt đầu với \draw, \patch, hoặc \fill
+        if (/^\s*(\\draw|\\patch|\\fill)/.test(line)) {
+            return line; // Giữ nguyên dòng này
+        }
+
+        // Áp dụng các thay thế cho các dòng khác
+        line = line.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
+        line = line.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
+        line = line.replace(/\+\+/g, '+'); // ++ -> +
+        line = line.replace(/--/g, '+'); // -- -> +
+        line = line.replace(/\+-/g, '-'); // +- -> -
+        line = line.replace(/-\+/g, '-'); // -+ -> -
+        line = line.replace(/^\+/, ''); // Xóa dấu + ở đầu biểu thức nếu có
+
+        return line; // Trả về dòng đã xử lý
+    });
+
+    // Ghép các dòng lại với nhau
+    return lines.join('\n');
+}
+
+function cleanUpOutput2(output) {
+    return output
+        .replace(/=\s*\+\s*/g, ' = ') // Remove "+ " right after "="
+        .replace(/\+\s*-/g, '-') // Change "+ -" to "-"
+        .replace(/-\s*-/g, '+') // Change "- -" to "+"
+        .replace(/-\s*\+/g, '-') // Change "- +" to "-"
+        .replace(/\+\s*\+/g, '+') // Change "+ +" to "+"
+        .replace(/\{\s*\+\s*/g, '{') // Remove "+" right after "{"
+        .replace(/^\+\s*/g, ''); // Remove leading "+"
+}
 
 // Hàm chuyển phân số ra LaTeX và tối giản phân số
 function formatFraction(numerator, denominator) {
@@ -59,26 +120,27 @@ function tinh_vecto_AB(OAx, OAy, OAz, OBx, OBy, OBz) {
         OBz - OAz
     ];
 
-    // Helper function to format vectors properly
     function formatVectorComponent(value, component) {
-        if (value < 0) {
-            return `${value}\\vec{${component}}`;
-        } else {
-            return `+ ${value}\\vec{${component}}`;
-        }
+    // Nếu giá trị nhỏ hơn 0 (âm), định dạng với dấu - trước giá trị
+    if (value < 0) {
+        return `${value}\\vec{${component}}`;
+    } else if (value > 0) {
+        // Nếu giá trị lớn hơn 0 (dương), định dạng với dấu + trước giá trị
+        return `+ ${value}\\vec{${component}}`;
+    } else {
+        // Nếu giá trị là 0, bỏ qua giá trị này (không hiển thị)
+        return '';
     }
-
-  
-
+    }
     // Create the problem statement
     const problemStatement = `
         Cho $ \\overrightarrow{OA} = ${formatVectorComponent(OAx, 'i')} ${formatVectorComponent(OAy, 'j')} ${formatVectorComponent(OAz, 'k')} $, 
         $ \\overrightarrow{OB} = ${formatVectorComponent(OBx, 'i')} ${formatVectorComponent(OBy, 'j')} ${formatVectorComponent(OBz, 'k')} $. 
-        Tìm vecto $\\overrightarrow{AB}$.`;
+        Tìm tổng các toạ độ của vecto $\\overrightarrow{AB}$.`;
 
     // Create the answer statement
     const answerStatement = `
-        (${vectorAB[0]}; ${vectorAB[1]}; ${vectorAB[2]})
+        ${vectorAB[0]+vectorAB[1]+vectorAB[2]}
     `;
 
     // Format the output in the required LaTeX format
@@ -91,40 +153,48 @@ function tinh_vecto_AB(OAx, OAy, OAz, OBx, OBy, OBz) {
     }
 \\end{ex}
     `;
-
     // Clean up the LaTeX output
-    latexOutput = cleanUpOutput(latexOutput);
-    
+    latexOutput = cleanUpOutput2(latexOutput);    
     return latexOutput;
 }
-function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
-    
-    // Calculate the centroid G
-    const Gx = formatFraction(Ax + Bx + Cx, 3);
-    const Gy = formatFraction(Ay + By + Cy, 3);
-    const Gz = formatFraction(Az + Bz + Cz, 3);
 
-    // Helper function to clean up the final output
-    function cleanUpOutput(output) {
-        return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
+function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
+    // Helper function to format fractions
+    function formatFraction(numerator, denominator) {
+        return (numerator / denominator).toFixed(3);
     }
 
+    // Calculate the centroid G
+    const Gx = parseFloat(formatFraction(Ax + Bx + Cx, 3));
+    const Gy = parseFloat(formatFraction(Ay + By + Cy, 3));
+    const Gz = parseFloat(formatFraction(Az + Bz + Cz, 3));
+    // Helper function to clean up the number format (remove .0 if necessary)
+    function cleanNumber(num) {
+        if (num.endsWith('.0')) {
+            return num.slice(0, -2);
+        }
+        return num;
+    }
+    // Calculate the sum of the coordinates of the centroid G
+    const sumOfCoordinates = (Gx + Gy + Gz).toFixed(1);
+     // Clean up the sum of coordinates
+    const cleanedSum = cleanNumber(sumOfCoordinates);
     // Create the problem statement
     const problemStatement = `
         Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. 
-        Khi đó tọa độ trọng tâm $G$ của tam giác $ABC$ là gì?
+        Khi đó tổng các tọa độ của trọng tâm $G$ trong tam giác $ABC$ bằng bao nhiêu? (làm tròn đến hàng phần mười).
     `;
 
     // Create the answer statement
     const answerStatement = `
-        Tọa độ trọng tâm $G$ của tam giác $ABC$ là \\(G\\left(${Gx}; ${Gy}; ${Gz}\\right)\\).
+        ${cleanedSum}
     `;
 
     // Format the output in the required LaTeX format
     let latexOutput = `
 \\begin{ex}
-    ${problemStatement.trim()},
-    \\shortans{$G\\left(${Gx}; ${Gy}; ${Gz}\\right)$}
+    ${problemStatement.trim()}
+    \\shortans{$${answerStatement.trim()}$}
     \\loigiai{
         Ta có tọa độ trọng tâm $G$ của tam giác $ABC$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
         $G\\left(\\dfrac{${Ax} + ${Bx} + ${Cx}}{3}; \\dfrac{${Ay} + ${By} + ${Cy}}{3}; \\dfrac{${Az} + ${Bz} + ${Cz}}{3}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
@@ -137,30 +207,50 @@ function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     
     return latexOutput;
 }
-function tinh_trongtam_tudien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
-    // Calculate the centroid G
-    const Gx = formatFraction(Ox + Ax + Bx + Cx, 4);
-    const Gy = formatFraction(Oy + Ay + By + Cy, 4);
-    const Gz = formatFraction(Oz + Az + Bz + Cz, 4);
+
+function tinh_trongtam_tudien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz){
+    // Helper function to format fractions
+    function formatFraction(numerator, denominator) {
+        return (numerator / denominator).toFixed(1);
+    }
+
+    // Helper function to clean up the number format (remove .0 if necessary)
+    function cleanNumber(num) {
+        if (num.endsWith('.0')) {
+            return num.slice(0, -2);
+        }
+        return num;
+    }
+
+    // Calculate the centroid G of the tetrahedron
+    const Gx = formatFraction(Ax + Bx + Cx + Dx, 4);
+    const Gy = formatFraction(Ay + By + Cy + Dy, 4);
+    const Gz = formatFraction(Az + Bz + Cz + Dz, 4);
+
+    // Calculate the sum of the coordinates of the centroid G
+    const sumOfCoordinates = (parseFloat(Gx) + parseFloat(Gy) + parseFloat(Gz)).toFixed(1);
+
+    // Clean up the sum of coordinates
+    const cleanedSum = cleanNumber(sumOfCoordinates);
+
     // Create the problem statement
     const problemStatement = `
-        Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. 
-        Khi đó tọa độ trọng tâm $G$ của tứ diện $OABC$ là gì?
+        Tìm tọa độ trọng tâm tứ diện $ABCD$ biết $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$ và $D(${Dx}; ${Dy}; ${Dz})$. 
     `;
 
     // Create the answer statement
     const answerStatement = `
-        Tọa độ trọng tâm $G$ của tứ diện $OABC$ là \\(G\\left(${Gx}; ${Gy}; ${Gz}\\right)\\).
+        ${cleanedSum}
     `;
 
     // Format the output in the required LaTeX format
     let latexOutput = `
 \\begin{ex}
-    ${problemStatement.trim()},
-    \\shortans{$G\\left(${Gx}; ${Gy}; ${Gz}\\right)$}
+    ${problemStatement.trim()}
+    \\shortans{$${answerStatement.trim()}$}
     \\loigiai{
-        Ta có tọa độ trọng tâm $G$ của tứ diện $OABC$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
-        $G\\left(\\dfrac{${Ox} + ${Ax} + ${Bx} + ${Cx}}{4}; \\dfrac{${Oy} + ${Ay} + ${By} + ${Cy}}{4}; \\dfrac{${Oz} + ${Az} + ${Bz} + ${Cz}}{4}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
+        Ta có tọa độ trọng tâm $G$ của tứ diện $ABCD$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
+        $G\\left(\\dfrac{${Ax} + ${Bx} + ${Cx} + ${Dx}}{4}; \\dfrac{${Ay} + ${By} + ${Cy} + ${Dy}}{4}; \\dfrac{${Az} + ${Bz} + ${Cz} + ${Dz}}{4}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
     }
 \\end{ex}
     `;
@@ -170,6 +260,7 @@ function tinh_trongtam_tudien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     
     return latexOutput;
 }
+
 function tinh_toado_D(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     // Calculate vector BC
     const BCx = Cx - Bx;
@@ -249,11 +340,11 @@ function phan_tich_vector(dx, dy, dz, ax, ay, az, bx, by, bz, cx, cy, cz) {
     \\shortans{${answerStatement.trim()}}
     \\loigiai{
         Ta có hệ phương trình: \\\\
-        \\heva{
+        $$\\heva{
         &${ax}x + ${bx}y + ${cx}z = ${dx} \\\\
         &${ay}x + ${by}y + ${cy}z = ${dy} \\\\
         &${az}x + ${bz}y + ${cz}z = ${dz}}\\\\
-        Giải hệ phương trình này ta được: \\\\
+        Giải hệ phương trình này ta được: \\\\$$
         $x = ${formatFraction(x)}, y = ${formatFraction(y)}, z = ${formatFraction(z)}$\\\\
         Vậy $\\vec{d} = ${formatFraction(x)} \\vec{a} + ${formatFraction(y)} \\vec{b} + ${formatFraction(z)} \\vec{c}$.
     }
@@ -8231,7 +8322,117 @@ Thể tích khối chóp là $$V = \\dfrac{\\sqrt{3}}{12} \\cdot a^2 \\cdot h \\
   return solve();
 }
  
-          
+function max_tru_in_cau(e) {
+  function solve() {
+    const min = 1;
+    const max = 10;
+    const step = 1;
+    const pi = Math.PI;
+
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1 đến 10 với bước là 1
+    const range = Math.floor((max - min) / step) + 1;
+    const radius = min + Math.floor(Math.random() * range) * step;
+
+    // Tính diện tích xung quanh lớn nhất của khối trụ
+    const maxSurfaceArea = Math.pow(radius, 2) * pi * 2;
+    const maxSurfaceAreaRounded = maxSurfaceArea.toFixed(0);
+    const debai = `
+\\begin{ex}
+\\immini{
+Cho mặt cầu $(S)$ bán kính $R=${radius}$. Một hình trụ có chiều cao $h$ và bán kính đáy $r$ thay đổi nội tiếp mặt cầu như hình vẽ. Tính diện tích xung quanh lớn nhất của khối trụ, kết quả làm tròn đến phần nguyên.
+}{\\begin{tikzpicture}[scale=0.8, font=\\footnotesize, line join=round, line cap=round, >=stealth]
+    \\def\\ax{1/sqrt(10)}
+    \\draw[dashed] (2,-2) arc (0:180:2 and {\\ax});
+    \\draw (2,-2) arc (0:-180:2 and {\\ax});
+    \\draw[dashed] (2,2) arc (0:180:2 and {\\ax});
+    \\draw (2,2) arc (0:-180:2 and {\\ax});
+    \\draw (0,0) circle (2.8465);
+    \\path (2,2) coordinate (A) (2,-2) coordinate (B) (-2,2) coordinate(C) (-2,-2) coordinate (D) (0,2) coordinate(M) node[left]{$O$} (0,-2) coordinate(N) node[left]{$O'$} (0,0) coordinate (O);
+    \\draw[dashed] (A)--(B) (C)--(D) (B)--(N)--(M);
+    \\foreach \\i in {A,B,C,D,M,N,O} \\fill (\\i) circle (1pt);
+\\end{tikzpicture}}
+\\shortans{$${maxSurfaceAreaRounded}$}
+\\loigiai{
+\\immini{
+Bán kính đáy hình trụ là $r=\\sqrt{R^2-\\dfrac{h^2}{4}}=\\sqrt{${radius}^2-\\dfrac{h^2}{4}}$.\\\\
+Diện tích xung quanh của khối trụ là 
+$$ \\mathrm{S}= 2\\pi r \\cdot h = \\pi \\cdot h \\sqrt{4R^2 - h^2} = \\pi \\cdot h \\sqrt{4 \\cdot ${radius}^2 - h^2}.$$
+Từ đó, ta có $h \\sqrt{4R^2 - h^2}$ đạt giá trị cực đại khi $h = \\sqrt{2}R$.\\\\
+Thay vào công thức, ta có:
+\\[
+\\mathrm{S} = \\pi \\cdot \\sqrt{2}R \\sqrt{4R^2 - (\\sqrt{2}R)^2} = \\pi \\cdot \\sqrt{2}R \\sqrt{2R^2} = 2\\pi R^2.
+\\]
+Nên $\\mathrm{S} \\le 2\\pi R^2$.\\\\
+Vậy giá trị lớn nhất cần tìm là $2\\pi \\cdot ${radius}^2 \\approx ${maxSurfaceAreaRounded}$.
+}{\\begin{tikzpicture}[scale=0.8, font=\\footnotesize, line join=round, line cap=round, >=stealth]
+    \\def\\ax{1/sqrt(10)}
+    \\draw[dashed] (2,-2) arc (0:180:2 and {\\ax});
+    \\draw (2,-2) arc (0:-180:2 and {\\ax});
+    \\draw[dashed] (2,2) arc (0:180:2 and {\\ax});
+    \\draw (2,2) arc (0:-180:2 and {\\ax});
+    \\draw (0,0) circle (2.8465);
+    \\path (2,2) coordinate (A) (2,-2) coordinate (B) node[right]{$M$}(-2,2) coordinate(C)(-2,-2) coordinate (D) (0,2) coordinate(M) node[left]{$O$} (0,-2) coordinate(N) node[left]{$O'$} (0,0) coordinate (O)node[left]{$I$};
+    \\draw[dashed] (A)--(B) (C)--(D) (B)--(N)--(M) (O)--(B);
+    \\foreach \\i in {A,B,C,D,M,N,O} \\fill (\\i) circle (1pt);
+\\end{tikzpicture}}
+}
+\\end{ex}
+    `;
+
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+//Phân tích vecto
+function phan_tich_vecto_trong_tudien(e) {
+    const values = [2, 3, 4, 5, -2, -3];
+    
+    // Random giá trị từ mảng values
+    const k = values[Math.floor(Math.random() * values.length)];
+    const n = values[Math.floor(Math.random() * values.length)];
+    
+    // Function tính toán tổng a + b + c
+    function calculateABC(k, n) {
+        // Tọa độ điểm M
+        const M = [1 / k, 0, 0];
+        // Tọa độ điểm N
+        const N = [0, (n - 1) / n, 1 / n];
+
+        // Vector MN
+        const MN = [N[0] - M[0], N[1] - M[1], N[2] - M[2]];
+
+        // Vector AB, AC, AD
+        const AB = [1, 0, 0];
+        const AC = [0, 1, 0];
+        const AD = [0, 0, 1];
+
+        // Hệ số phân tích a, b, c
+        const a = MN[0] / AB[0];
+        const b = MN[1] / AC[1];
+        const c = MN[2] / AD[2];
+
+        // Tổng a + b + c
+        const total = a + b + c;
+        return total.toFixed(1);
+    }
+
+    const result = calculateABC(k, n);
+    
+    // Tạo đề bài
+    const problem = `
+\\begin{ex}
+Cho tứ diện $ABCD$, điểm $M$ thoả $\\overrightarrow{AB}=${k}\\overrightarrow{AM}$, điểm $N$ thoả $\\overrightarrow{CD}=${n}\\overrightarrow{CN}$. Biết $\\overrightarrow{MN}=a\\overrightarrow{AB}+b\\overrightarrow{AC}+c\\overrightarrow{AD}$. Khi đó $a+b+c$ bằng bao nhiêu, làm tròn đến hàng phần mười.
+\\shortans{$${result}$}
+\\loigiai{
+
+}
+\\end{ex}
+    `;
+    
+    return problem;
+}
 
 
 
