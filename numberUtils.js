@@ -113,6 +113,25 @@ export function thay_haicham_colon(text) {
     // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
     const mathModePattern = /\$([^$]+)\$/g;
     
+    // Thay thế dấu : bằng \colon, dấu . thành \cdot, dấu , thành {,}, và xử lý khoảng trống trước }
+    text = text.replace(mathModePattern, (match, content) => {
+        // Thay thế dấu : bằng \colon, dấu . thành \cdot và dấu , thành {,}
+        let processedContent = content.replace(/:/g, '\\colon ')
+                                      .replace(/\./g, '\\cdot ')
+                                      .replace(/,/g, '{,}');
+        // Trả về nội dung đã xử lý kèm theo dấu $
+        return `$${processedContent}$`;
+    });
+
+    // Loại bỏ khoảng trống trước dấu } ở cuối dòng
+    text = text.replace(/ \}$/gm, '}');
+
+    return text;
+}
+export function thay_haicham_colonG(text) {
+    // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
+    const mathModePattern = /\$([^$]+)\$/g;
+    
     // Thay thế dấu : bằng \colon và thêm một khoảng trống trong các đoạn tìm được
     text = text.replace(mathModePattern, (match, content) => {
         return `$${content.replace(/:/g, '\\colon ')}$`;
