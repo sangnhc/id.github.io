@@ -132,8 +132,8 @@
         <a href="index.html">Home</a>
         <a href="giai_thong_ke_k10_new.html">Thống Kê 10</a>
         <a href="giai_thongke_bangdon.html">Thống Kê 12-Bảng</a>
-        <a href="giai_thongke_hinhdon.html">Thống Kê 12-Biểu Đồ Cột Đơn</a>
-        <a href="giai_thongke_hinhkep.html">Thống Kê 12-Biểu Đồ Cột Ghép</a>
+        <a href="giai_thongke_hinhdon.html">Thống Kê 12-Cột Ghép</a>
+        <a href="giai_thongke_hinhkep.html">Thống Kê 12-Cột Đơn</a>
     </div>
 
     <div class="container">
@@ -264,16 +264,24 @@
     </style>
     <script>
         function thongke() {
-            let startInput = document.getElementById("start").value;
-            const step = parseInt(document.getElementById("step").value);
+            // let startInput = document.getElementById("start").value;
+            // const step = parseInt(document.getElementById("step").value);
             const ranges = parseInt(document.getElementById("ranges").value);
             const frequenciesInput = document.getElementById("frequencies").value;
             const frequencies = frequenciesInput.split(/[\s,]+/).map(Number);
 
-            // Kiểm tra xem start có phải là số thập phân hay không
-            // Chuẩn hóa startInput: Thay thế dấu phẩy bằng dấu chấm
+            let startInput = document.getElementById("start").value;
+            let stepInput = document.getElementById("step").value;
+
+            // Chuẩn hóa startInput và stepInput: Thay thế dấu phẩy bằng dấu chấm
             startInput = startInput.replace(',', '.');
+            stepInput = stepInput.replace(',', '.');
+
+            // Chuyển đổi startInput thành số (có thể là số nguyên hoặc số thực)
             const start = startInput.includes('.') ? parseFloat(startInput) : parseInt(startInput);
+
+            // Chuyển đổi step thành số với 1 chữ số thập phân nếu có dấu . hoặc , ngược lại thành số nguyên
+            const step = stepInput.includes('.') ? parseFloat(stepInput) : parseInt(stepInput);
             if (frequencies.length !== ranges) {
                 alert("Số lượng tần số phải bằng số khoảng!");
                 return;
@@ -303,17 +311,22 @@
         // Hàm cho các trường hợp n = 4k, 4k+1, 4k+2, 4k+3
         function thongke_4k_0tuchon(start, ranges, step, frequencies) {
             const heightRanges = [];
-            for (let i = 0; i < ranges; i++) {
-            const rangeStart = start + i * step;
-            const rangeEnd = rangeStart + step;
-            const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
 
-            if (isDecimal) {
-                heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
-            } else {
-                heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+                }
             }
-            }
+
 
                 let totalStudents = 0;
 
@@ -484,11 +497,11 @@
                 result += `\n\\end{itemize}\n`;
 
                 if (Q1BoundaryUsed) {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{{${Math.ceil(positionQ1)}}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ1)}}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
                     result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
                     result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{{${Math.ceil(positionQ1)}}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{{${Math.ceil(positionQ1)}}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                     result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
                     result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
                 }
@@ -529,19 +542,23 @@
             }
 
         function thongke_4k_1tuchon(start, ranges, step, frequencies) {
-                // Tạo các khoảng chiều cao
                 const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
             for (let i = 0; i < ranges; i++) {
                 const rangeStart = start + i * step;
                 const rangeEnd = rangeStart + step;
-                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
 
-                if (isDecimal) {
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
                     heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
                 } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
                     heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
             }
+
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
 
@@ -683,17 +700,17 @@
 
                 // Xác định tứ phân vị thứ nhất (Q1)
                 if (Q1BoundaryUsed) {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ1)}}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
                     result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
                     result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{{${Math.ceil(positionQ1)}}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                     result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
                     result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
                 }
 
                 // Xác định trung vị (Q2)
-                result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2)}}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                 result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
                 result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
 
@@ -722,18 +739,23 @@
             }
 
         function thongke_4k_2tuchon(start, ranges, step, frequencies) {
-                const heightRanges = [];
+            const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
             for (let i = 0; i < ranges; i++) {
                 const rangeStart = start + i * step;
                 const rangeEnd = rangeStart + step;
-                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
 
-                if (isDecimal) {
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
                     heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
                 } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
                     heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
             }
+
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
                 if (totalStudents % 4 !== 2) {
@@ -835,7 +857,7 @@
                 const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
                 const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
 
-                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                let result = `\\begin{ex}\n`;
                 result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
                 result += `\\begin{center}\n`;
                 result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
@@ -872,16 +894,16 @@
                 result = result.trim();
                 result += `\n\\end{itemize}\n`;
 
-                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ1)}}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                 result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
                 result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
 
                 if (Q2Range1 === Q2Range2) {
-                    result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2)}}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong nhóm có khoảng $[${Q2Range1.split(";")[0].replace("[", "")};${Q2Range1.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong nhóm có khoảng $[${Q2Range1.split(";")[0].replace("[", "")};${Q2Range1.split(";")[1].replace(")", "")})$.\\\\\n`;
                     result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
                     result += `$$Q_2=${Q2Range1.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency1}} \\cdot(${Q2Range1.split(";")[1].replace(")", "")}-${Q2Range1.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
                 } else {
-                    result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2)}}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong hai nhóm khác nhau.\\\\\n`;
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong hai nhóm khác nhau.\\\\\n`;
                     result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
                     result += `$$Q_2=${Q2Range1.split(";")[1].replace(")", "")}$$\n`;
                 }
@@ -904,19 +926,23 @@
             }
 
         function thongke_4k_3tuchon(start, ranges, step, frequencies) {
-                // Tạo các khoảng chiều cao
                 const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
             for (let i = 0; i < ranges; i++) {
                 const rangeStart = start + i * step;
                 const rangeEnd = rangeStart + step;
-                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
 
-                if (isDecimal) {
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
                     heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
                 } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
                     heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
             }
+
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
 
@@ -1047,12 +1073,12 @@
                 result += `\n\\end{itemize}\n`;
 
                 // Xác định tứ phân vị thứ nhất (Q1)
-                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ1)}}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                 result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
                 result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
 
                 // Xác định trung vị (Q2)
-                result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2)}}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
                 result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
                 result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
 
