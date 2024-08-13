@@ -132,6 +132,7 @@
         <a href="giai_thong_ke_k10_new.html">Thống Kê 10</a>
         <a href="giai_thongke_bangdon.html">Thống Kê 12-Bảng</a>
         <a href="giai_thongke_hinhdon.html">Thống Kê 12-Hình</a>
+        <a href="giai_thongke_hinhkep.html">Thống Kê 12-Hình</a>
     </div>
     <div class="container">
         <h1 class="custom-title">Giải Toán Thống Kê - Hình Cột</h1>
@@ -263,12 +264,15 @@
 
     <script>
         function thongke() {
-            const start = parseInt(document.getElementById("start").value);
+            const startInput = document.getElementById("start").value;
             const step = parseInt(document.getElementById("step").value);
             const ranges = parseInt(document.getElementById("ranges").value);
             const frequenciesInput = document.getElementById("frequencies").value;
-            const frequencies = frequenciesInput.split(',').map(Number);
+            // const frequencies = frequenciesInput.split(',').map(Number);
+            const frequencies = frequenciesInput.split(/[\s,]+/).map(Number);
 
+            // Kiểm tra xem start có phải là số thập phân hay không
+            const start = startInput.includes('.') ? parseFloat(startInput) : parseInt(startInput);
             if (frequencies.length !== ranges) {
                 alert("Số lượng tần số phải bằng số khoảng!");
                 return;
@@ -298,11 +302,17 @@
         // Hàm cho các trường hợp n = 4k, 4k+1, 4k+2, 4k+3
         function thongke_4k_tuchon(start, ranges, step, frequencies) {
                 const heightRanges = [];
-                for (let i = 0; i < ranges; i++) {
-                    const rangeStart = start + i * step;
-                    const rangeEnd = rangeStart + step;
-                    heightRanges.push(`[${rangeStart};${rangeEnd})`);
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
+
+                if (isDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
+            }
 
                 let totalStudents = 0;
 
@@ -540,11 +550,17 @@
 
         function thongke_4k_1hinhtuchon(start, ranges, step, frequencies) {
                 const heightRanges = [];
-                for (let i = 0; i < ranges; i++) {
-                    const rangeStart = start + i * step;
-                    const rangeEnd = rangeStart + step;
-                    heightRanges.push(`[${rangeStart};${rangeEnd})`);
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
+
+                if (isDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
+            }
 
                 const representativeValues = heightRanges.map(range => {
                     const lowerBound = parseInt(range.split(";")[0].replace("[", ""));
@@ -740,11 +756,17 @@
 
         function thongke_4k_2_tuchon(start, ranges, step, frequencies) {
                 const heightRanges = [];
-                for (let i = 0; i < ranges; i++) {
-                    const rangeStart = start + i * step;
-                    const rangeEnd = rangeStart + step;
-                    heightRanges.push(`[${rangeStart};${rangeEnd})`);
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
+
+                if (isDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
+            }
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
                 if (totalStudents % 4 !== 2) {
@@ -928,13 +950,18 @@
             }
 
         function thongke_4k_3_tuchon(start, ranges, step, frequencies) {
-                // Tạo các khoảng chiều cao
                 const heightRanges = [];
-                for (let i = 0; i < ranges; i++) {
-                    const rangeStart = start + i * step;
-                    const rangeEnd = rangeStart + step;
-                    heightRanges.push(`[${rangeStart};${rangeEnd})`);
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+                const isDecimal = start % 1 !== 0;  // Kiểm tra xem số bắt đầu có phải là số thập phân
+
+                if (isDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
                 }
+            }
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
 

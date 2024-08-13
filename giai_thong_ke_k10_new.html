@@ -144,6 +144,7 @@
         <a href="giai_thong_ke_k10_new.html">Thống Kê 10</a>
         <a href="giai_thongke_bangdon.html">Thống Kê 12-Bảng</a>
         <a href="giai_thongke_hinhdon.html">Thống Kê 12-Hình</a>
+        <a href="giai_thongke_hinhkep.html">Thống Kê 12-Hình</a>
     </div>
     <div class="container">
         <h1>Giải Thống Kê Từ Số Liệu Nhập Vào</h1>
@@ -267,7 +268,7 @@
         }
 
         function formatResult(values, frequencies, n, mean, mode, standardDeviation, Q1, Q2, Q3, range, IQR, lowerBound, upperBound, outliers) {
-            let result = `\\begin{bt}%[0D5K4-1]\n`;
+            let result = `\\begin{ex}\n`;
             result += `Cho các số liệu như sau\n`;
             result += `\\begin{center}\n`;
             result += `\\begin{tabular}{|${'c'.repeat(values.length)}|}\n\\hline\n`;
@@ -310,7 +311,7 @@
             result += `\\item Các giá trị bất thường: ${outliers.length ? outliers.join(", ") : "không có"}.\n`;
             result += `\\end{itemize}\n`;
             result += `}\n`;
-            result += `\\end{bt}\n`;
+            result += `\\end{ex}\n`;
 
             document.getElementById("result").value = result;
         }
