@@ -150,7 +150,7 @@ export function xoa_2cham_sau_thila(text) {
 
     return text;
 }
-export function them_dola_cho_so_new(text) {
+export function them_dola_cho_so_newG(text) {
     // Step 1: Escape math environments
     const mathEnvironments = /(\$[^$]*\$|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
     let escapedText = [];
@@ -175,4 +175,40 @@ export function them_dola_cho_so_new(text) {
 
     // Step 3: Reassemble the text
     return escapedText.map(part => part.text).join('');
+}
+export function them_dola_cho_so_new(text) {
+    // Step 1: Escape math environments
+    const mathEnvironments = /(\$[^$]*\$|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
+    let escapedText = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = mathEnvironments.exec(text)) !== null) {
+        escapedText.push({ text: text.slice(lastIndex, match.index), isMath: false });
+        escapedText.push({ text: match[0], isMath: true });
+        lastIndex = match.index + match[0].length;
+    }
+    escapedText.push({ text: text.slice(lastIndex), isMath: false });
+
+    // Step 2: Replace numbers in non-math environments
+    const numberPattern = /\b\d+\b/g;
+    escapedText = escapedText.map(part => {
+        if (!part.isMath) {
+            part.text = part.text.replace(numberPattern, match => `$${match}$`);
+        }
+        return part;
+    });
+
+    // Step 3: Reassemble the text
+    //return escapedText.map(part => part.text).join('');
+    // Reassemble the text
+    let resultText = escapedText.map(part => part.text).join('');
+
+    // Replace \section*{Lời giải} with Lời giải
+    resultText = resultText.replace(/\\section\*\{Lời giải\}/g, 'Lời giải');
+    resultText = resultText.replace(/\\section\*\{Lò̀i giải\}/g, 'Lời giải')
+    resultText = resultText.replace(/\\lim\*\{Lò̀i giải\}/g, 'Lời giải')
+    // Replace \lim _ with \lim \limits_
+    resultText = resultText.replace(/\\lim\s*_/g, '\\lim\\limits_');
+    return resultText;
 }
