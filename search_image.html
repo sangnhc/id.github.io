@@ -12,7 +12,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             height: 100vh;
             background-image: url('background.jpg');
             background-size: cover;
@@ -26,11 +26,12 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            height: 100%;
+            margin-top: 20px;
             position: relative;
             z-index: 1;
         }
 
+        /* Đặt nút search ở trên cùng */
         .input {
             width: 100%;
             display: flex;
@@ -49,16 +50,32 @@
             }
         }
 
-        .frame {
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
-
+        /* Ảnh chiếm 90% chiều rộng màn hình */
         #img {
             display: none;
-            max-width: 500px;
+            width: 98%;
             margin-top: 20px;
+        }
+
+        /* Nút quay về trang chủ */
+        #back-to-home {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        #back-to-home:hover {
+            background-color: #0056b3;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 86, 179, 0.4);
         }
     </style>
 </head>
@@ -72,11 +89,15 @@
                 <option value="svg">svg</option>
                 <option value="pdf">pdf</option>
             </select>
-            <input id="search" />
+            <input id="search" placeholder="Nhập tên ảnh" />
             <button onclick="find()">Tìm</button>
             <button onclick="clearImage()">Xóa ảnh</button>
         </div>
+
         <img id="img" />
+
+        <!-- Nút quay về trang chủ -->
+        <button id="back-to-home" onclick="window.location.href='index.html'">Quay Về Trang Chủ</button>
     </div>
 
     <script>
@@ -84,7 +105,8 @@
             const searchValue = document.getElementById('search').value;
             const type = document.getElementById('type').value;
             if (searchValue) {
-                const imgUrl = searchValue + '.' + type;
+                // Ví dụ: Đường dẫn tới ảnh trong thư mục image1
+                const imgUrl = `image1/${searchValue}.${type}`;
                 const imgElement = document.getElementById('img');
                 imgElement.src = imgUrl;
                 imgElement.style.display = 'block';
