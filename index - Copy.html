@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            position: relative;
+            z-index: 0;
+        }
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            margin-top: 50px;
+            position: relative;
+            z-index: 1;
+        }
+        .input {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        #search {
+            width: 200px;
+            font-size: larger;
+        }
+        @media only screen and (max-width: 600px) {
+            #search {
+                font-size: xx-large;
+            }
+        }
+        .frame {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        #img {
+            display: none;
+        }
+        #login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1;
+        }
+        #login-container input {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #login-container button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #login-container button:hover {
+            background-color: #0056b3;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-submenu {
+            position: relative;
+        }
+        .dropdown-submenu .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            background-color: #f1f1f1;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 3;
+        }
+        .dropdown-submenu:hover .dropdown-content {
+            display: block;
+        }
+        /* Đảm bảo thuộc tính text-emphasis-color có tiền tố -webkit- */
+        .element {
+            -webkit-text-emphasis-color: red; /* Hỗ trợ Chrome, Chrome Android, Edge */
+            text-emphasis-color: red; /* Hỗ trợ các trình duyệt khác */
+        }
+    </style>
+</head>
+<body id="body">
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="tron_de.html">Trộn Đề</a>
+        <a href="extest_rd.html">Extest_rd</a>
+        <a href="Ve_hinh.html">Vẽ Hình</a>
+        <a href="beamer.html">Beamer</a>
+        <a href="geo.html">Geo Gọn</a>
+        <a href="fixcode.html">Tiện Ích</a>
+        <a href="bank_v3.html">Ma Trận</a>
+        <a href="loc.html">Lọc-Search</a>
+        <a href="bank_person.html">Cây ID</a>
+        <a href="hang_loat.html">Đề Hàng Loạt</a>
+       <!-- <a href="https://sangtoan.github.io/toan12/#">THPT</a> Thêm dòng này -->
+    </div>
+    <div id="main-content" class="container" style="display: none;">
+        <div class="input">
+            <select name="type" id="type">
+                <option value="png">png</option>
+                <option value="jpg">jpg</option>
+                <option value="svg">svg</option>
+                <option value="pdf">pdf</option>
+            </select>
+            <input id="search" />
+            <button onclick="find()">Tìm</button>
+            <button onclick="clearImage()">Xóa ảnh</button>
+        </div>
+        <img id="img" />
+        <iframe class="frame" id="frame"></iframe>
+    </div>
+    <div id="login-container">
+        <button id="getIdentifier">Lấy chuỗi nhận dạng duy nhất</button>
+        <p id="identifier"></p>
+        <button id="copyIdentifier" style="display: none;">Copy Chuỗi Số Series</button>
+        <label for="key">Key:</label>
+        <input type="text" id="key">
+        <button id="verify">Kiểm tra key</button>
+        <div id="author-info">
+            <p>Tác giả: Nguyễn Văn Sang - GV THPT Nguyễn Hữu Cảnh - TP.HCM</p>
+            <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115</p>
+            <p>Liên hệ: <a href="https://www.facebook.com/nguyenvan.sang.92798072/" target="_blank">Facebook</a></p>
+        </div>
+        <button id="clearStorage">Xóa Trạng Thái Đăng Nhập</button>
+        <p id="result"></p>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.23/jsrsasign-all-min.js"></script>
+    <script>
+        document.getElementById('getIdentifier').addEventListener('click', getUniqueIdentifier);
+        document.getElementById('copyIdentifier').addEventListener('click', copyIdentifier);
+        document.getElementById('verify').addEventListener('click', verifyKey);
+        document.getElementById('clearStorage').addEventListener('click', clearStorage);
+
+        let uniqueIdentifier = '';
+
+        function getUniqueIdentifier() {
+            console.log('Starting getUniqueIdentifier...');
+            if (localStorage.getItem('identifier') === null) {
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const randomString = Math.random().toString(36).substring(2, 15);
+                uniqueIdentifier = CryptoJS.MD5(userAgent + platform + randomString).toString();
+                localStorage.setItem('identifier', uniqueIdentifier);
+                console.log('Generated new identifier:', uniqueIdentifier);
+            } else {
+                uniqueIdentifier = localStorage.getItem('identifier');
+                console.log('Loaded existing identifier:', uniqueIdentifier);
+            }
+            document.getElementById('identifier').textContent = `Số series máy: ${uniqueIdentifier}`;
+            document.getElementById('copyIdentifier').style.display = 'block';
+        }
+
+        function copyIdentifier() {
+            navigator.clipboard.writeText(uniqueIdentifier).then(() => {
+                alert('Đã sao chép chuỗi số series vào clipboard');
+            });
+        }
+
+        function verifyKey() {
+            const key = document.getElementById('key').value;
+            const secret = 'my_random_secret_key_270187';
+            const identifier = localStorage.getItem('identifier');
+
+            console.log('Verifying key:', key);
+            console.log('Using secret:', secret);
+            console.log('With identifier:', identifier);
+
+            try {
+                const isValid = KJUR.jws.JWS.verify(key, secret, {alg: ['HS256']});
+                console.log('Key is valid:', isValid);
+
+                if (isValid) {
+                    const decoded = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(key.split('.')[1]));
+                    console.log('Decoded payload:', decoded);
+                    if (decoded.series === identifier) {
+                        document.getElementById('result').textContent = 'Key hợp lệ';
+                        localStorage.setItem('isLoggedIn', 'true');
+                        document.getElementById('login-container').style.display = 'none';
+                        document.getElementById('main-content').style.display = 'block';
+
+                        const menuLinks = document.querySelectorAll('.menu a');
+                        menuLinks.forEach(link => {
+                            link.removeAttribute('onclick');
+                        });
+                    } else {
+                        document.getElementById('result').textContent = 'Key không hợp lệ';
+                    }
+                } else {
+                    document.getElementById('result').textContent = 'Key không hợp lệ';
+                }
+            } catch (e) {
+                console.log('Error verifying key:', e);
+                document.getElementById('result').textContent = 'Key không hợp lệ';
+            }
+        }
+
+        function checkLoginStatus() {
+            uniqueIdentifier = localStorage.getItem('identifier');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            console.log('Check login status: isLoggedIn =', isLoggedIn, 'identifier =', uniqueIdentifier);
+            if (isLoggedIn === 'true' && uniqueIdentifier) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+                const menuLinks = document.querySelectorAll('.menu a');
+                menuLinks.forEach(link => {
+                    link.removeAttribute('onclick');
+                });
+            } else {
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('main-content').style.display = 'none';
+            }
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('identifier');
+            alert('Đã xóa trạng thái đăng nhập.');
+            location.reload();
+        }
+
+        window.onload = function() {
+            console.log('Page loaded, initializing...');
+            getUniqueIdentifier();
+            checkLoginStatus();
+        };
+    </script>
+</body>
+</html>

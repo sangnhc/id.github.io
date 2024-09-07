@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm Kiếm Ảnh</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            position: relative;
+            z-index: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .input {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        #search {
+            width: 200px;
+            font-size: larger;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #search {
+                font-size: xx-large;
+            }
+        }
+
+        .frame {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        #img {
+            display: none;
+            max-width: 500px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input">
+            <select name="type" id="type">
+                <option value="png">png</option>
+                <option value="jpg">jpg</option>
+                <option value="svg">svg</option>
+                <option value="pdf">pdf</option>
+            </select>
+            <input id="search" />
+            <button onclick="find()">Tìm</button>
+            <button onclick="clearImage()">Xóa ảnh</button>
+        </div>
+        <img id="img" />
+    </div>
+
+    <script>
+        function find() {
+            const searchValue = document.getElementById('search').value;
+            const type = document.getElementById('type').value;
+            if (searchValue) {
+                const imgUrl = searchValue + '.' + type;
+                const imgElement = document.getElementById('img');
+                imgElement.src = imgUrl;
+                imgElement.style.display = 'block';
+            }
+        }
+
+        function clearImage() {
+            const imgElement = document.getElementById('img');
+            imgElement.src = '';
+            imgElement.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

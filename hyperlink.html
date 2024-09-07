@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Hyperlink Cho File LaTeX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input[type="file"],
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            width: 97.5%;
+            height: 300px;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            background-color: #f9f9f9;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #result p {
+            color: #28a745;
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+        /* Nút quay lại trang chủ */
+        .back-home {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-home a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-home a:hover {
+            background-color: #d32f2f;
+        }
+h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            background-color: #e0f7ff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Tạo Hyperlink Cho File LaTeX</h1>
+
+        <!-- Input để người dùng chọn file hoặc thư mục -->
+        <input type="file" id="fileInput" accept=".tex" onchange="loadFileContent()" />
+        <button onclick="loadFolder()">Load Folder</button>
+        <button onclick="loadMultipleFiles()">Load Multiple Files</button>
+
+        <!-- Khung nhập số cho các môi trường -->
+        <div class="input-group">
+            <label for="exStart">Bắt đầu số cho môi trường `ex`: </label>
+            <input type="number" id="exStart" value="1">
+        </div>
+
+        <div class="input-group">
+            <label for="vdStart">Bắt đầu số cho môi trường `vd`: </label>
+            <input type="number" id="vdStart" value="1">
+        </div>
+
+        <div class="input-group">
+            <label for="btStart">Bắt đầu số cho môi trường `bt`: </label>
+            <input type="number" id="btStart" value="1">
+        </div>
+
+        <textarea id="fileContent" placeholder="File content will appear here..."></textarea>
+        <button onclick="processFile()">Tạo File</button>
+
+        <!-- Checkbox để chọn xóa comment -->
+        <label>
+            <input type="checkbox" id="removeComments"> Xóa comment trong file LaTeX
+        </label>
+
+        <!-- Nơi hiển thị kết quả -->
+        <div id="result">
+            <p id="status"></p>
+            <p id="fileCount"></p>
+            <button id="downloadExBtn" style="display: none;" onclick="downloadFile('ex')">Download Đề Bài</button>
+            <button id="downloadSolBtn" style="display: none;" onclick="downloadFile('sol')">Download Lời Giải</button>
+        </div>
+    </div>
+    <!-- Nút Quay lại Trang Chủ -->
+    <div class="back-home">
+        <a href="index.html">Quay về Trang Chủ</a>
+    </div>
+    <script>
+        let processedExContent = '';  // Biến lưu trữ nội dung bài tập đã xử lý
+        let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
+        let combinedFileContent = '';  // Biến lưu trữ nội dung đã ghép từ các file trong thư mục
+
+        // Hàm khởi tạo, khôi phục các giá trị bộ đếm từ localStorage khi tải trang
+        function initializeCounters() {
+            const exStart = localStorage.getItem('exStart') || 1;
+            const vdStart = localStorage.getItem('vdStart') || 1;
+            const btStart = localStorage.getItem('btStart') || 1;
+
+            document.getElementById('exStart').value = exStart;
+            document.getElementById('vdStart').value = vdStart;
+            document.getElementById('btStart').value = btStart;
+        }
+
+        // Hàm lưu các bộ đếm vào localStorage
+        function saveCounters() {
+            const exStart = document.getElementById('exStart').value;
+            const vdStart = document.getElementById('vdStart').value;
+            const btStart = document.getElementById('btStart').value;
+
+            localStorage.setItem('exStart', exStart);
+            localStorage.setItem('vdStart', vdStart);
+            localStorage.setItem('btStart', btStart);
+        }
+
+        // Hàm tải nội dung file vào textarea ngay khi chọn tệp
+        function loadFileContent() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) {
+                alert("Please select a .tex file.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const decoder = new TextDecoder('utf-8');
+                const content = decoder.decode(e.target.result);
+                document.getElementById('fileContent').value = content;  // Hiển thị nội dung file trong textarea
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Hàm xử lý file từ nội dung textarea
+        function processFile() {
+            let content = document.getElementById('fileContent').value;  // Lấy nội dung từ textarea
+
+            // Kiểm tra nếu người dùng muốn xóa comment
+            if (document.getElementById('removeComments').checked) {
+                content = removeComments(content);  // Gọi hàm xóa comment
+            }
+
+            // Xóa các dòng trống
+            content = content.replace(/^\s*[\r\n]/gm, '');
+
+            let counter_ex = parseInt(document.getElementById('exStart').value); // Lấy số bắt đầu cho môi trường `ex`
+            let counter_vd = parseInt(document.getElementById('vdStart').value); // Lấy số bắt đầu cho môi trường `vd`
+            let counter_bt = parseInt(document.getElementById('btStart').value); // Lấy số bắt đầu cho môi trường `bt`
+
+            const [exContent, solContent] = addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt);
+            processedExContent = exContent;
+            processedSolContent = solContent;
+
+            // Sau khi xử lý xong file, lưu các bộ đếm
+            saveCounters();
+
+            document.getElementById('status').innerText = "File processed successfully!";
+            document.getElementById('downloadExBtn').style.display = 'inline';
+            document.getElementById('downloadSolBtn').style.display = 'inline';
+        }
+
+        // Hàm xử lý nội dung file
+        function addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt) {
+            let exContent = content;
+            let solContent = "";
+
+            // Regex để tìm các môi trường ex, vd, bt và loigiai, với xử lý khoảng trống sau \loigiai
+            const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\loigiai\s*\{\s*([\s\S]*?)\s*\}\s*\\end\{\1\}/g;
+
+            exContent = exContent.replace(envRegex, (match, envType, exPart, loigiaiPart) => {
+                let label_ex, label_sol;
+                if (envType === "ex") {
+                    label_ex = `ex${counter_ex}b`;
+                    label_sol = `ex${counter_ex}a`;
+                    counter_ex++;
+                } else if (envType === "vd") {
+                    label_ex = `vd${counter_vd}b`;
+                    label_sol = `vd${counter_vd}a`;
+                    counter_vd++;
+                } else if (envType === "bt") {
+                    label_ex = `bt${counter_bt}b`;
+                    label_sol = `bt${counter_bt}a`;
+                    counter_bt++;
+                }
+
+                // Xử lý bài tập
+                const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_sol}]{Xem Lời Giải}}\n\\end{${envType}}`;
+
+                // Xử lý lời giải
+                const processedSolPart = `\\hypertarget{${label_sol}}{}\\loigiai{${loigiaiPart.trim()}\n\\par\\noindent{\\mfbox[${label_ex}]{Quay Lại Đề}}}`;
+
+                solContent += processedSolPart + '\n\n';
+                return processedExPart;
+            });
+
+            // Cập nhật lại các giá trị bắt đầu mới sau khi xử lý
+            document.getElementById('exStart').value = counter_ex;
+            document.getElementById('vdStart').value = counter_vd;
+            document.getElementById('btStart').value = counter_bt;
+
+            return [exContent, solContent];
+        }
+
+        // Khởi động bộ đếm khi tải trang
+        window.onload = initializeCounters;
+
+        // Hàm xóa comment trong nội dung LaTeX
+        function removeComments(content) {
+            // Xóa comment bắt đầu bằng %, nhưng không xóa những comment có dấu \% (ký hiệu phần trăm)
+            return content.replace(/(?<!\\)%.*$/gm, '').trim();
+        }
+
+        // Hàm tải về file đã xử lý
+        function downloadFile(type) {
+            let content = '';
+            let filename = '';
+
+            if (type === 'ex') {
+                content = processedExContent;
+                filename = 'ProcessedExercise.tex';
+            } else if (type === 'sol') {
+                content = processedSolContent;
+                filename = 'ProcessedSolution.tex';
+            }
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        // Hàm load nhiều file và ghép lại
+        function loadMultipleFiles() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.multiple = true;
+            fileInput.accept = ".tex";
+            fileInput.onchange = function (event) {
+                const files = event.target.files;
+                combinedFileContent = '';  // Reset nội dung đã ghép
+
+                let promises = [];  // Để xử lý tất cả các file
+
+                // Kiểm tra trạng thái của checkbox có xóa comment hay không
+                const removeCommentsChecked = document.getElementById('removeComments').checked;
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const reader = new FileReader();
+
+                    const promise = new Promise((resolve, reject) => {
+                        reader.onload = function (e) {
+                            const decoder = new TextDecoder('utf-8');
+                            let content = decoder.decode(e.target.result);
+
+                            // Nếu checkbox được chọn, xóa comment trong nội dung file
+                            if (removeCommentsChecked) {
+                                content = removeComments(content);
+                            }
+
+                            // Ghép nội dung (sau khi đã xóa comment nếu có)
+                            combinedFileContent += content + '\n\n';
+                            resolve();
+                        };
+                        reader.onerror = reject;
+                    });
+
+                    reader.readAsArrayBuffer(file);
+                    promises.push(promise);
+                }
+
+                // Khi tất cả các file đã đọc xong
+                Promise.all(promises).then(() => {
+                    document.getElementById('fileContent').value = combinedFileContent;  // Hiển thị nội dung đã ghép vào textarea
+                    document.getElementById('status').innerText = "All files combined successfully!";
+                    document.getElementById('fileCount').innerText = `Total files combined: ${files.length}`;
+                });
+            };
+
+            fileInput.click();
+        }
+    </script>
+
+</body>
+
+</html>
