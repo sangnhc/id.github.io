@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng dẫn sử dụng các hiệu ứng text và chèn ảnh</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .text-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .text-box:hover {
+            transform: scale(1.02);
+        }
+
+        .text-box h2 {
+            color: #555;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Các hiệu ứng chữ */
+        .txt-red {
+            color: red;
+        }
+
+        .txt-large {
+            font-size: 24px;
+        }
+
+        .txt-shadow {
+            text-shadow: 2px 2px 5px gray;
+        }
+
+        .gradient-text {
+            font-size: 48px;
+            background: linear-gradient(to right, red, yellow);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        @keyframes blink-anim {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .txt-blink {
+            animation: blink-anim 1s infinite;
+        }
+
+        .txt-zoom:hover {
+            transform: scale(1.5);
+            transition: transform 0.3s ease;
+        }
+
+        .txt-rotate {
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        .txt-rotate:hover {
+            transform: rotate(360deg);
+        }
+
+        .txt-hover-color {
+            color: blue;
+            transition: color 0.3s ease;
+        }
+
+        .txt-hover-color:hover {
+            color: green;
+        }
+
+        .txt-wave {
+            display: inline-block;
+            position: relative;
+            font-size: 24px;
+        }
+
+        .txt-wave::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 5px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, red, yellow);
+            animation: wave-anim 1s infinite;
+        }
+
+        @keyframes wave-anim {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        .txt-shake {
+            display: inline-block;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .txt-shake:hover {
+            transform: translateX(5px) rotate(3deg);
+        }
+
+        .txt-neon {
+            color: #fff;
+            text-shadow: 0 0 5px #00e6ff, 0 0 10px #00e6ff, 0 0 15px #00e6ff, 0 0 20px #00e6ff;
+        }
+
+        /* Chèn ảnh */
+        .img-box {
+            text-align: center;
+        }
+
+        .img-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Kích thước ảnh */
+        .small-size {
+            width: 100px;
+        }
+
+        .normal-size {
+            width: 300px;
+        }
+
+        .large-size {
+            width: 600px;
+        }
+
+        .tiny-size {
+            width: 50px;
+        }
+
+        .custom-size {
+            width: 200px;
+        }
+
+        /* Chèn ảnh bên trái */
+        .img-left {
+            float: left;
+            margin-right: 20px;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chèn ảnh bên phải */
+        .img-right {
+            float: right;
+            margin-left: 20px;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Clear float */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Link ảnh */
+        .img-box a {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #333;
+            background-color: #ffbf00;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .img-box a:hover {
+            background-color: #ff8000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Hướng dẫn sử dụng các hiệu ứng chữ và chèn ảnh</h1>
+
+    <div class="container">
+        <div class="text-box">
+            <h2>0. Nghe Giọng Nói</h2>
+
+            <p id="text-to-read-1" data-lang="vi">
+                Đây là đoạn văn bản tiếng Việt mà bạn muốn đọc với giọng Nam hoặc Nữ.
+            </p>
+            <button onclick="speakText('text-to-read-1', 'male')">Nghe Giọng Nam</button>
+            <button onclick="speakText('text-to-read-1', 'female')">Nghe Giọng Nữ</button>
+            <pre>
+            &lt;p id="text-to-read-1" data-lang="vi"&gt;
+                Đây là đoạn văn bản tiếng Việt mà bạn muốn đọc với giọng Nam hoặc Nữ.
+            &lt;/p&gt;
+            &lt;button onclick="speakText('text-to-read-1', 'male')"&gt;Nghe Giọng Nam&lt;/button&gt;
+            &lt;button onclick="speakText('text-to-read-1', 'female')"&gt;Nghe Giọng Nữ&lt;/button&gt;
+                    </pre>
+        </div>
+        <div class="text-box">
+            <h2>1. Tô màu chữ</h2>
+            <p class="txt-red">Chữ này có màu đỏ</p>
+            <pre>&lt;p class="txt-red"&gt;Chữ này có màu đỏ&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>2. Đổi kích thước và font chữ</h2>
+            <p class="txt-large" style="font-family: 'Courier New';">Chữ này có kích thước lớn và font Courier New</p>
+            <pre>&lt;p class="txt-large" style="font-family: 'Courier New';"&gt;Chữ này có kích thước lớn và font Courier New&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>3. Hiệu ứng đổ bóng</h2>
+            <p class="txt-shadow">Chữ này có hiệu ứng đổ bóng</p>
+            <pre>&lt;p class="txt-shadow"&gt;Chữ này có hiệu ứng đổ bóng&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>4. Hiệu ứng chữ chuyển màu gradient</h2>
+            <h1 class="gradient-text">Chữ chuyển màu</h1>
+            <pre>&lt;h1 class="gradient-text"&gt;Chữ chuyển màu&lt;/h1&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>5. Hiệu ứng nhấp nháy</h2>
+            <p class="txt-blink">Chữ này nhấp nháy</p>
+            <pre>&lt;p class="txt-blink"&gt;Chữ này nhấp nháy&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>6. Hiệu ứng phóng to khi di chuột vào</h2>
+            <p class="txt-zoom">Di chuột vào đây để thấy chữ phóng to</p>
+            <pre>&lt;p class="txt-zoom"&gt;Di chuột vào đây để thấy chữ phóng to&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>7. Hiệu ứng xoay vòng khi di chuột vào</h2>
+            <p class="txt-rotate">Di chuột vào đây để thấy chữ xoay</p>
+            <pre>&lt;p class="txt-rotate"&gt;Di chuột vào đây để thấy chữ xoay&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>8. Hiệu ứng đổi màu khi di chuột vào</h2>
+            <p class="txt-hover-color">Di chuột vào đây để thấy chữ đổi màu</p>
+            <pre>&lt;p class="txt-hover-color"&gt;Di chuột vào đây để thấy chữ đổi màu&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>9. Hiệu ứng gợn sóng</h2>
+            <p class="txt-wave">Chữ này có hiệu ứng gợn sóng</p>
+            <pre>&lt;p class="txt-wave"&gt;Chữ này có hiệu ứng gợn sóng&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>10. Hiệu ứng rung khi di chuột vào</h2>
+            <p class="txt-shake">Di chuột vào đây để thấy chữ rung nhẹ</p>
+            <pre>&lt;p class="txt-shake"&gt;Di chuột vào đây để thấy chữ rung nhẹ&lt;/p&gt;</pre>
+        </div>
+
+        <div class="text-box">
+            <h2>11. Hiệu ứng ánh sáng neon</h2>
+            <p class="txt-neon">Chữ này có hiệu ứng ánh sáng neon</p>
+            <pre>&lt;p class="txt-neon"&gt;Chữ này có hiệu ứng ánh sáng neon&lt;/p&gt;</pre>
+        </div>
+
+        <!-- Chèn ảnh bên trái -->
+        <div class="text-box clearfix">
+            <h2>Chèn ảnh bên trái</h2>
+            <img class="img-left normal-size" src="https://via.placeholder.com/300" alt="Example Image">
+            <p>Ảnh này được chèn vào bên trái với kích thước bình thường và khoảng cách rõ ràng so với văn bản. Bạn có
+                thể sử dụng kiểu này khi cần chèn ảnh minh họa ở bên trái của đoạn văn bản.</p>
+            <pre>&lt;img class="img-left normal-size" src="URL_Ảnh" alt="Example Image"&gt;</pre>
+        </div>
+
+        <!-- Chèn ảnh bên phải với kích thước nhỏ -->
+        <div class="text-box clearfix">
+            <h2>Chèn ảnh bên phải (kích thước nhỏ)</h2>
+            <img class="img-right small-size" src="https://via.placeholder.com/100" alt="Example Image">
+            <p>Ảnh này được chèn vào bên phải với kích thước nhỏ. Kiểu chèn ảnh này giúp bạn trình bày ảnh nhỏ gọn ở
+                phía phải của văn bản.</p>
+            <pre>&lt;img class="img-right small-size" src="URL_Ảnh" alt="Example Image"&gt;</pre>
+        </div>
+
+        <!-- Chèn ảnh toàn chiều rộng (full width) -->
+        <div class="text-box img-box">
+            <h2>Chèn ảnh toàn chiều rộng (large-size)</h2>
+            <img class="large-size" src="https://via.placeholder.com/600" alt="Example Image">
+            <p>Ảnh này được chèn theo chiều rộng lớn của khung chứa. Bạn có thể sử dụng nó khi muốn ảnh chiếm toàn bộ
+                không gian ngang của phần nội dung.</p>
+            <pre>&lt;img class="large-size" src="URL_Ảnh_FULL_WIDTH" alt="Example Image"&gt;</pre>
+            <a href="https://via.placeholder.com/600" target="_blank">Xem ảnh đầy đủ</a>
+        </div>
+
+        <!-- Chèn ảnh với kích thước tuỳ chỉnh -->
+        <div class="text-box clearfix">
+            <h2>Chèn ảnh kích thước tùy chỉnh (custom-size)</h2>
+            <img class="img-left custom-size" src="https://via.placeholder.com/200" alt="Example Image">
+            <p>Ảnh này được chèn với kích thước tuỳ chỉnh. Bạn có thể tùy chỉnh kích thước theo ý muốn bằng cách thay
+                đổi class `custom-size`.</p>
+            <pre>&lt;img class="custom-size" src="URL_Ảnh" alt="Example Image"&gt;</pre>
+        </div>
+
+    </div>
+<script>
+    async function speakTextWithGoogleAPI(text, gender) {
+        const apiKey = 'AIzaSyB8Xtw5rP9__9g_9PXQ1tziRVF6HbQ6lKM';
+        const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
+
+        const voiceGender = gender === 'male' ? 'MALE' : 'FEMALE';
+
+        const requestBody = {
+            input: {
+                text: text
+            },
+            voice: {
+                languageCode: 'en-US',
+                ssmlGender: voiceGender
+            },
+            audioConfig: {
+                audioEncoding: 'MP3'
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            console.error('Error synthesizing speech:', response.statusText);
+            return;
+        }
+
+        const data = await response.json();
+        const audioContent = data.audioContent;
+
+        // Tạo phần tử audio để phát giọng nói
+        const audioElement = new Audio('data:audio/mp3;base64,' + audioContent);
+        audioElement.play();
+    }
+
+    function speakText(elementId, gender) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            const text = element.textContent;
+            const lang = element.getAttribute('data-lang'); // Lấy ngôn ngữ từ thuộc tính data-lang
+
+            if (lang === 'en') {
+                // Sử dụng Google Text-to-Speech API cho tiếng Anh
+                speakTextWithGoogleAPI(text, gender);
+            } else if (lang === 'vi') {
+                // Sử dụng SpeechSynthesis API cho tiếng Việt
+                const speech = new SpeechSynthesisUtterance(text);
+                const voices = speechSynthesis.getVoices();
+                const selectedVoice = voices.find(voice =>
+                    voice.lang === 'vi-VN' &&
+                    (gender === 'male' ? voice.name.includes('Nam') : voice.name.includes('Nữ'))
+                );
+
+                if (selectedVoice) {
+                    speech.voice = selectedVoice;
+                }
+
+                speech.lang = 'vi-VN';
+                speechSynthesis.speak(speech);
+            }
+        }
+    }
+
+    // Đảm bảo các giọng nói đã được tải trước khi gọi
+    speechSynthesis.onvoiceschanged = function () {
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.disabled = false; // Kích hoạt các nút sau khi giọng đã được tải
+        });
+    };
+</script>
+</body>
+
+</html>
