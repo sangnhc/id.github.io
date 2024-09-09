@@ -193,7 +193,7 @@ export function them_dola_cho_so_newG(text) {
 }
 export function them_dola_cho_so_new(text) {
     // Step 1: Escape math environments
-    const mathEnvironments = /(\$[^$]*\$|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
+    const mathEnvironments = /(\${1,2}[^$]*\${1,2}|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
     let escapedText = [];
     let lastIndex = 0;
     let match;
