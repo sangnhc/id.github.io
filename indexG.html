@@ -20,64 +20,7 @@
             z-index: 0;
         }
 
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            width: 320px;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .login-container h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #333;
-        }
-
-        .login-container button,
-        .login-container input {
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 16px;
-            width: 100%;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .login-container button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
-
-        .login-container input {
-            border: 1px solid #ddd;
-        }
-
-        .login-container p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 50px;
-            gap: 20px;
-        }
-		.container {
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,6 +30,16 @@
             position: relative;
             z-index: 1;
         }
+
+        /* Style cho các nút với màu sắc khác nhau */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 20px;
+        }
+
         .button {
             padding: 15px 30px;
             font-size: 18px;
@@ -111,38 +64,47 @@
             background-color: #ff5733;
         }
 
+        /* Đỏ cam */
         .button:nth-child(2) {
             background-color: #33c3ff;
         }
 
+        /* Xanh dương nhạt */
         .button:nth-child(3) {
             background-color: #75ff33;
         }
 
+        /* Xanh lá cây */
         .button:nth-child(4) {
             background-color: #ff33da;
         }
 
+        /* Hồng */
         .button:nth-child(5) {
             background-color: #ffa533;
         }
 
+        /* Vàng cam */
         .button:nth-child(6) {
             background-color: #ff3347;
         }
 
+        /* Đỏ tươi */
         .button:nth-child(7) {
             background-color: #33ff85;
         }
 
+        /* Xanh lá mạ */
         .button:nth-child(8) {
             background-color: #8a33ff;
         }
 
+        /* Tím nhạt */
         .button:nth-child(9) {
             background-color: #3356ff;
         }
 
+        /* Xanh đậm */
         .button:nth-child(10) {
             background-color: #ff8333;
         }
@@ -159,20 +121,20 @@
 </head>
 
 <body id="body">
-    <div id="login-container" class="login-container">
-        <h2>Đăng nhập</h2>
+    <div id="login-container">
         <button id="getIdentifier">Lấy chuỗi nhận dạng duy nhất</button>
         <p id="identifier"></p>
         <button id="copyIdentifier" style="display: none;">Copy Chuỗi Số Series</button>
-        <input type="text" id="key" placeholder="Nhập key của bạn">
+        <label for="key">Key:</label>
+        <input type="text" id="key">
         <button id="verify">Kiểm tra key</button>
-        <p id="result"></p>
-        <button id="clearStorage" style="background-color: #f44336;">Xóa Trạng Thái Đăng Nhập</button>
         <div id="author-info">
             <p>Tác giả: Nguyễn Văn Sang - GV THPT Nguyễn Hữu Cảnh - TP.HCM</p>
             <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115</p>
             <p>Liên hệ: <a href="https://www.facebook.com/nguyenvan.sang.92798072/" target="_blank">Facebook</a></p>
         </div>
+        <button id="clearStorage">Xóa Trạng Thái Đăng Nhập</button>
+        <p id="result"></p>
     </div>
 
     <div id="main-content" class="container" style="display: none;">
@@ -188,10 +150,14 @@
             <button class="button" onclick="window.location.href='loc.html'">Lọc-Search</button>
             <button class="button" onclick="window.location.href='bank_person.html'">Cây ID</button>
             <button class="button" onclick="window.location.href='hang_loat.html'">Đề Hàng Loạt</button>
-			<!-- Nút tìm kiếm ảnh -->
+            <!-- Nút tìm kiếm ảnh -->
             <button class="button" onclick="window.location.href='search_image.html'">Tìm Kiếm Ảnh</button>
             <!-- Nút hyperlink -->
             <button class="button" onclick="window.location.href='hyperlink.html'">Hyperlink</button>
+            <button class="button" onclick="window.location.href='soat_loi.html'">Gán ID-Soát Lỗi</button>
+            <button class="button" onclick="window.location.href='save_code.html'">Kho Cá Nhân</button>
+            <button class="button" onclick="window.location.href='giai_thong_ke_k10_new.html'">Toán Thống Kê</button>
+            <button class="button" onclick="window.location.href='giai_toan_demso_v2.html'">Toán Đếm Số</button>
         </div>
     </div>
 
