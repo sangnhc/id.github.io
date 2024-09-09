@@ -45,12 +45,7 @@ export function themdolachoso(text) {
 export function them_dola_cho_so(text) {
     // Biểu thức chính quy để tìm các số đứng giữa hai từ, nhưng không nằm trong đoạn $...$
     const pattern = /(\b\w+\b\s)(\d+)(\s\b\w+\b)/g;
-    // const mathModePattern = /\$.*?\$/g;
-     const mathModePattern = /\$\$[\s\S]*?\$\$|\$.*?\$/g;
-
-    // Loại bỏ dấu xuống dòng sau $$ mở và trước $$ đóng
-    text = text.replace(/\$\$\s+/g, '$$') // Loại bỏ xuống dòng ngay sau $$ mở
-               .replace(/\s+\$\$/g, '$$'); // Loại bỏ xuống dòng ngay trước $$ đóng
+    const mathModePattern = /\$.*?\$/g;
     
     // Chuyển đổi các số không nằm trong đoạn $...$
     let segments = text.split(mathModePattern);
@@ -158,7 +153,7 @@ export function thay_haicham_colonG(text) {
     });
 }
 export function xoa_2cham_sau_thila(text) {
-    text= processDoubleDollar(text)
+    content= processDoubleDollar(content)
     // Biểu thức chính quy để tìm các từ khóa "ta có" hoặc "thì" theo sau bởi dấu :
     const keywordPattern = /\b(ta có|thì|là)\s*:/g;
     
