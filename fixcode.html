@@ -956,7 +956,7 @@
            // Xử lý các nội dung trong dấu $
             content = processMathContent(content);            
             content = content.replace(/\\\\/g, '<br>');
-
+            content = content.replace(/\\\\mathrm/g, '\\mathrm');
             return content;
         }
 
