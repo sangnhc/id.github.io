@@ -156,14 +156,14 @@ export function processDoubleDollar(content) {
 export function replaceEInMath(content) {
     // Tìm tất cả các nội dung trong dấu $...$ hoặc $$...$$
     return content.replace(/(\$+)([^$]+)\1/g, function(match, delimiter, mathContent) {
-        // Thay thế ký tự e thành \mathrm{e} ngoại trừ khi e nằm trong \text{...}
-        return delimiter + mathContent.replace(/\\text\{.*?\}|e/g, function(innerMatch) {
+        // Thay thế ký tự e thành \mathrm{e} chỉ khi trước e là số, +, -, =, ^, kể cả có khoảng trắng
+        return delimiter + mathContent.replace(/\\text\{.*?\}|([0-9+\-=^]\s*)e/g, function(innerMatch, before) {
             // Nếu khớp với \text{...} thì giữ nguyên
             if (innerMatch.startsWith('\\text{')) {
                 return innerMatch;
             }
-            // Nếu khớp với e thì thay thành \mathrm{e}
-            return '\\mathrm{e}';
+            // Thay thế e bằng \mathrm{e}
+            return before + '\\mathrm{e}';
         }) + delimiter;
     });
 }
