@@ -122,7 +122,8 @@ export function thay_haicham_colon(text) {
         // Thay thế dấu : bằng \colon, dấu . thành \cdot và dấu , thành {,}
         let processedContent = content.replace(/:/g, '\\colon ')
                                       .replace(/\./g, '\\cdot ')
-                                      .replace(/,/g, '{,}');
+                                      // Chỉ thay dấu , khi trước và sau là số
+                                      .replace(/(\d),(\d)/g, '$1{,}$2');
         // Trả về nội dung đã xử lý kèm theo dấu $
         return `$${processedContent}$`;
     });
