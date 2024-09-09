@@ -35,6 +35,8 @@ export function themdolachoso(text) {
     // Thay thế .} hoặc . } bằng }
     text = text.replace(removeDotPattern, ' }');
     text = text.replace(/\\int_/g, '\\displaystyle\\int_');
+    text = text.replace(/\\left\.(.*?)\\right\|/g, '$1\\bigg|');
+    text = text.replace(/\\left\\cdot(.*?)\\right\|/g, '$1\\bigg|');
 
 
     return text;
