@@ -1297,9 +1297,7 @@
                 .replace(/\\end{bt}/g, '</div>')
                 .replace(/\\begin{dn}/g, function () {
                     dnButtons += `<a href="#dn-${definitionCounter}" class="btn btn-danger btn-sm">dn${definitionCounter}</a>`; // Thêm nút dn-i
-                    return `<div id="dn-${definitionCounter}" class="definition slide" data-definition-number="${definitionCounter++}"><br>
-                    <button onclick="speakText('dn-${definitionCounter}', 'male')">Nghe Giọng Nam</button>
-                    <button onclick="speakText('dn-${definitionCounter}', 'female')">Nghe Giọng Nữ</button>`;
+                    return `<div id="dn-${definitionCounter}" class="definition slide" data-definition-number="${definitionCounter++}"><br>`;
                 })
                 .replace(/\\end{dn}/g, '</div>')
                 .replace(/\\begin{dl}/g, function () {

@@ -102,16 +102,38 @@
 
     <script>
         function find() {
-            const searchValue = document.getElementById('search').value;
-            const type = document.getElementById('type').value;
-            if (searchValue) {
-                // Ví dụ: Đường dẫn tới ảnh trong thư mục image1
-                const imgUrl = `image1/${searchValue}.${type}`;
-                const imgElement = document.getElementById('img');
-                imgElement.src = imgUrl;
-                imgElement.style.display = 'block';
+                const searchValue = document.getElementById('search').value;
+                const type = document.getElementById('type').value;
+                const totalFolders = 10; // Số lượng thư mục dạng imageX, bạn có thể thay đổi số này tùy ý
+                let found = false;
+
+                if (searchValue) {
+                    const imgElement = document.getElementById('img');
+
+                    // Duyệt qua các thư mục dạng imageX từ image1 đến imageX với X là totalFolders
+                    for (let i = 1; i <= totalFolders; i++) {
+                        const imgUrl = `image${i}/${searchValue}.${type}`;
+
+                        // Kiểm tra xem ảnh có tồn tại không (yêu cầu xử lý từ phía server hoặc dùng AJAX)
+                        const http = new XMLHttpRequest();
+                        http.open('HEAD', imgUrl, false);
+                        http.send();
+
+                        if (http.status != 404) {  // Nếu ảnh tồn tại trong thư mục
+                            imgElement.src = imgUrl;
+                            imgElement.style.display = 'block';
+                            found = true;
+                            break;  // Dừng lại khi đã tìm thấy ảnh
+                        }
+                    }
+
+                    if (!found) {
+                        imgElement.style.display = 'none';
+                        alert('Không tìm thấy ảnh!');
+                    }
+                }
             }
-        }
+
 
         function clearImage() {
             const imgElement = document.getElementById('img');

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page with Buttons</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            position: relative;
+            z-index: 0;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 320px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .login-container button,
+        .login-container input {
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .login-container button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-container input {
+            border: 1px solid #ddd;
+        }
+
+        .login-container p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 20px;
+        }
+		.container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+            outline: none;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Mỗi nút một màu khác nhau */
+        .button:nth-child(1) {
+            background-color: #ff5733;
+        }
+
+        .button:nth-child(2) {
+            background-color: #33c3ff;
+        }
+
+        .button:nth-child(3) {
+            background-color: #75ff33;
+        }
+
+        .button:nth-child(4) {
+            background-color: #ff33da;
+        }
+
+        .button:nth-child(5) {
+            background-color: #ffa533;
+        }
+
+        .button:nth-child(6) {
+            background-color: #ff3347;
+        }
+
+        .button:nth-child(7) {
+            background-color: #33ff85;
+        }
+
+        .button:nth-child(8) {
+            background-color: #8a33ff;
+        }
+
+        .button:nth-child(9) {
+            background-color: #3356ff;
+        }
+
+        .button:nth-child(10) {
+            background-color: #ff8333;
+        }
+
+        /* Cam đậm */
+
+        @media (max-width: 600px) {
+            .button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div id="login-container" class="login-container">
+        <h2>Đăng nhập</h2>
+        <button id="getIdentifier">Lấy chuỗi nhận dạng duy nhất</button>
+        <p id="identifier"></p>
+        <button id="copyIdentifier" style="display: none;">Copy Chuỗi Số Series</button>
+        <input type="text" id="key" placeholder="Nhập key của bạn">
+        <button id="verify">Kiểm tra key</button>
+        <p id="result"></p>
+        <button id="clearStorage" style="background-color: #f44336;">Xóa Trạng Thái Đăng Nhập</button>
+        <div id="author-info">
+            <p>Tác giả: Nguyễn Văn Sang - GV THPT Nguyễn Hữu Cảnh - TP.HCM</p>
+            <p>Ủng hộ momo: 0389.821.115 - STK VPB: 10389.821.115</p>
+            <p>Liên hệ: <a href="https://www.facebook.com/nguyenvan.sang.92798072/" target="_blank">Facebook</a></p>
+        </div>
+    </div>
+
+    <div id="main-content" class="container" style="display: none;">
+        <div class="button-container">
+            <button class="button" onclick="window.location.href='tron_de.html'">Trộn Đề</button>
+            <button class="button" onclick="window.location.href='extest_rd.html'">Extest_rd</button>
+            <button class="button" onclick="window.location.href='Ve_hinh.html'">Vẽ Hình</button>
+            <button class="button" onclick="window.location.href='beamer.html'">Beamer</button>
+            <button class="button" onclick="window.location.href='trinhchieu.html'">Trình Chiếu</button>
+            <button class="button" onclick="window.location.href='geo.html'">Geo Gọn</button>
+            <button class="button" onclick="window.location.href='fixcode.html'">Tiện Ích</button>
+            <button class="button" onclick="window.location.href='bank_v3.html'">Ma Trận</button>
+            <button class="button" onclick="window.location.href='loc.html'">Lọc-Search</button>
+            <button class="button" onclick="window.location.href='bank_person.html'">Cây ID</button>
+            <button class="button" onclick="window.location.href='hang_loat.html'">Đề Hàng Loạt</button>
+			<!-- Nút tìm kiếm ảnh -->
+            <button class="button" onclick="window.location.href='search_image.html'">Tìm Kiếm Ảnh</button>
+            <!-- Nút hyperlink -->
+            <button class="button" onclick="window.location.href='hyperlink.html'">Hyperlink</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.5.23/jsrsasign-all-min.js"></script>
+    <script>
+        document.getElementById('getIdentifier').addEventListener('click', getUniqueIdentifier);
+        document.getElementById('copyIdentifier').addEventListener('click', copyIdentifier);
+        document.getElementById('verify').addEventListener('click', verifyKey);
+        document.getElementById('clearStorage').addEventListener('click', clearStorage);
+
+        let uniqueIdentifier = '';
+
+        function getUniqueIdentifier() {
+            if (localStorage.getItem('identifier') === null) {
+                const userAgent = navigator.userAgent;
+                const platform = navigator.platform;
+                const randomString = Math.random().toString(36).substring(2, 15);
+                uniqueIdentifier = CryptoJS.MD5(userAgent + platform + randomString).toString();
+                localStorage.setItem('identifier', uniqueIdentifier);
+            } else {
+                uniqueIdentifier = localStorage.getItem('identifier');
+            }
+            document.getElementById('identifier').textContent = `Số series máy: ${uniqueIdentifier}`;
+            document.getElementById('copyIdentifier').style.display = 'block';
+        }
+
+        function copyIdentifier() {
+            navigator.clipboard.writeText(uniqueIdentifier).then(() => {
+                alert('Đã sao chép chuỗi số series vào clipboard');
+            });
+        }
+
+        function verifyKey() {
+            const key = document.getElementById('key').value;
+            const secret = 'my_random_secret_key_270187';
+            const identifier = localStorage.getItem('identifier');
+
+            try {
+                const isValid = KJUR.jws.JWS.verify(key, secret, { alg: ['HS256'] });
+                if (isValid) {
+                    const decoded = KJUR.jws.JWS.readSafeJSONString(b64utoutf8(key.split('.')[1]));
+                    if (decoded.series === identifier) {
+                        document.getElementById('result').textContent = 'Key hợp lệ';
+                        localStorage.setItem('isLoggedIn', 'true');
+                        document.getElementById('login-container').style.display = 'none';
+                        document.getElementById('main-content').style.display = 'block';
+                    } else {
+                        document.getElementById('result').textContent = 'Key không hợp lệ';
+                    }
+                } else {
+                    document.getElementById('result').textContent = 'Key không hợp lệ';
+                }
+            } catch (e) {
+                document.getElementById('result').textContent = 'Key không hợp lệ';
+            }
+        }
+
+        function checkLoginStatus() {
+            uniqueIdentifier = localStorage.getItem('identifier');
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true' && uniqueIdentifier) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            } else {
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('main-content').style.display = 'none';
+            }
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('identifier');
+            alert('Đã xóa trạng thái đăng nhập.');
+            location.reload();
+        }
+
+        window.onload = function () {
+            getUniqueIdentifier();
+            checkLoginStatus();
+        };
+    </script>
+</body>
+
+</html>

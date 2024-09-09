@@ -236,6 +236,7 @@
     <h1>Hướng dẫn sử dụng các hiệu ứng chữ và chèn ảnh</h1>
 
     <div class="container">
+
         <div class="text-box">
             <h2>0. Nghe Giọng Nói</h2>
 
@@ -354,7 +355,52 @@
                 đổi class `custom-size`.</p>
             <pre>&lt;img class="custom-size" src="URL_Ảnh" alt="Example Image"&gt;</pre>
         </div>
-
+        <!-- Thêm phần hướng dẫn về LaTeX -->
+        <div class="text-box">
+            <h2>Hướng dẫn khai báo LaTeX với \usepackage{hyperref}</h2>
+            <p>Dưới đây là hướng dẫn chi tiết về cách khai báo và sử dụng các lệnh trong LaTeX với các gói
+                <code>hyperref</code>, <code>tcolorbox</code>, và các lệnh tùy chỉnh.</p>
+            <pre>
+        \usepackage{hyperref} % Gói dùng để tạo liên kết
+        \usepackage{comment}  % Gói hỗ trợ ẩn các đoạn văn bản
+        \usepackage{tcolorbox} % Gói để tạo khung đẹp
+        \usepackage{tikz} % Gói hỗ trợ vẽ hình và tạo khung tùy chỉnh
+        \usepackage{fontawesome} % Gói biểu tượng cho tiêu đề
+        
+        % Biến kiểm soát hiển thị lời giải
+        \newif\ifshowloigiai
+        \showloigiaitrue % Hiển thị lời giải, đổi thành \showloigiaifalse để ẩn
+        
+        % Định nghĩa lại lệnh \loigiai với khung đẹp
+        \renewcommand{\loigiai}[1]{%
+            \ifshowloigiai
+            \begin{tcolorbox}[colback=orange!10, colframe=orange!85!red,
+            title=\centering\faLightbulbO\ \textbf{Lời giải}]
+            #1
+            \end{tcolorbox}
+            \fi
+        }
+        
+        % Lệnh tạo liên kết với hộp màu cam
+        \newcommand{\myfbox}[2][]{%
+            \hypersetup{linkcolor=white}
+            \hyperlink{#1}{\fcolorbox{orange!85!black}{orange!30!white}{%
+            \textbf{\textcolor{black}{\color{blue}#2}}}}
+        }
+        
+        % Lệnh tạo liên kết với hộp bo tròn
+        \newcommand{\mfbox}[2][]{%
+            \hypersetup{linkcolor=black}
+            \hyperlink{#1}{\begin{tikzpicture}
+            \node[fill=orange!30!white, rounded corners=10pt,
+            text=blue, font=\bfseries] {#2};
+            \end{tikzpicture}}
+        }
+                    </pre>
+        
+            <p>Sử dụng <code>\loigiai{}</code> để chèn lời giải vào tài liệu, và <code>\myfbox{}</code>, <code>\mfbox{}</code>
+                để tạo các hộp liên kết đẹp trong LaTeX. Bạn có thể dễ dàng thay đổi màu sắc và hình dạng của hộp.</p>
+        </div>
     </div>
 <script>
     async function speakTextWithGoogleAPI(text, gender) {
