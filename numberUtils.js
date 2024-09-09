@@ -46,7 +46,11 @@ export function them_dola_cho_so(text) {
     // Biểu thức chính quy để tìm các số đứng giữa hai từ, nhưng không nằm trong đoạn $...$
     const pattern = /(\b\w+\b\s)(\d+)(\s\b\w+\b)/g;
     // const mathModePattern = /\$.*?\$/g;
-    const mathModePattern = /\$\$.*?\$\$|\$.*?\$/g;
+     const mathModePattern = /\$\$[\s\S]*?\$\$|\$.*?\$/g;
+
+    // Loại bỏ dấu xuống dòng sau $$ mở và trước $$ đóng
+    text = text.replace(/\$\$\s+/g, '$$') // Loại bỏ xuống dòng ngay sau $$ mở
+               .replace(/\s+\$\$/g, '$$'); // Loại bỏ xuống dòng ngay trước $$ đóng
     
     // Chuyển đổi các số không nằm trong đoạn $...$
     let segments = text.split(mathModePattern);
