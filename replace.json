@@ -26,7 +26,7 @@
     {"find": "\\\\in D", "replace": "\\in \\mathscr{D}"},
     {"find": "\\\\notin D", "replace": "\\notin \\mathscr{D}"},
     {"find": "backslash", "replace": " setminus "},
-    {"find": "mathrm{d}", "replace": "\\mathrm{\\,d}"},
+    {"find": "mathrm{d}", "replace": "mathrm{\\,d}"},
     {"find": " / / ", "replace": " \\parallel "},
     {"find": "\\^\\{\\\\prime\\}", "replace": "'"},
     {"find": "B C D \\\\cdot A' B' C'", "replace": "BCD.A'B'C'"},
