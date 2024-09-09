@@ -43,28 +43,29 @@ export function themdolachoso(text) {
 }
 
 export function them_dola_cho_so(text) {
-    // Biểu thức chính quy để tìm các số đứng giữa hai từ, nhưng không nằm trong đoạn $...$
-    const pattern = /(\b\w+\b\s)(\d+)(\s\b\w+\b)/g;
-    const mathModePattern = /\$.*?\$/g;
-    
-    // Chuyển đổi các số không nằm trong đoạn $...$
+    // Biểu thức chính quy để tìm các đoạn $...$ và $$...$$
+    const mathModePattern = /\$\$[\s\S]*?\$\$|\$[^$]*?\$/g;
+    // Biểu thức để tìm các số không nằm trong đoạn toán học (chỉ số không đứng cạnh $)
+    const pattern = /(?<!\$)(\d+)(?!\$)/g;
+
+    // Tách văn bản thành các đoạn không phải toán học (bên ngoài $...$ hoặc $$...$$)
     let segments = text.split(mathModePattern);
+    // Lưu lại các đoạn toán học $...$ hoặc $$...$$
     let matches = text.match(mathModePattern) || [];
-    
+
+    // Xử lý các đoạn không phải toán học: Thêm dấu $ vào các số
     segments = segments.map(segment => 
-        segment.replace(pattern, (match, before, number, after) => {
-            if (/[a-zA-Z]/.test(before) && /[a-zA-Z]/.test(after)) {
-                return `${before} $${number}$ ${after}`;
-            }
-            return match;
+        segment.replace(pattern, (match, number) => {
+            // Thêm dấu $ vào các con số không nằm trong toán học
+            return `$${number}$`;
         })
     );
-    
-    // Ghép các đoạn đã xử lý và các đoạn $...$ lại với nhau
+
+    // Ghép các đoạn đã xử lý và các đoạn toán học lại với nhau
     let result = segments.reduce((acc, segment, index) => {
         return acc + segment + (matches[index] || '');
     }, '');
-    
+
     return result;
 }
 export function removeLoiGiaiInEx(text) {
