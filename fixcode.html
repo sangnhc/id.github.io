@@ -939,12 +939,15 @@
          function processMathContent(input) {
                 // Tìm tất cả các nội dung bên trong dấu $
                 return input.replace(/\$([^$]+)\$/g, function (match, p1) {
-                    // Thay thế dấu . thành \cdot và dấu , thành {,}
-                    const processedContent = p1.replace(/\./g, '\\cdot ').replace(/,/g, '{,}');
+                    // Thay thế dấu . thành \cdot
+                    let processedContent = p1.replace(/\./g, '\\cdot ')
+                        // Chỉ thay dấu , thành {,} khi trước và sau là số
+                        .replace(/(\d),(\d)/g, '$1{,}$2');
                     // Trả về nội dung đã xử lý kèm theo dấu $
                     return `$${processedContent}$`;
                 });
             }
+
         function processContent(content) {
             content = replaceHeva(content);
             content = replaceHoac(content);
