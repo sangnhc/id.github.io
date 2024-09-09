@@ -156,17 +156,18 @@ export function processDoubleDollar(content) {
 export function replaceEInMath(content) {
     // Tìm tất cả các nội dung trong dấu $...$ hoặc $$...$$
     return content.replace(/(\$+)([^$]+)\1/g, function(match, delimiter, mathContent) {
-        // Thay thế ký tự e thành \mathrm{e} chỉ khi trước e là số, +, -, =, ^, kể cả có khoảng trắng
-        return delimiter + mathContent.replace(/\\text\{.*?\}|([0-9+\-=^]\s*)e/g, function(innerMatch, before) {
+        // Thay thế ký tự e thành \mathrm{e} chỉ khi trước e là số, +, -, =, ^ hoặc có khoảng trắng
+        return delimiter + mathContent.replace(/\\text\{.*?\}|([0-9+\-=^]\s*)e(\^?)/g, function(innerMatch, before, after) {
             // Nếu khớp với \text{...} thì giữ nguyên
             if (innerMatch.startsWith('\\text{')) {
                 return innerMatch;
             }
-            // Thay thế e bằng \mathrm{e}
-            return before + '\\mathrm{e}';
+            // Thay thế e bằng \mathrm{e}, nếu có ^ sau e thì giữ lại
+            return before + '\\mathrm{e}' + after;
         }) + delimiter;
     });
 }
+
 
 export function xoa_2cham_sau_thila(text) {
     text= processDoubleDollar(text)
