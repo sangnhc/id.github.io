@@ -71,6 +71,13 @@
         .full-width {
             grid-column: span 2;
         }
+        .btn-home {
+            margin-top: 20px;
+            background-color: #ff6347;
+        }
+        .btn-home:hover {
+            background-color: #ff4500;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +165,8 @@
 
         <h2 id="countResult">Kết quả:</h2>
         <p id="result"></p>
+        <!-- Nút Quay về trang chủ -->
+        <button class="btn btn-home" onclick="goHome()">Quay về trang chủ</button>
     </div>
 
     <script>
@@ -293,7 +302,9 @@
             document.getElementById('countResult').innerText = `Kết quả: Có ${count} số thỏa mãn điều kiện`;
             document.getElementById('result').innerText = resultText;
         }
-
+        function goHome() {
+                window.location.href = 'index.html'; // Điều hướng về trang chủ
+            }
         window.onload = calculate;
     </script>
 </body>
