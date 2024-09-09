@@ -154,6 +154,8 @@ export function processDoubleDollar(content) {
     });
 }
 export function replaceEInMath(content) {
+    // Thay thế e có dấu mũ ^ phía sau
+    content = content.replace(/e\^/g, '\\mathrm{e}\^');
     // Tìm tất cả các nội dung trong dấu $...$ hoặc $$...$$
     return content.replace(/(\$+)([^$]+)\1/g, function(match, delimiter, mathContent) {
         // Thay thế ký tự e thành \mathrm{e} chỉ khi trước e là số, +, -, =, ^ hoặc có khoảng trắng
@@ -172,6 +174,7 @@ export function replaceEInMath(content) {
 export function xoa_2cham_sau_thila(text) {
     text= processDoubleDollar(text)
     text=replaceEInMath(text)
+    
     // Biểu thức chính quy để tìm các từ khóa "ta có" hoặc "thì" theo sau bởi dấu :
     const keywordPattern = /\b(ta có|thì|là)\s*:/g;
     
