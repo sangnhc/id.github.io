@@ -117,22 +117,23 @@ export function thay_haicham_colon(text) {
     // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
     const mathModePattern = /\$([^$]+)\$/g;
     
-    // Thay thế dấu : bằng \colon, dấu . thành \cdot, dấu , thành {,}, và xử lý khoảng trống trước }
+    // Chỉ thay thế các ký tự trong đoạn $...$
     text = text.replace(mathModePattern, (match, content) => {
-        // Thay thế dấu : bằng \colon, dấu . thành \cdot và dấu , thành {,}
+        // Thay thế dấu : bằng \colon, dấu . thành \cdot, và dấu , thành {,} nếu trước và sau là số
         let processedContent = content.replace(/:/g, '\\colon ')
                                       .replace(/\./g, '\\cdot ')
-                                      // Chỉ thay dấu , khi trước và sau là số
                                       .replace(/(\d),(\d)/g, '$1{,}$2');
+        // Loại bỏ khoảng trắng trước dấu } ở cuối dòng nếu có trong đoạn $
+        processedContent = processedContent.replace(/ \}$/gm, '}');
+        
         // Trả về nội dung đã xử lý kèm theo dấu $
         return `$${processedContent}$`;
     });
 
-    // Loại bỏ khoảng trống trước dấu } ở cuối dòng nếu có
-    text = text.replace(/ \}$/gm, '}');
-
+    // Trả về text đã được xử lý chỉ trong đoạn $
     return text;
 }
+
 
 export function thay_haicham_colonG(text) {
     // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
