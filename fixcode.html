@@ -947,8 +947,15 @@
                     return `$${processedContent}$`;
                 });
             }
+        function processDoubleDollar(content) {
+                return content.replace(/\$\$(.*?)\$\$/gs, function (match, p1) {
+                    // Thêm xuống dòng trước và sau nội dung bên trong cặp dấu $$
+                    return `$$${p1.trim()}$$`;
+                });
+            }
 
         function processContent(content) {
+            content= processDoubleDollar(content)
             content = replaceHeva(content);
             content = replaceHoac(content);
             content = replaceChoice(content);
