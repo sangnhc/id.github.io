@@ -147,14 +147,30 @@ export function thay_haicham_colonG(text) {
 
     return text;
 }
- function processDoubleDollar(content) {
+export function processDoubleDollar(content) {
     return content.replace(/\$\$\s*([^\$]+?)\s*\$\$/g, function (match, p1) {
         // Loại bỏ khoảng trắng không cần thiết sau $$ mở và trước $$ đóng
         return `$$${p1}$$`;
     });
 }
+export function replaceEInMath(content) {
+    // Tìm tất cả các nội dung trong dấu $...$ hoặc $$...$$
+    return content.replace(/(\$+)([^$]+)\1/g, function(match, delimiter, mathContent) {
+        // Thay thế ký tự e thành \mathrm{e} ngoại trừ khi e nằm trong \text{...}
+        return delimiter + mathContent.replace(/\\text\{.*?\}|e/g, function(innerMatch) {
+            // Nếu khớp với \text{...} thì giữ nguyên
+            if (innerMatch.startsWith('\\text{')) {
+                return innerMatch;
+            }
+            // Nếu khớp với e thì thay thành \mathrm{e}
+            return '\\mathrm{e}';
+        }) + delimiter;
+    });
+}
+
 export function xoa_2cham_sau_thila(text) {
-    content= processDoubleDollar(content)
+    text= processDoubleDollar(text)
+    text=replaceEInMath(text)
     // Biểu thức chính quy để tìm các từ khóa "ta có" hoặc "thì" theo sau bởi dấu :
     const keywordPattern = /\b(ta có|thì|là)\s*:/g;
     
