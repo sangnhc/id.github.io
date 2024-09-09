@@ -127,11 +127,12 @@ export function thay_haicham_colon(text) {
         return `$${processedContent}$`;
     });
 
-    // Loại bỏ khoảng trống trước dấu } ở cuối dòng
+    // Loại bỏ khoảng trống trước dấu } ở cuối dòng nếu có
     text = text.replace(/ \}$/gm, '}');
 
     return text;
 }
+
 export function thay_haicham_colonG(text) {
     // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
     const mathModePattern = /\$([^$]+)\$/g;
