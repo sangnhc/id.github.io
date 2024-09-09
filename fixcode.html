@@ -948,11 +948,12 @@
                 });
             }
         function processDoubleDollar(content) {
-                return content.replace(/\$\$(.*?)\$\$/gs, function (match, p1) {
-                    // Thêm xuống dòng trước và sau nội dung bên trong cặp dấu $$
-                    return `$$${p1.trim()}$$`;
-                });
-            }
+    return content.replace(/\$\$\s*([^\$]+?)\s*\$\$/g, function (match, p1) {
+        // Loại bỏ khoảng trắng không cần thiết sau $$ mở và trước $$ đóng
+        return `$$${p1}$$`;
+    });
+}
+
 
         function processContent(content) {
             content= processDoubleDollar(content)

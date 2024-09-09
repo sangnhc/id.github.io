@@ -146,7 +146,14 @@ export function thay_haicham_colonG(text) {
 
     return text;
 }
+ function processDoubleDollar(content) {
+    return content.replace(/\$\$\s*([^\$]+?)\s*\$\$/g, function (match, p1) {
+        // Loại bỏ khoảng trắng không cần thiết sau $$ mở và trước $$ đóng
+        return `$$${p1}$$`;
+    });
+}
 export function xoa_2cham_sau_thila(text) {
+    text= processDoubleDollar(text)
     // Biểu thức chính quy để tìm các từ khóa "ta có" hoặc "thì" theo sau bởi dấu :
     const keywordPattern = /\b(ta có|thì|là)\s*:/g;
     
