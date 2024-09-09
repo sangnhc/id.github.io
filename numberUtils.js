@@ -37,7 +37,7 @@ export function themdolachoso(text) {
     text = text.replace(/\\int_/g, '\\displaystyle\\int_');
     text = text.replace(/\\left\.(.*?)\\right\|/g, '$1\\bigg|');
     text = text.replace(/\\left\\cdot(.*?)\\right\|/g, '$1\\bigg|');
-
+    text = text.replace(/\\\\mathrm/g, '\\mathrm');
 
     return text;
 }
