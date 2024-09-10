@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Ngân Hàng Latex</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4A90E2;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 98%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+
+        .file-info {
+            flex: 1;
+            color: #333;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #downloadAllBtn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.open-btn {
+            background-color: #f39c12;
+        }
+
+        button.open-btn:hover {
+            background-color: #e67e22;
+        }
+
+        /* Container for the two buttons */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        #backBtn,
+        #helpBtn {
+            flex: 1;
+            padding: 12px;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        #backBtn:hover {
+            background-color: #c0392b;
+        }
+
+        #helpBtn:hover {
+            background-color: #d35400;
+        }
+
+        #helpContent {
+            display: none;
+            margin-top: 20px;
+            background-color: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #helpContent h2 {
+            color: #4A90E2;
+            text-align: center;
+        }
+
+        #helpContent p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Quản Lý File LaTeX</h1>
+        <input type="file" id="folderInput" webkitdirectory multiple>
+        <button id="downloadAllBtn" disabled>Tải Xuống Tất Cả File .tex</button>
+        <ul id="fileList"></ul>
+
+        <!-- Nút "Quay về trang chủ" và "Hướng dẫn sử dụng" cùng một hàng -->
+        <div class="button-container">
+            <button id="backBtn" onclick="window.location.href='index.html'">Quay về trang chủ</button>
+            <button id="helpBtn">Hướng dẫn sử dụng</button>
+        </div>
+
+        <!-- Nội dung hướng dẫn sử dụng -->
+        <div id="helpContent">
+            <h2>Hướng Dẫn Sử Dụng Trang Quản Lý File LaTeX</h2>
+            <p><strong>1. Chọn thư mục:</strong> Nhấn vào ô "Chọn thư mục" để chọn thư mục chứa các file LaTeX từ máy của bạn.
+                Web sẽ tự động lọc và hiển thị các file có đuôi .tex.</p>
+            <p><strong>2. Hiển thị danh sách file:</strong> Sau khi chọn thư mục, trang web sẽ liệt kê các file .tex, và
+                bạn có thể mở hoặc tải xuống từng file.</p>
+            <p><strong>3. Nút mở file:</strong> Nhấn vào nút "Mở" bên cạnh mỗi file để xem nội dung file LaTeX trong một
+                tab mới.</p>
+            <p><strong>4. Nút tải xuống file:</strong> Nhấn vào nút "Tải xuống" để tải file .tex về máy.</p>
+            <p><strong>5. Tải xuống tất cả:</strong> Nhấn nút "Tải xuống tất cả file .tex" để tải tất cả các file đã chọn
+                dưới dạng tệp zip.</p>
+            <p><strong>6. Quay về trang chủ:</strong> Nhấn nút "Quay về trang chủ" để trở lại trang chính của bạn.</p>
+            <p><strong>7. Khuyết Khích:</strong> Tải về giải nén để ở thư mục Onedrive hoặc Google drive để tiện lưu và sử dụng trên web.</p>
+        </div>
+    </div>
+
+    <script>
+        let texFiles = [];
+        let fileNamesMap = {};
+
+        document.getElementById('folderInput').addEventListener('change', handleFiles);
+        document.getElementById('downloadAllBtn').addEventListener('click', downloadAllFiles);
+        document.getElementById('helpBtn').addEventListener('click', toggleHelp);
+
+        function handleFiles(event) {
+            const files = event.target.files;
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = ''; // Clear previous list
+            texFiles = []; // Reset texFiles array
+            fileNamesMap = {}; // Reset file name tracking
+
+            const exclusionPatterns = [/^_MASOS/, /^ans.*\.tex$/];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                // Only consider .tex files and skip excluded files and files in _MACOS folders
+                if (file.name.endsWith('.tex') && !isExcluded(file.name, exclusionPatterns) && !file.webkitRelativePath.includes('_MACOS')) {
+                    const duplicate = fileNamesMap[file.name];
+
+                    if (duplicate) {
+                        const userChoice = confirm(`File ${file.name} đã tồn tại. Bạn có muốn giữ cả hai phiên bản không?`);
+                        if (userChoice) {
+                            const newName = addIndexToFileName(file.name, duplicate);
+                            fileNamesMap[newName] = 1; // Mark the new name as well
+                            texFiles.push({ file: file, name: newName });
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        fileNamesMap[file.name] = 1;
+                        texFiles.push({ file: file, name: file.name });
+                    }
+
+                    const listItem = document.createElement('li');
+                    const fileInfo = document.createElement('span');
+                    fileInfo.classList.add('file-info');
+                    fileInfo.textContent = file.webkitRelativePath; // Show the full path including subfolders
+                    listItem.appendChild(fileInfo);
+
+                    // Create Open button
+                    const openButton = document.createElement('button');
+                    openButton.classList.add('open-btn');
+                    openButton.textContent = 'Mở';
+                    openButton.addEventListener('click', () => openFile(file));
+                    listItem.appendChild(openButton);
+
+                    // Create Download button
+                    const downloadButton = document.createElement('button');
+                    downloadButton.textContent = 'Tải xuống';
+                    downloadButton.addEventListener('click', () => downloadFile(file));
+                    listItem.appendChild(downloadButton);
+
+                    fileList.appendChild(listItem);
+                }
+            }
+
+            // Enable the "Download All" button if there are .tex files
+            if (texFiles.length > 0) {
+                document.getElementById('downloadAllBtn').disabled = false;
+            }
+        }
+
+        // Toggle hiển thị phần hướng dẫn sử dụng
+        function toggleHelp() {
+            const helpContent = document.getElementById('helpContent');
+            if (helpContent.style.display === 'none' || helpContent.style.display === '') {
+                helpContent.style.display = 'block';
+            } else {
+                helpContent.style.display = 'none';
+            }
+        }
+
+        // Check if the file matches any exclusion patterns
+        function isExcluded(fileName, patterns) {
+            return patterns.some(pattern => pattern.test(fileName));
+        }
+
+        // Add index to duplicate file name (e.g., file.tex -> file(1).tex)
+        function addIndexToFileName(name, count) {
+            const nameParts = name.split('.');
+            const baseName = nameParts.slice(0, -1).join('.');
+            const extension = nameParts[nameParts.length - 1];
+            return `${baseName}(${count}).${extension}`;
+        }
+
+        // Open the file content in a new window
+        function openFile(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const newWindow = window.open("", "_blank");
+                newWindow.document.write('<pre>' + e.target.result + '</pre>');
+                newWindow.document.title = file.name;
+            };
+            reader.readAsText(file);
+        }
+
+        // Download a single file
+        function downloadFile(file) {
+            const url = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // Clean up the URL object
+        }
+
+        // Download all .tex files as a zip without any folders, just the files
+        function downloadAllFiles() {
+            const zip = new JSZip();
+
+            // Add each .tex file to the zip without preserving folder structure
+            texFiles.forEach(({ file, name }) => {
+                zip.file(name, file);
+            });
+
+            // Generate the zip and trigger download
+            zip.generateAsync({ type: "blob" })
+                .then(function (content) {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(content);
+                    a.download = "latex_files.zip";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+        }
+    </script>
+
+</body>
+
+</html>

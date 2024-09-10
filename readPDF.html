@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho sách PDF</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .accordion {
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            transition: 0.4s;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .accordion-math {
+            background-color: #1abc9c;
+            color: white;
+        }
+
+        .accordion-math.active,
+        .accordion-math:hover {
+            background-color: #16a085;
+        }
+
+        .accordion-physics {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .accordion-physics.active,
+        .accordion-physics:hover {
+            background-color: #2980b9;
+        }
+
+        .accordion-literature {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .accordion-literature.active,
+        .accordion-literature:hover {
+            background-color: #c0392b;
+        }
+
+        .panel {
+            padding: 0 18px;
+            background-color: white;
+            display: none;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .book-list {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .book-item {
+            background-color: #fff;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .book-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Kho sách PDF</h1>
+    <button class="accordion accordion-math">Giáo Án - Kế Hoạch Bài Dạy</button>
+    <div class="panel">
+        <ul class="book-list">
+            <li class="book-item"><a href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/K%E1%BA%BF%20ho%E1%BA%A1ch%20b%C3%A0i%20d%E1%BA%A1y%20kh%E1%BB%91i%2011%20CTST%20-%20HK1(%2024_25)-GI%C3%81O%20VI%C3%8AN.pdf"
+                    target="_blank">KHBG Toán 11<br>HKI</a></li>
+            <li class="book-item"><a
+                    href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/K%E1%BA%BF%20ho%E1%BA%A1ch%20b%C3%A0i%20d%E1%BA%A1y%20CHUY%C3%8AN%20%C4%90%E1%BB%80%20%20kh%E1%BB%91i%2011%20CTST%20-%20HK1(%2024_25)-GI%C3%81O%20VI%C3%8AN.pdf"
+                    target="_blank">KHBG Chuyên Đề<br>Toán 11 HKI</a></li>
+            <li class="book-item"><a
+                    href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/K%E1%BA%BF%20ho%E1%BA%A1ch%20b%C3%A0i%20d%E1%BA%A1y%20kh%E1%BB%91i%2012%20CTST%20-%20HK1%20(24-25).pdf"
+                    target="_blank">KHBG Toán 12<br>HKI</a></li>
+            <li class="book-item"><a
+                    href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/K%E1%BA%BF%20Ho%E1%BA%A1ch%20b%C3%A0i%20d%E1%BA%A1y%20kh%E1%BB%91i%2012%20CTST%20-HK2%20(24-25).pdf"
+                    target="_blank">KHBG Toán 12<br>HKII</a></li>
+        </ul>
+    </div>
+    <button class="accordion accordion-math">Toán 12</button>
+    <div class="panel">
+        <ul class="book-list">
+            <li class="book-item"><a href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/K12_C1B1.pdf" target="_blank">Đơn Điệu Cực Trị<br> Hàm Số</a></li>
+        </ul>
+    </div>
+
+    <button class="accordion accordion-physics">Toán 11</button>
+    <div class="panel">
+        <ul class="book-list">
+            <li class="book-item"><a href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/BG11_KNTT_HKI_DS_GV_P.pdf"
+                    target="_blank">Giải Tích HKI</a></li>
+            <li class="book-item"><a href="https://gitlab.com/nguyensangnhc/mybook/-/raw/main/BG11_KNTT_HKI_HH_GV_P.pdf"
+                    target="_blank">Hình Học HKI</a></li>
+        </ul>
+    </div>
+
+    <button class="accordion accordion-literature">Toán 10</button>
+    <div class="panel">
+        <ul class="book-list">
+            <li class="book-item"><a href="https://example.com/literature_book_1.pdf" target="_blank">Sách ..</a>
+            </li>
+            <li class="book-item"><a href="https://example.com/literature_book_2.pdf" target="_blank">Sách ..</a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
