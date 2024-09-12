@@ -78,11 +78,11 @@
                                             "content": "${tinhdodaicungkimdongho(e)}"
                                         },
                                         {
-                                            "name": "Tính số vong quay cảu bánh xe",
+                                            "name": "Tính số vong quay của bánh xe",
                                             "content": "${tinhovongquaybanhxe(e)}"
                                         },
                                         {
-                                            "name": "Tính quãng đương kim phút quay",
+                                            "name": "Tính quãng đường kim phút quay",
                                             "content": "${tinhquangduongkimphut(e)}"
                                         }
                                     ]
@@ -159,6 +159,41 @@
         {
             "name": "Câu Đúng Sai",
             "K12": [
+                {
+                  "name": "Khối 11",
+                    "Chương": [
+                      {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Cung Góc Lượng Giác",
+                                    "baitoan": [
+                                        {
+                                            "name": "TF-Đổi Radian Sang Độ",
+                                            "content": "${TFdoirad2do(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Đổi Độ Sang Radian",
+                                            "content": "${TFdoido2rad(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Cung, Góc Đường Tròn",
+                                            "content": "${TFcunggocdtron(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Cung, Góc Bánh Xe Quay",
+                                            "content": "${TFcunggocbanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Thực Tế Về Vệ Tinh",
+                                            "content": "${TFthucteVeTinh(e)}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     "name": "Khối 12",
                     "Chương": [
@@ -263,6 +298,41 @@
                     }
 
                   ]
+                },
+                {
+                  "name": "Khối 11",
+                    "Chương": [
+                      {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Cung Góc Lượng Giác",
+                                    "baitoan": [                                        
+                                        {
+                                            "name": "TL-Đổi Độ Sang Radian",
+                                            "content": "${TLdoiDeg2Rad(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Đổi Radian Sang Độ",
+                                            "content": "${TLdoiRad2Deg(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Độ Bánh Xe Quay",
+                                            "content": "${TLtinhdobanhxequay(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Góc Bánh Răng Xe Quay",
+                                            "content": "${TLtinhgocbanhrangxequay(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Quãng Đường Xe Chạy",
+                                            "content": "${TLthuctechayxedi(e)}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 },
                 {
                     "name": "Khối 12",

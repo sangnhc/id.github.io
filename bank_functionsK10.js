@@ -546,3 +546,414 @@ function tinhquangduongkimphut(e) {
     return exercise;
 }
 
+function TFdoirad2do(e) {
+    // Random các giá trị cho góc (rad) từ pi/12 đến 2pi
+    let randomValues = [
+        {numerator: 1, denominator: 9, degree: 20},
+        {numerator: 5, denominator: 4, degree: 225},
+        {numerator: 3, denominator: 5, degree: 108},
+        {numerator: 7, denominator: 12, degree: 105}
+    ];
+
+    // Shuffle thứ tự của các mệnh đề
+    randomValues.sort(() => Math.random() - 0.5);
+
+    // Tạo mệnh đề đúng/sai ngẫu nhiên
+    let statements = randomValues.map(({numerator, denominator, degree}, index) => {
+        // Random True/False cho các mệnh đề
+        let isTrue = Math.random() < 0.5;
+        let correctDegree = (numerator / denominator) * 180; // Đổi rad sang độ thực tế
+        
+        // Tạo mệnh đề đúng/sai
+        let displayedDegree = isTrue ? Math.round(correctDegree) : Math.round(correctDegree) + (index % 2 === 0 ? 10 : -10); // Tạo nhiễu nếu sai
+        return isTrue
+            ? `{\\True \\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}}`
+            : `{\\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}}`;
+    });
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Đổi số đo của các góc sang độ. Xét tính đúng sai của các mệnh đề sau:
+    \\choiceTF
+    ${statements.join("\n")}
+    \\loigiai{
+    Áp dụng công thức đổi rad sang độ $n=\\dfrac{\\alpha \\cdot 180}{\\pi}$.
+    \\begin{itemize}
+    ${randomValues.map(({numerator, denominator, degree}, index) => {
+        let correctDegree = (numerator / denominator) * 180;
+        let displayedDegree = degree;
+        let correct = Math.round(correctDegree) === displayedDegree ? "Đúng" : "Sai";
+        return `\\item ${correct}: $n=\\dfrac{${numerator} \\pi}{${denominator}} \\cdot \\dfrac{180^{\\circ}}{\\pi} = ${correctDegree}^{\\circ}$`;
+    }).join("\n")}
+    \\end{itemize}
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+
+function TFdoido2rad(e) {
+    // Random các giá trị cho góc (độ) và radian đúng/sai
+    let randomValues = [
+        {degree: 120, radNumerator: 2, radDenominator: 3, isTrue: false},
+        {degree: 250, radNumerator: 25, radDenominator: 18, isTrue: true},
+        {degree: 135, radNumerator: 3, radDenominator: 4, isTrue: true},
+        {degree: 300, radNumerator: 5, radDenominator: 3, isTrue: true}
+    ];
+
+    // Shuffle thứ tự của các mệnh đề
+    randomValues.sort(() => Math.random() - 0.5);
+
+    // Tạo mệnh đề đúng/sai ngẫu nhiên
+    let statements = randomValues.map(({degree, radNumerator, radDenominator, isTrue}) => {
+        return isTrue
+            ? `{\\True ${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}} rad}`
+            : `{${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}} rad}`;
+    });
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    %% Câu $2$:
+    \\begin{ex}
+    Đổi số đo của các góc sang rađian. Xét tính đúng sai của các mệnh đề sau:
+    \\choiceTF
+    ${statements.join("\n")}
+    \\loigiai{
+    \\begin{itemize}
+    ${randomValues.map(({degree, radNumerator, radDenominator, isTrue}) => {
+        let correctNumerator = degree;
+        let correctDenominator = 180;
+        let [simplifiedNumerator, simplifiedDenominator] = simplifyFraction(correctNumerator, correctDenominator);
+        let correct = isTrue ? "Đúng" : "Sai";
+        return `\\item ${correct}: Ta có ${degree}^{\\circ} = \\dfrac{${degree} \\cdot \\pi}{180} = \\dfrac{${simplifiedNumerator} \\pi}{${simplifiedDenominator}} rad`;
+    }).join("\n")}
+    \\end{itemize}
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+
+function gcd(a, b) {
+    if (!b) return a;
+    return gcd(b, a % b);
+}
+
+function simplifyFraction(numerator, denominator) {
+    let divisor = gcd(numerator, denominator);
+    return [numerator / divisor, denominator / divisor];
+}
+
+function TFcunggocdtron(e) {
+    // Các giá trị ngẫu nhiên cho bán kính và số đo cung tròn (radian)
+    let randomValues = [
+        {radius: 9, arcLength: "3 \\pi", radian: "\\dfrac{\\pi}{3}", isTrue: true},
+        {radius: 30, arcLength: "75", radian: "2.5", isTrue: false},
+        {radius: 10, arcLength: "24", radian: "\\dfrac{5}{3}", isTrue: false},
+        {radius: 6, arcLength: "3", radian: "\\dfrac{1}{2}", isTrue: true}
+    ];
+
+    // Shuffle thứ tự của các mệnh đề
+    randomValues.sort(() => Math.random() - 0.5);
+
+    // Tạo mệnh đề đúng/sai ngẫu nhiên
+    let statements = randomValues.map(({radius, arcLength, radian, isTrue}) => {
+        return isTrue
+            ? `{\\True Đường tròn có bán kính bằng $${radius}$ cm thì số đo (radian) của cung có độ dài $${arcLength}$ cm bằng $${radian}$ rad}`
+            : `{Đường tròn có bán kính bằng $${radius}$ cm thì số đo (radian) của cung có độ dài $${arcLength}$ cm bằng $${radian}$ rad}`;
+    });
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Xét tính đúng sai của các mệnh đề sau:
+    \\choiceTF
+    ${statements.join("\n")}
+    \\loigiai{
+    \\begin{itemsize}
+    ${randomValues.map(({radius, arcLength, radian, isTrue}) => {
+        let correct = isTrue ? "Đúng" : "Sai";
+        let explanation;
+        if (isTrue) {
+            explanation = `\\item ${correct}: $\\ell=R \\cdot \\alpha \\Rightarrow \\alpha=\\dfrac{l}{R}=\\dfrac{${arcLength}}{${radius}} = ${radian}$ rad`;
+        } else {
+            explanation = `\\item ${correct}: Áp dụng công thức $\\ell=R \\cdot \\alpha$ ta có $R=\\dfrac{l}{\\alpha}=\\dfrac{${arcLength}}{${radian}}$, tính ra không khớp với bán kính`;
+        }
+        return explanation;
+    }).join("\n")}
+    \\end{itemsize}
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+ function TFcunggocbanhxe(e){
+    // Sinh đường kính ngẫu nhiên từ 500 mm đến 800 mm
+    let diameter = Math.floor(Math.random() * (800 - 500 + 1)) + 500;
+    
+    // Sinh số vòng quay ngẫu nhiên từ 8 đến 15 vòng
+    let rounds = Math.floor(Math.random() * (15 - 8 + 1)) + 8;
+    
+    // Sinh thời gian ngẫu nhiên từ 4 đến 10 giây
+    let timeInSeconds = Math.floor(Math.random() * (10 - 4 + 1)) + 4;
+
+    // Tính các thông số
+    let roundsPerSecond = rounds / timeInSeconds; // Số vòng quay trong 1 giây
+    let angleInDegrees = roundsPerSecond * 360;   // Góc quay (độ) trong 1 giây
+    let angleInRadians = roundsPerSecond * 2 * Math.PI; // Góc quay (radian) trong 1 giây
+    let roundsPerMinute = roundsPerSecond * 60;   // Số vòng quay trong 1 phút
+    let circumferenceInMeters = (diameter / 1000) * Math.PI; // Chu vi bánh xe (mét)
+    let distanceInOneMinute = circumferenceInMeters * roundsPerMinute; // Quãng đường trong 1 phút
+
+    // Sinh số vòng sai dựa trên một giá trị lệch nhỏ
+    let wrongRoundsPerMinute = Math.floor(roundsPerMinute + Math.random() * 10 - 5); // Lệch nhỏ từ 5 vòng
+
+    // Tạo các phương án đúng
+    let correctStatements = [
+        `{\\True Góc (theo độ) mà bánh xe quay được trong $1$ giây là $${angleInDegrees.toFixed(0)}^{\\circ}$}`,
+        `{\\True Quãng đường mà người đi xe đã đi được trong $1$ phút khoảng ${distanceInOneMinute.toFixed(0)} m}`
+    ];
+
+    // Tạo các phương án sai
+    let incorrectStatements = [
+        `{Góc (theo radian) mà bánh xe quay được trong $1$ giây là $\\dfrac{2 \\pi}{5}$ rad}`,
+        `{Trong một phút bánh xe quay được $${wrongRoundsPerMinute}$ vòng}`
+    ];
+
+    // Trộn ngẫu nhiên các phương án
+    let allStatements = correctStatements.concat(incorrectStatements).sort(() => Math.random() - 0.5);
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Một vận động viên đi xe đạp trên đường, bánh xe đạp của vận động viên này quay được $${rounds}$ vòng trong $${timeInSeconds}$ giây. Biết rằng đường kính của bánh xe đạp là $${diameter}$ mm.
+    \\choiceTF
+    ${allStatements.join("\n")}
+    \\loigiai{
+    \\begin{itemsize}
+    \\item Đúng: Trong $1$ giây, bánh xe đạp quay được $\\dfrac{${rounds}}{${timeInSeconds}}$ vòng. Vì một vòng ứng với góc bằng $360^{\\circ}$ nên góc mà bánh xe quay được trong $1$ giây là $$\\dfrac{${rounds}}{${timeInSeconds}} \\cdot 360 = ${angleInDegrees.toFixed(0)}^{\\circ}$$
+    \\item Sai: Vì một vòng ứng với góc bằng $2 \\pi$ rad nên góc mà bánh xe quay được trong $1$ giây là $$\\dfrac{${rounds}}{${timeInSeconds}} \\cdot 2 \\pi = ${angleInRadians.toFixed(2)}$$ (rad).
+    \\item Sai: Trong $1$ phút, bánh xe quay được $60 \\cdot \\dfrac{${rounds}}{${timeInSeconds}} = ${roundsPerMinute.toFixed(0)}$ vòng, không phải $${wrongRoundsPerMinute}$ vòng.
+    \\item Đúng: Chu vi của bánh xe đạp là $C = ${diameter} \\cdot \\pi$ mm, và quãng đường mà người đi xe đạp đã đi được trong $1$ phút là $$S = ${roundsPerMinute.toFixed(0)} \\times ${circumferenceInMeters.toFixed(2)} \\approx ${distanceInOneMinute.toFixed(0)}$$ mét.
+    \\end{itemsize}
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+function TFthucteVeTinh(e) {
+    // Sinh bán kính quỹ đạo ngẫu nhiên từ 8000 km đến 10000 km
+    let radius = Math.floor(Math.random() * (10000 - 8000 + 1)) + 8000;
+
+    // Sinh thời gian hoàn thành một vòng quỹ đạo ngẫu nhiên từ 1 đến 3 giờ
+    let fullOrbitTime = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+
+    // Sinh thời gian ngẫu nhiên để tính toán các trường hợp
+    let timeForRandom1 = (Math.random() * 2 + 1).toFixed(2); // Random từ 1 đến 3 giờ
+    let timeForRandom2 = (Math.random() * 3 + 1).toFixed(2); // Random từ 1 đến 4 giờ
+    let randomTimeForFalseStatement = (Math.random() * (7 - 4) + 4).toFixed(2); // Random từ 4 đến 7 giờ
+    let randomTimeForAngle = (Math.random() * (6 - 3) + 3).toFixed(2); // Random từ 3 đến 6 giờ
+
+    // Tính chu vi quỹ đạo
+    let circumference = 2 * Math.PI * radius; // Chu vi quỹ đạo (km)
+
+    // Quãng đường vệ tinh di chuyển sau timeForRandom1 giờ
+    let distanceAfterTimeForRandom1 = (circumference / fullOrbitTime) * timeForRandom1;
+
+    // Quãng đường vệ tinh di chuyển sau timeForRandom2 giờ
+    let distanceAfterTimeForRandom2 = (circumference / fullOrbitTime) * timeForRandom2;
+
+    // Quãng đường ngẫu nhiên sai để tạo nhiễu (240000 km là giá trị cố định)
+    let wrongDistance = 240000;
+
+    // Tính số vòng di chuyển sai
+    let hoursForWrongDistance = randomTimeForFalseStatement;
+
+    // Tính góc quay sau một thời gian ngẫu nhiên
+    let angleAfterRandomTime = (randomTimeForAngle / fullOrbitTime) * 2 * Math.PI;
+
+    // Tạo các phương án đúng
+    let correctStatements = [
+        `{\\True Quãng đường vệ tinh $X$ chuyển động được sau $${timeForRandom1}$ giờ là $\\approx ${distanceAfterTimeForRandom1.toFixed(2)}$ km}`,
+        `{\\True Quãng đường vệ tinh $X$ chuyển động được sau $${timeForRandom2}$ giờ là $\\approx ${distanceAfterTimeForRandom2.toFixed(2)}$ km}`,
+        `{\\True Giả sử vệ tinh di chuyển theo chiều dương của đường tròn, sau ${randomTimeForAngle} giờ thì vệ tinh vẽ nên một góc $\\approx ${angleAfterRandomTime.toFixed(2)} rad$}`
+    ];
+
+    // Tạo các phương án sai
+    let incorrectStatements = [
+        `{Sau khoảng ${hoursForWrongDistance} giờ thì $X$ di chuyển được quãng đường ${wrongDistance} km}`
+    ];
+
+    // Trộn ngẫu nhiên các phương án
+    let allStatements = correctStatements.concat(incorrectStatements).sort(() => Math.random() - 0.5);
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Từ một vị trí ban đầu trong không gian, vệ tinh $X$ chuyển động theo quỹ đạo là một đường tròn quanh Trái Đất và luôn cách tâm Trái Đất một khoảng bằng $${radius}$ km. Sau $${fullOrbitTime}$ giờ thì vệ tinh $X$ hoàn thành hết một vòng di chuyển.
+    \\choiceTF
+    ${allStatements.join("\n")}
+    \\loigiai{
+    \\begin{itemize}
+    \\item Đúng: Một vòng di chuyển của $X$ chính là chu vi đường tròn:
+    $$C = 2 \\pi R = 2 \\pi \\cdot ${radius} = ${circumference.toFixed(2)}$$ (km).
+    Sau $${timeForRandom1}$ giờ, vệ tinh di chuyển được quãng đường là:
+    $$\\dfrac{${timeForRandom1}}{${fullOrbitTime}} \\cdot C = ${distanceAfterTimeForRandom1.toFixed(2)}$$ (km).
+    \\item Đúng: Sau $${timeForRandom2}$ giờ, vệ tinh di chuyển được quãng đường là:
+    $$\\dfrac{${timeForRandom2}}{${fullOrbitTime}} \\cdot C = ${distanceAfterTimeForRandom2.toFixed(2)}$$ (km).
+    \\item Sai: Số giờ để vệ tinh $X$ thực hiện quãng đường $240000$ km là:
+    $$\\dfrac{240000}{${radius} \\cdot \\pi} \\approx 8,3$$ (giờ).
+    \\item Đúng: Sau ${randomTimeForAngle} giờ thì số vòng tròn mà vệ tinh $X$ di chuyển được là:
+    $$\\dfrac{${randomTimeForAngle}}{${fullOrbitTime}} \\cdot 2 \\pi \\approx ${angleAfterRandomTime.toFixed(2)} rad$$.
+    \\end{itemize}
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+function TLdoiDeg2Rad(e) {
+    // Sinh số đo góc ngẫu nhiên trong khoảng từ 30 đến 90 độ và phút ngẫu nhiên từ 0 đến 59
+    let degrees = Math.floor(Math.random() * (300 - 5 + 1)) + 5;           
+    let minutes = Math.floor(Math.random() * 60);
+
+    // Tính số đo góc bằng độ
+    let decimalDegree = degrees + minutes / 60;
+
+    // Tính số đo góc bằng radian
+    let radians = (decimalDegree * Math.PI) / 180;
+
+    // Làm tròn kết quả đến hàng phần chục
+    let roundedRadians = radians.toFixed(1);
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Đổi số đo của góc $${degrees}^{\\circ} ${minutes}'$ sang đơn vị radian với độ chính xác đến hàng phần chục.
+    \\shortans{$${roundedRadians}$}
+    \\loigiai{
+    Áp dụng công thức $\\alpha=\\dfrac{a \\cdot \\pi}{180}$ với $\\alpha$ tính bằng radian, $a$ tính bằng độ.\\\\
+    Trước tiên ta đổi $${degrees}^{\\circ} ${minutes}'=\\left(${degrees}+\\dfrac{${minutes}}{60}\\right)^0$.\\\\
+    Áp dụng công thức, ta được $\\alpha=\\dfrac{\\left(${degrees}+\\dfrac{${minutes}}{60}\\right) \\cdot \\pi}{180}=\\dfrac{${(decimalDegree * Math.PI).toFixed(0)} \\pi}{180} \\approx ${radians.toFixed(9)} \\approx ${roundedRadians}$.
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+function TLdoiRad2Deg(e) {
+    // Sinh giá trị radian ngẫu nhiên từ 0.1 đến 5 rad
+    let radians = (Math.random() * (5 - 0.1) + 0.1).toFixed(1);
+
+    // Chuyển đổi từ radian sang độ và làm tròn đến độ
+    let degrees = (radians * 180 / Math.PI).toFixed(0); // Làm tròn đến phần nguyên
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Đổi số đo của góc $${radians}$ radian sang đơn vị độ và làm tròn đến phần độ.
+    \\shortans{$${degrees}$}
+    \\loigiai{
+    Áp dụng công thức $a=\\dfrac{\\alpha \\cdot 180}{\\pi}$ với $\\alpha$ tính bằng radian, $a$ tính bằng độ.\\\\
+    Ta có $${radians}$ rad = $\\dfrac{${radians} \\cdot 180}{\\pi} \\approx ${degrees}^{\\circ}$.
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+function TLtinhdobanhxequay(e) {
+   let totalRounds = Math.floor(Math.random() * 15) + 7; // Sinh số từ 1 đến 5
+    let totalTime = Math.floor(Math.random() * 10) + 5;   // Sinh số từ 5 đến 10
+    let timeForRotation = Math.floor(Math.random() * 8) + 1; // Sinh số từ 1 đến 4
+        
+
+    // Tính số vòng quay trong thời gian ngẫu nhiên
+    let roundsInGivenTime = (totalRounds * timeForRotation) / totalTime;
+
+    // Tính góc quay (theo độ)
+    let angleInDegrees = (roundsInGivenTime * 360).toFixed(0); // Một vòng là 360 độ
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Bánh xe đạp của người đi xe đạp quay được $${totalRounds}$ vòng trong $${totalTime}$ giây. Hỏi trong $${timeForRotation}$ giây, bánh xe quay được $1$ góc bao nhiêu (tính theo độ)?
+    \\shortans{$${angleInDegrees}$}
+    \\loigiai{
+    Trong $${timeForRotation}$ giây bánh xe đạp quay được $\\dfrac{${totalRounds} \\cdot ${timeForRotation}}{${totalTime}}=\\dfrac{${(totalRounds * timeForRotation).toFixed(0)}}{${totalTime}}$ vòng, tức là quay được góc:
+    $$\\dfrac{${(totalRounds * timeForRotation).toFixed(0)}}{${totalTime}} \\cdot 360 = ${angleInDegrees}^{\\circ}$$
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+function TLtinhgocbanhrangxequay(e) {
+    // Sinh số răng của bánh xe ngẫu nhiên từ 50 đến 100 răng
+    let totalTeeth = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+
+    // Sinh số răng di chuyển ngẫu nhiên từ 5 đến 20 răng
+    let movedTeeth = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
+
+    // Tính số đo góc bánh xe đã quay được (theo độ)
+    let angle = (movedTeeth * 360) / totalTeeth;
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Một bánh xe có $${totalTeeth}$ răng. Số đo góc mà bánh xe đã quay được khi di chuyển $${movedTeeth}$ răng là 
+    \\shortans{$${angle.toFixed(0)}$}
+    \\loigiai{
+    Ta có $${totalTeeth}$ răng có chiều dài là $2 \\pi R$ nên $${movedTeeth}$ răng có chiều dài $l=\\dfrac{${movedTeeth} \\cdot 2 \\pi R}{${totalTeeth}}=\\dfrac{${(movedTeeth * 2).toFixed(0)} \\pi}{${totalTeeth}} R$.\\\\
+    Theo công thức $l=R \\alpha \\Leftrightarrow \\alpha=\\dfrac{l}{R}=\\dfrac{\\dfrac{${(movedTeeth * 2).toFixed(0)}}{${totalTeeth}} \\pi R}{R}=\\dfrac{${(movedTeeth * 2).toFixed(0)}}{${totalTeeth}} \\pi$. Từ đó ta có $a=\\dfrac{180 \\alpha}{\\pi}=\\dfrac{180 \\cdot \\dfrac{${(movedTeeth * 2).toFixed(0)}}{${totalTeeth}}}{\\pi} = ${angle.toFixed(0)}^{\\circ}$.\\\\
+    Cách khác: $${totalTeeth}$ răng tương ứng với $360^{\\circ}$ nên $${movedTeeth}$ răng tương ứng với $\\dfrac{${movedTeeth} \\cdot 360}{${totalTeeth}}=${angle.toFixed(0)}^{\\circ}$.
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+} 
+function TLthuctechayxedi(e) {
+    // Sinh số vòng quay trong 20 giây ngẫu nhiên từ 50 đến 100 vòng
+    let totalRoundsIn20Seconds = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+
+    // Sinh thời gian ngẫu nhiên cho tính toán trong khoảng từ 1 đến 5 phút
+    let timeInMinutes = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+
+    // Bán kính bánh xe cố định, 6.5 cm
+    let radiusInCm = 6.5;
+
+    // Tính số vòng quay trong khoảng thời gian ngẫu nhiên
+    let totalRoundsInTime = (timeInMinutes * 60 / 20) * totalRoundsIn20Seconds;
+
+    // Tính chu vi của bánh xe (cm)
+    let circumferenceInCm = 2 * Math.PI * radiusInCm;
+
+    // Tính tổng quãng đường xe đã đi được (cm)
+    let totalDistanceInCm = totalRoundsInTime * circumferenceInCm;
+
+    // Chuyển đổi từ cm sang km
+    let totalDistanceInKm = (totalDistanceInCm / 100000).toFixed(1);
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Trong $20$ giây bánh xe của xe gắn máy quay được $${totalRoundsIn20Seconds}$ vòng. Quãng đường xe gắn máy đã đi được bao nhiêu km trong vòng $${timeInMinutes}$ phút, biết rằng bán kính bánh xe gắn máy bằng $6{,}5$ cm. Kết quả làm tròn đến phần mười.
+    \\shortans{$${totalDistanceInKm}$}
+    \\loigiai{
+    Trong $${timeInMinutes}$ phút, xe đi được $\\dfrac{${timeInMinutes} \\cdot 60}{20} \\cdot ${totalRoundsIn20Seconds} = ${totalRoundsInTime.toFixed(0)}$ vòng.\\\\
+    Độ dài $1$ vòng bằng chu vi bánh xe là $2 \\pi R = 2 \\cdot 3{,}1416 \\cdot 6{,}5 = ${circumferenceInCm.toFixed(4)}$ cm.\\\\
+    Vậy quãng đường xe đi được là $${totalRoundsInTime.toFixed(0)} \\times ${circumferenceInCm.toFixed(4)} = ${totalDistanceInCm.toFixed(3)}$ cm $\\approx ${totalDistanceInKm}$ km.
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+
+
