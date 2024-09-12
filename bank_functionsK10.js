@@ -404,7 +404,7 @@ function tinhdodaicungkimdongho(e) {
     return exercise;
 }
 
-function tínhovongquaybanhxe(e) {
+function tinhovongquaybanhxe(e) {
     // Random đường kính bánh xe từ 40 đến 70 cm
     let diameter = Math.floor(Math.random() * 31) + 40; // Đường kính từ 40 đến 70 cm
 

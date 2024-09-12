@@ -79,7 +79,7 @@
                                         },
                                         {
                                             "name": "Tính số vong quay cảu bánh xe",
-                                            "content": "${tínhovongquaybanhxe(e)}"
+                                            "content": "${tinhovongquaybanhxe(e)}"
                                         }
                                     ]
                                 },
