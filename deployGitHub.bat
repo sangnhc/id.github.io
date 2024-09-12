@@ -17,6 +17,6 @@ git pull https://github.com/sangnhc/id.github.io main --allow-unrelated-historie
 REM Đẩy mã nguồn lên GitHub
 git push https://github.com/sangnhc/id.github.io main
 
+REM Thông báo hoàn thành và tự động thoát
 echo Đẩy mã nguồn lên GitHub thành công!
-pause
 exit

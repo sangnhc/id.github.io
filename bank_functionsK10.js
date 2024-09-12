@@ -469,3 +469,80 @@ function tinhovongquaybanhxe(e) {
     return exercise;
 }
 
+function gcd(a, b) {
+    if (!b) return a;
+    return gcd(b, a % b);
+}
+
+function simplifyFraction(numerator, denominator) {
+    let divisor = gcd(numerator, denominator);
+    return [numerator / divisor, denominator / divisor];
+}
+
+function formatFraction(numerator, denominator) {
+    // Nếu mẫu số là 1, chỉ hiển thị tử số
+    if (denominator === 1) return `${numerator}`;
+    return `\\dfrac{${numerator}}{${denominator}}`;
+}
+
+function tinhquangduongkimphut(e) {
+    // Random chiều dài kim giờ và kim phút
+    let hourHandLength = Math.floor(Math.random() * 11) + 5; // Chiều dài kim giờ từ 5 đến 15 cm
+    let minuteHandLength = Math.floor(Math.random() * 11) + 5; // Chiều dài kim phút từ 5 đến 15 cm
+
+    // Random số phút từ 10 đến 60 phút
+    let minutes = Math.floor(Math.random() * 51) + 10; // Thời gian từ 10 đến 60 phút
+
+    // Tính góc quay của kim phút và kim giờ trong khoảng thời gian đó
+    let minuteAngle = (2 * Math.PI) * (minutes / 60); // Góc quay của kim phút
+    let hourAngle = (2 * Math.PI / 12) * (minutes / 60); // Góc quay của kim giờ
+
+    // Tính quãng đường mà kim phút và kim giờ đi được
+    let minuteDistance = minuteAngle * minuteHandLength; // Quãng đường kim phút
+    let hourDistance = hourAngle * hourHandLength;       // Quãng đường kim giờ
+
+    // Tính tổng quãng đường
+    let totalDistanceNumerator = Math.round(minuteDistance * 3 + hourDistance * 3); // Tử số (tính cho phân số)
+    let totalDistanceDenominator = 3; // Mẫu số của phân số (để có dạng phân số đẹp)
+
+    // Rút gọn phân số
+    let [simplifiedNumerator, simplifiedDenominator] = simplifyFraction(totalDistanceNumerator, totalDistanceDenominator);
+
+    // Tạo các phương án sai dựa trên các lỗi học sinh thường gặp
+    let wrongAnswer1 = `\\dfrac{${simplifiedNumerator}}{${simplifiedDenominator * 2}} \\pi`;  // Sai mẫu số lớn hơn
+    let wrongAnswer2 = `\\dfrac{${simplifiedNumerator}}{${simplifiedDenominator / 2}} \\pi`;  // Sai mẫu số nhỏ hơn
+    let wrongAnswer3 = `\\dfrac{${simplifiedNumerator + 5}}{${simplifiedDenominator}} \\pi`;  // Sai tử số tăng
+
+    // Đáp án đúng
+    let correctAnswerFormatted = `${formatFraction(simplifiedNumerator, simplifiedDenominator)} \\pi`;
+
+    // Các đáp án sai
+    let answers = [
+        `{\\True $${correctAnswerFormatted}$}`,  // Đáp án đúng
+        `{$${wrongAnswer1}$}`,                   // Sai phương án 1
+        `{$${wrongAnswer2}$}`,                   // Sai phương án 2
+        `{$${wrongAnswer3}$}`                    // Sai phương án 3
+    ];
+
+    // Shuffle các câu trả lời
+    answers.sort(() => Math.random() - 0.5);
+
+    // Tạo LaTeX-like output cho đề bài
+    let exercise = `
+    \\begin{ex}
+    Kim giờ của đồng hồ dài $${hourHandLength}$ cm, kim phút dài $${minuteHandLength}$ cm. Tổng quãng đường mũi kim phút, kim giờ đi được trong $${minutes}$ phút bằng
+    \\choice
+    ${answers.join("\n")}
+    \\loigiai{
+    Trong $${minutes}$ phút, kim phút quay được một góc là $${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${minuteAngle.toFixed(2)}$ rad.
+    Quãng đường kim phút đi được là $S_1 = ${minuteAngle.toFixed(2)} \\cdot ${minuteHandLength} = ${minuteDistance.toFixed(2)} \\pi$ (cm).
+    Trong $${minutes}$ phút, kim giờ quay được một góc là $\\dfrac{1}{12} \\cdot ${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${hourAngle.toFixed(2)}$ rad.
+    Quãng đường kim giờ đi được là $S_2 = ${hourAngle.toFixed(2)} \\cdot ${hourHandLength} = ${hourDistance.toFixed(2)} \\pi$ (cm).
+    Vậy tổng quãng đường cần tìm là $S = S_1 + S_2 = ${correctAnswerFormatted} \\pi$ (cm).
+    }
+    \\end{ex}
+    `;
+
+    return exercise;
+}
+

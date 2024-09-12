@@ -80,6 +80,10 @@
                                         {
                                             "name": "Tính số vong quay cảu bánh xe",
                                             "content": "${tinhovongquaybanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "Tính quãng đương kim phút quay",
+                                            "content": "${tinhquangduongkimphut(e)}"
                                         }
                                     ]
                                 },
