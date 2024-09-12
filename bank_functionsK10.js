@@ -112,7 +112,7 @@ function tinhdodaicungtheorad(e) {
     \\choice
     ${answers.join("\n")}
     \\loigiai{
-    Tính được $\ell=\\alpha \\cdot R=${angle} \\cdot \\dfrac{${diameter}}{2}=${correctAnswerFormatted}$.
+    Tính được $\\ell=\\alpha \\cdot R=${angle} \\cdot \\dfrac{${diameter}}{2}=${correctAnswerFormatted}$.
     }
     \\end{ex}
     `;
@@ -175,11 +175,11 @@ function tinhdodaicungtheodo(e){
     // Tạo LaTeX-like output cho đề bài
     let exercise = `
     \\begin{ex}
-    Trên đường tròn bán kính $${radius}$, lấy cung có số đo $${angle}^{\\circ}$. Độ dài $\ell$ của cung tròn bằng
+    Trên đường tròn bán kính $${radius}$, lấy cung có số đo $${angle}^{\\circ}$. Độ dài $\\ell$ của cung tròn bằng
     \\choice
     ${answers.join("\n")}
     \\loigiai{
-    Ta có $\ell=${radius} \\cdot \\left(\\dfrac{${angle}^{\\circ}}{180^{\\circ}} \\cdot \\pi\\right) = ${formatFraction(simplifiedNumerator, simplifiedDenominator)}.
+    Ta có $\\ell=${radius} \\cdot \\left(\\dfrac{${angle}^{\\circ}}{180^{\\circ}} \\cdot \\pi\\right) = ${formatFraction(simplifiedNumerator, simplifiedDenominator)}.
     }
     \\end{ex}
     `;
