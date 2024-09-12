@@ -90,7 +90,7 @@ export function wordtoTF() {
 
     // Xóa tất cả các dòng trống
     inputCode = inputCode.replace(/^\s*[\r\n]/gm, '');
-    inputCode = them_dola_cho_so_new(inputCode)
+    //inputCode = them_dola_cho_so_new(inputCode)
     inputCode = inputCode.replace(/Câu\s+\$(\d+)\$\s*([.:])/g, 'Câu $1$2');
     // Sửa lỗi chính tả
     inputCode = inputCode.replace(/Lò̀i giải/g, 'Lời giải');
@@ -157,6 +157,7 @@ export function wordtoTF() {
     outputCode = xoa_khoangtrong_trong_ngoac(outputCode);
     outputCode = thay_haicham_colon(outputCode);
     outputCode = xoa_2cham_sau_thila(outputCode);
+    outputCode = them_dola_cho_so_new( outputCode);
 
     fetch('replace.json')
         .then(response => response.json())

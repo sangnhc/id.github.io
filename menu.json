@@ -4,6 +4,112 @@
             "name": "Câu Trắc Nghiệm",
             "K12": [
                 {
+                    "name": "Khối 10",
+                    "Chương": [
+                        {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1",
+                                    "baitoan": [
+                                        {
+                                            "name": "Bài toán 1",
+                                            "content": "y = {a}x^2 + {b}"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Khối 11",
+                    "Chương": [
+                        {
+                            "name": "Chương 1: Lượng Giác",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Của 1 Góc",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tính độ dài cung biết R và alpha theo radian",
+                                            "content": "${tinhdodaicungtheorad({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung biết R và alpha theo độ",
+                                            "content": "${tinhdodaicungtheodo({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung đồng hồ có bán kính,kim đồng hồ",
+                                            "content": "${tinhdodaicungtheokimgio({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung: quay bánh xe đạp",
+                                            "content": "${tinhdodaicungtheoquaybanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "Tính thời gian đu quay",
+                                            "content": "${tinhthoigianduquay(e)}"
+                                        },
+                                        {
+                                            "name": "Tính góc kim đồng hồ quay trong x phút",
+                                            "content": "${tinhdodaicungkimdongho(e)}"
+                                        },
+                                        {
+                                            "name": "Tính số vong quay cảu bánh xe",
+                                            "content": "${tínhovongquaybanhxe(e)}"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
                     "name": "Khối 12",
                     "Chương": [
                         {

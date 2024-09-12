@@ -211,7 +211,37 @@ export function them_dola_cho_so_newG(text) {
     // Step 3: Reassemble the text
     return escapedText.map(part => part.text).join('');
 }
+export function convertSolutionWithItems(inputCode) {
+    // Tìm phần giữa \loigiai{ và \end{ex}
+    const solutionPattern = /\\loigiai\s*\{([\s\S]*?)\}\s*\\end{ex}/g;
+    
+    return inputCode.replace(solutionPattern, (match, solutionContent) => {
+        // Tách phần nội dung lời giải chính và các mục a., b., c., d. hoặc 1., 2., 3.
+        const parts = solutionContent.split(/\n(?=[a-z]\.|[a-z]\)|\d+\.\s|\d+\)\s)/i);
+        let formattedSolution = parts.shift().trim(); // Nội dung chính trước các mục a., b., c., d.
+
+        // Nếu có các mục a., b., c., d., chuyển đổi chúng thành \item và loại bỏ ký tự a., b., c., d. sau \item
+        if (parts.length > 0) {
+            formattedSolution += "\n\\begin{enumerate}";
+            parts.forEach(part => {
+                // Loại bỏ ký tự đánh số như a., b., c., d. hoặc 1., 2., 3.
+                const cleanPart = part.replace(/^[a-z]\.|[a-z]\)|\d+\.\s|\d+\)\s/, '').trim();
+                formattedSolution += `\n\\item ${cleanPart}`;
+            });
+            formattedSolution += "\n\\end{enumerate}";
+        }
+
+        // Loại bỏ các dòng trống trong phần nội dung
+        formattedSolution = formattedSolution.replace(/^\s*[\r\n]/gm, '');
+
+        // Trả lại phần \loigiai với nội dung đã được chuyển đổi
+        return `\\loigiai{\n${formattedSolution}\n}\\end{ex}`;
+    });
+}
+
+
 export function them_dola_cho_so_new(text) {
+    text=convertSolutionWithItems(text)
     // Step 1: Escape math environments
     const mathEnvironments = /(\${1,2}[^$]*\${1,2}|\\begin\{[^}]*\}[\s\S]*?\\end\{[^}]*\})/g;
     let escapedText = [];
@@ -239,11 +269,14 @@ export function them_dola_cho_so_new(text) {
     // Reassemble the text
     let resultText = escapedText.map(part => part.text).join('');
 
-    // Replace \section*{Lời giải} with Lời giải
+   // Replace \section*{Lời giải} with Lời giải
     resultText = resultText.replace(/\\section\*\{Lời giải\}/g, 'Lời giải');
-    resultText = resultText.replace(/\\section\*\{Lò̀i giải\}/g, 'Lời giải')
-    resultText = resultText.replace(/\\lim\*\{Lò̀i giải\}/g, 'Lời giải')
+    resultText = resultText.replace(/\\section\*\{Lò̀i giải\}/g, 'Lời giải'); // Thiếu dấu chấm phẩy đã được thêm
+    resultText = resultText.replace(/\\lim\*\{Lò̀i giải\}/g, 'Lời giải'); // Đã thêm chấm phẩy
     // Replace \lim _ with \lim \limits_
     resultText = resultText.replace(/\\lim\s*_/g, '\\lim\\limits_');
+    resultText = resultText.replace(/\s+}$/gm, '}');
+    resultText = resultText.replace(/\\int\s*_/g, '\\int\\limits_');
+
     return resultText;
 }
