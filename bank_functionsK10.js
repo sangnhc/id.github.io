@@ -325,10 +325,10 @@ function tinhthoigianduquay(e) {
 
     // Các đáp án sai
     let answers = [
-        `{\\True ${correctAnswerFormatted}}`,  // Đáp án đúng
-        `{${wrongAnswer1} phút}`,               // Phương án sai 1
-        `{${wrongAnswer2} phút}`,               // Phương án sai 2
-        `{${wrongAnswer3} phút}`                // Phương án sai 3
+        `{\\True $${correctAnswerFormatted}}`,  // Đáp án đúng
+        `{$${wrongAnswer1}$ phút}`,               // Phương án sai 1
+        `{$${wrongAnswer2}$ phút}`,               // Phương án sai 2
+        `{$${wrongAnswer3}$ phút}`                // Phương án sai 3
     ];
 
     // Shuffle các câu trả lời
@@ -349,6 +349,13 @@ function tinhthoigianduquay(e) {
     `;
 
     return exercise;
+}
+function formatFraction(numerator, denominator) {
+    if (denominator === 1) {
+        return `${numerator}`; // Nếu mẫu số là 1, chỉ trả về tử số
+    } else {
+        return `\\dfrac{${numerator}}{${denominator}}`; // Trả về phân số nếu mẫu số khác 1
+    }
 }
 
 function tinhdodaicungkimdongho(e) {
@@ -373,13 +380,13 @@ function tinhdodaicungkimdongho(e) {
     let correctAnswerFormatted = `${formatFraction(simplifiedNumerator, simplifiedDenominator)} \\pi$ cm`;
 
     // Tạo các phương án sai dựa trên các lỗi học sinh thường gặp
-    let wrongAnswer1 = `\\dfrac{${simplifiedNumerator}}{${simplifiedDenominator * 2}} \\pi$ cm`;  // Lỗi nhầm mẫu số lớn hơn
-    let wrongAnswer2 = `\\dfrac{${simplifiedNumerator}}{${simplifiedDenominator / 2}} \\pi$ cm`;  // Lỗi nhầm mẫu số nhỏ hơn
-    let wrongAnswer3 = `\\dfrac{${simplifiedNumerator}}{${simplifiedDenominator * 4}} \\pi$ cm`;  // Lỗi tăng gấp 4 lần mẫu số
+    let wrongAnswer1 = `${formatFraction(simplifiedNumerator, simplifiedDenominator * 2)} \\pi$ cm`;  // Lỗi nhầm mẫu số lớn hơn
+    let wrongAnswer2 = `${formatFraction(simplifiedNumerator, simplifiedDenominator / 2)} \\pi$ cm`;  // Lỗi nhầm mẫu số nhỏ hơn
+    let wrongAnswer3 = `${formatFraction(simplifiedNumerator, simplifiedDenominator * 4)} \\pi$ cm`;  // Lỗi tăng gấp 4 lần mẫu số
 
     // Các đáp án sai
     let answers = [
-        `{\\True ${correctAnswerFormatted}}`,  // Đáp án đúng
+        `{\\True $${correctAnswerFormatted}}`,  // Đáp án đúng
         `{${wrongAnswer1}}`,                   // Sai phương án 1
         `{${wrongAnswer2}}`,                   // Sai phương án 2
         `{${wrongAnswer3}}`                    // Sai phương án 3
@@ -395,7 +402,7 @@ function tinhdodaicungkimdongho(e) {
     \\choice
     ${answers.join("\n")}
     \\loigiai{
-    Trong $60$ phút, mũi kim giờ vạch lên $1$ cung có số đo là $\\dfrac{2 \\pi}{12} = \\dfrac{\\pi}{6}$, nên trong $${minutes}$ phút kim giờ vạch lên $1$ cung có số đo là $\\dfrac{${minutes}}{30} \\pi$.
+    Trong $60$ phút, mũi kim giờ vạch lên $1$ cung có số đo là $\\dfrac{2 \\pi}{12} = \\dfrac{\\pi}{6}$, nên trong $${minutes}$ phút kim giờ vạch lên $1$ cung có số đo là $\\dfrac{${minutes}}{30} \\pi$.\\\\
     Vậy độ dài cung tròn mà mũi kim giờ vạch lên là $l = R \\cdot \\alpha = ${radius} \\times \\dfrac{${minutes}}{30} \\pi = ${formatFraction(simplifiedNumerator, simplifiedDenominator)} \\pi$ cm.
     }
     \\end{ex}
@@ -403,6 +410,7 @@ function tinhdodaicungkimdongho(e) {
 
     return exercise;
 }
+
 
 function tinhovongquaybanhxe(e) {
     // Random đường kính bánh xe từ 40 đến 70 cm
@@ -457,10 +465,10 @@ function tinhovongquaybanhxe(e) {
     \\choice
     ${answers.join("\n")}
     \\loigiai{
-    Ta có $r=\\dfrac{${diameter}}{2}$ cm = $\\dfrac{${diameter / 100}}{2}$ m ; $${speed}$ km/h = $\\dfrac{${speed * 1000}}{3600}$ m/s.
-    Gọi $l$ là quãng đường đi được trong $${time}$ giây.
-    Gọi $x$ là số vòng bánh xe quay được trong $${time}$ giây.
-    Khi đó $l=2 \\pi \\cdot r \\cdot x$.
+    Ta có $r=\\dfrac{${diameter}}{2}$ cm = $\\dfrac{${diameter / 100}}{2}$ m ; $${speed}$ km/h = $\\dfrac{${speed * 1000}}{3600}$ m/s.\\\\
+    Gọi $l$ là quãng đường đi được trong $${time}$ giây.\\\\
+    Gọi $x$ là số vòng bánh xe quay được trong $${time}$ giây.\\\\
+    Khi đó $l=2 \\pi \\cdot r \\cdot x$.\\\\
     Mà $l=\\dfrac{${time} \\cdot ${speed * 1000}}{3600}$ m, suy ra $x=\\dfrac{l}{2 \\pi \\cdot r} \\approx ${roundedRotations}$ vòng.
     }
     \\end{ex}
@@ -479,11 +487,7 @@ function simplifyFraction(numerator, denominator) {
     return [numerator / divisor, denominator / divisor];
 }
 
-function formatFraction(numerator, denominator) {
-    // Nếu mẫu số là 1, chỉ hiển thị tử số
-    if (denominator === 1) return `${numerator}`;
-    return `\\dfrac{${numerator}}{${denominator}}`;
-}
+
 
 function tinhquangduongkimphut(e) {
     // Random chiều dài kim giờ và kim phút
@@ -534,10 +538,10 @@ function tinhquangduongkimphut(e) {
     \\choice
     ${answers.join("\n")}
     \\loigiai{
-    Trong $${minutes}$ phút, kim phút quay được một góc là $${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${minuteAngle.toFixed(2)}$ rad.
-    Quãng đường kim phút đi được là $S_1 = ${minuteAngle.toFixed(2)} \\cdot ${minuteHandLength} = ${minuteDistance.toFixed(2)} \\pi$ (cm).
-    Trong $${minutes}$ phút, kim giờ quay được một góc là $\\dfrac{1}{12} \\cdot ${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${hourAngle.toFixed(2)}$ rad.
-    Quãng đường kim giờ đi được là $S_2 = ${hourAngle.toFixed(2)} \\cdot ${hourHandLength} = ${hourDistance.toFixed(2)} \\pi$ (cm).
+    Trong $${minutes}$ phút, kim phút quay được một góc là $${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${minuteAngle.toFixed(2)}$ rad.\\\\
+    Quãng đường kim phút đi được là $S_1 = ${minuteAngle.toFixed(2)} \\cdot ${minuteHandLength} = ${minuteDistance.toFixed(2)} \\pi$ (cm).\\\\
+    Trong $${minutes}$ phút, kim giờ quay được một góc là $\\dfrac{1}{12} \\cdot ${formatFraction(minutes, 60)} \\cdot 2 \\pi = ${hourAngle.toFixed(2)}$ rad.\\\\
+    Quãng đường kim giờ đi được là $S_2 = ${hourAngle.toFixed(2)} \\cdot ${hourHandLength} = ${hourDistance.toFixed(2)} \\pi$ (cm).\\\\
     Vậy tổng quãng đường cần tìm là $S = S_1 + S_2 = ${correctAnswerFormatted} \\pi$ (cm).
     }
     \\end{ex}
@@ -567,8 +571,8 @@ function TFdoirad2do(e) {
         // Tạo mệnh đề đúng/sai
         let displayedDegree = isTrue ? Math.round(correctDegree) : Math.round(correctDegree) + (index % 2 === 0 ? 10 : -10); // Tạo nhiễu nếu sai
         return isTrue
-            ? `{\\True \\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}}`
-            : `{\\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}}`;
+            ? `{\\True $\\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}$}`
+            : `{$\\dfrac{${numerator} \\pi}{${denominator}} rad = ${displayedDegree}^{\\circ}$}`;
     });
 
     // Tạo LaTeX-like output cho đề bài
@@ -609,14 +613,12 @@ function TFdoido2rad(e) {
     // Tạo mệnh đề đúng/sai ngẫu nhiên
     let statements = randomValues.map(({degree, radNumerator, radDenominator, isTrue}) => {
         return isTrue
-            ? `{\\True ${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}} rad}`
-            : `{${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}} rad}`;
+            ? `{\\True $${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}}$ rad}`
+            : `{$${degree}^{\\circ} = \\dfrac{${radNumerator} \\pi}{${radDenominator}}$ rad}`;
     });
 
     // Tạo LaTeX-like output cho đề bài
-    let exercise = `
-    %% Câu $2$:
-    \\begin{ex}
+    let exercise = `\\begin{ex}
     Đổi số đo của các góc sang rađian. Xét tính đúng sai của các mệnh đề sau:
     \\choiceTF
     ${statements.join("\n")}
