@@ -629,7 +629,7 @@ function TFdoido2rad(e) {
         let correctDenominator = 180;
         let [simplifiedNumerator, simplifiedDenominator] = simplifyFraction(correctNumerator, correctDenominator);
         let correct = isTrue ? "Đúng" : "Sai";
-        return `\\item ${correct}: Ta có ${degree}^{\\circ} = \\dfrac{${degree} \\cdot \\pi}{180} = \\dfrac{${simplifiedNumerator} \\pi}{${simplifiedDenominator}} rad`;
+        return `\\item ${correct}: Ta có $${degree}^{\\circ} = \\dfrac{${degree} \\cdot \\pi}{180} = \\dfrac{${simplifiedNumerator} \\pi}{${simplifiedDenominator}}$ rad`;
     }).join("\n")}
     \\end{itemize}
     }
@@ -675,7 +675,7 @@ function TFcunggocdtron(e) {
     \\choiceTF
     ${statements.join("\n")}
     \\loigiai{
-    \\begin{itemsize}
+    \\begin{itemize}
     ${randomValues.map(({radius, arcLength, radian, isTrue}) => {
         let correct = isTrue ? "Đúng" : "Sai";
         let explanation;
@@ -686,7 +686,7 @@ function TFcunggocdtron(e) {
         }
         return explanation;
     }).join("\n")}
-    \\end{itemsize}
+    \\end{itemize}
     }
     \\end{ex}
     `;
@@ -736,12 +736,12 @@ function TFcunggocdtron(e) {
     \\choiceTF
     ${allStatements.join("\n")}
     \\loigiai{
-    \\begin{itemsize}
+    \\begin{itemize}
     \\item Đúng: Trong $1$ giây, bánh xe đạp quay được $\\dfrac{${rounds}}{${timeInSeconds}}$ vòng. Vì một vòng ứng với góc bằng $360^{\\circ}$ nên góc mà bánh xe quay được trong $1$ giây là $$\\dfrac{${rounds}}{${timeInSeconds}} \\cdot 360 = ${angleInDegrees.toFixed(0)}^{\\circ}$$
     \\item Sai: Vì một vòng ứng với góc bằng $2 \\pi$ rad nên góc mà bánh xe quay được trong $1$ giây là $$\\dfrac{${rounds}}{${timeInSeconds}} \\cdot 2 \\pi = ${angleInRadians.toFixed(2)}$$ (rad).
     \\item Sai: Trong $1$ phút, bánh xe quay được $60 \\cdot \\dfrac{${rounds}}{${timeInSeconds}} = ${roundsPerMinute.toFixed(0)}$ vòng, không phải $${wrongRoundsPerMinute}$ vòng.
     \\item Đúng: Chu vi của bánh xe đạp là $C = ${diameter} \\cdot \\pi$ mm, và quãng đường mà người đi xe đạp đã đi được trong $1$ phút là $$S = ${roundsPerMinute.toFixed(0)} \\times ${circumferenceInMeters.toFixed(2)} \\approx ${distanceInOneMinute.toFixed(0)}$$ mét.
-    \\end{itemsize}
+    \\end{itemize}
     }
     \\end{ex}
     `;
