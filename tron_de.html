@@ -183,7 +183,7 @@
                                 <option value="phieu0">Mặc Định</option>
                                 <option value="phieu1">Phiếu TN Maker</option>
                                 <option value="phieu2">Phiếu Chấm Thi</option>
-                                <option value="phieu3">Phiếu 3</option>
+                                <option value="phieu3">Phiếu Azota V1.5</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -307,32 +307,854 @@ function getPhieuToContent(phieuTo) {
             case 'phieu0':
                 return ``;
             case 'phieu1':
-                return `
-\\{Phiếu Tô 1}
-\\begin{itemize}
-\\item Nội dung 1 của Phiếu 1
-\\item Nội dung 2 của Phiếu 1
-\\item Nội dung 3 của Phiếu 1
-\\end{itemize}
-`;
+                return `\\begin{center}
+      \\resizebox{0.88\\textwidth}{!}{
+         \\begin{tikzpicture}[line join = round, line cap =round,>=stealth,very thin,font=\\footnotesize,scale=1.25]
+			\\def \\x{-8.4}\\def \\y{-11}
+			\\def \\a{-6.95}\\def \\b{-10.475}		
+			%%SBD
+			\\foreach \\x in {0,1,...,6}{\\draw[violet] (3.71+0.3*\\x,8.85)--(3.71+0.3*\\x,4.5);}
+			\\foreach \\j in {0,1,...,10}{\\draw[violet] (3.71,8.85-0.435*\\j)--(3.71+0.3*6,8.85-0.435*\\j);}
+			\\foreach \\j in {0,1,...,5}{
+			\\foreach \\x in {0,1,...,9}{\\draw[blue] (3.86+\\j*0.3,8.64-\\x*0.435) circle (3.65pt);}}
+			\\foreach \\x in {0,1,...,9}{\\draw[blue] (3.86-0.4,8.64-\\x*0.435) circle (3.65pt) node{\\x};}
+			\\draw[violet] (3.86+0.45,9.6) node{\\footnotesize\\textbf{7.Số báo danh}};
+			\\foreach \\x in {0,1,...,6}{\\draw[violet] (3.86-0.15+0.3*\\x,9.4)--(3.86-0.15+0.3*\\x,8.965);}			
+			\\foreach \\j in {0,1}{\\draw[violet] (3.71,9.4-0.435*\\j)--(5.51,9.4-0.435*\\j);}		
+			%%MÃ ĐỀ	
+			\\foreach \\x in {0,1,2,3}{\\draw[violet] (6.11-0.15+0.3*\\x,8.85)--(6.11-0.15+0.3*\\x,4.5);}
+			\\foreach \\j in {0,1,...,10}{\\draw[violet] (5.96,8.85-0.435*\\j)--(6.86,8.85-0.435*\\j);}
+			\\draw[violet] (6.25,9.6) node{\\footnotesize\\textbf{8.Mã đề thi}};
+			\\foreach \\x in {0,1,2,3}{\\draw[violet] (6.11-0.15+0.3*\\x,9.4)--(6.11-0.15+0.3*\\x,8.965);}			
+			\\foreach \\j in {0,1}{\\draw[violet] (5.96,9.4-0.435*\\j)--(6.86,9.4-0.435*\\j);}			
+			\\foreach \\j in {0,1,2}{
+			\\foreach \\x in {0,1,...,9}{\\draw[blue] (6.11+\\j*0.3,8.64-\\x*0.435) circle (3.65pt);}}
+				\\foreach \\x in {0,1,...,9}{\\draw[blue] (7.11,8.64-\\x*0.435) circle (3.65pt) node{\\x};}
+			%%PHẦN 1-10
+			\\begin{scope}			
+				\\draw[fill=blue] (-6.1+2.92,-.865) rectangle++ (0.2,0.2);
+				\\draw[fill=blue] (-6.1+2.92,-.865+3.88) rectangle++ (0.2,0.2);
+				\\draw[blue,rounded corners, thick] (-6.1,-.8) rectangle++ (2.8,3.92);
+				\\draw[blue] (-5.65+0*0.63,3.1308+0.3) node {\\textbf{PHẦN I}};
+				\\draw[blue] (-5.65+0.15+0*0.645,3.1308-0.185) node {\\tiny A};
+				\\draw[blue] (-5.65+0.15+1*0.645,3.1308-0.185) node {\\tiny B};
+				\\draw[blue] (-5.65+0.15+2*0.645,3.1308-0.185) node {\\tiny C};
+				\\draw[blue] (-5.65+0.15+3*0.645,3.1308-0.185) node {\\tiny D};								
+				\\foreach \\x in {1,2,...,10}{\\draw (-5.65-0.4+0.15+0*0.64,3.1308-\\x*0.34-0.18) node {\\tiny \\x};}
+				\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-5.65+0.15+\\j*0.645,3.1308-\\x*0.34-0.185) circle (3.65pt);}}						
+			\\end{scope}	
+			\\begin{scope}[shift={(3.25,0)}]		
+			\\draw[fill=blue] (-6.1+2.92,-.865) rectangle++ (0.2,0.2);
+			\\draw[fill=blue] (-6.1+2.92,-.865+3.88) rectangle++ (0.2,0.2);
+			\\draw[blue,rounded corners, thick] (-6.1,-.8) rectangle++ (2.8,3.92);
+			\\draw[blue] (-5.65+0.15+0*0.645,3.1308-0.185) node {\\tiny A};
+			\\draw[blue] (-5.65+0.15+1*0.645,3.1308-0.185) node {\\tiny B};
+			\\draw[blue] (-5.65+0.15+2*0.645,3.1308-0.185) node {\\tiny C};
+			\\draw[blue] (-5.65+0.15+3*0.645,3.1308-0.185) node {\\tiny D};								
+			\\foreach \\x in {1,2,...,10}{
+			\\pgfmathtruncatemacro{\\result}{\\x + 10}
+			\\draw (-5.65-0.4+0.15+0*0.64,3.1308-\\x*0.34-0.18) node {\\tiny \\result};}
+			\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-5.65+0.15+\\j*0.645,3.1308-\\x*0.34-0.185) circle (3.65pt);}}						
+		\\end{scope}				
+		\\begin{scope}[shift={(3.25*2,0)}]		
+			\\draw[fill=blue] (-6.1+2.92,-.865) rectangle++ (0.2,0.2);
+			\\draw[fill=blue] (-6.1+2.92,-.865+3.88) rectangle++ (0.2,0.2);
+			\\draw[blue,rounded corners, thick] (-6.1,-.8) rectangle++ (2.8,3.92);
+			\\draw[blue] (-5.65+0.15+0*0.645,3.1308-0.185) node {\\tiny A};
+			\\draw[blue] (-5.65+0.15+1*0.645,3.1308-0.185) node {\\tiny B};
+			\\draw[blue] (-5.65+0.15+2*0.645,3.1308-0.185) node {\\tiny C};
+			\\draw[blue] (-5.65+0.15+3*0.645,3.1308-0.185) node {\\tiny D};								
+			\\foreach \\x in {1,2,...,10}{
+				\\pgfmathtruncatemacro{\\result}{\\x + 20}
+				\\draw (-5.65-0.4+0.15+0*0.64,3.1308-\\x*0.34-0.18) node {\\tiny \\result};}
+			\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-5.65+0.15+\\j*0.645,3.1308-\\x*0.34-0.185) circle (3.65pt);}}						
+		\\end{scope}
+		\\begin{scope}[shift={(3.25*3,0)}]		
+			\\draw[blue,rounded corners, thick] (-6.1,-.8) rectangle++ (2.8,3.92);
+			\\draw[blue] (-5.65+0.15+0*0.645,3.1308-0.185) node {\\tiny A};
+			\\draw[blue] (-5.65+0.15+1*0.645,3.1308-0.185) node {\\tiny B};
+			\\draw[blue] (-5.65+0.15+2*0.645,3.1308-0.185) node {\\tiny C};
+			\\draw[blue] (-5.65+0.15+3*0.645,3.1308-0.185) node {\\tiny D};								
+			\\foreach \\x in {1,2,...,10}{
+				\\pgfmathtruncatemacro{\\result}{\\x + 30}
+				\\draw (-5.65-0.4+0.15+0*0.64,3.1308-\\x*0.34-0.18) node {\\tiny \\result};}
+			\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-5.65+0.15+\\j*0.645,3.1308-\\x*0.34-0.185) circle (3.65pt);}}						
+		\\end{scope}
+		%%Phần II-Câu 1
+		\\begin{scope}		
+			\\draw[fill=blue] (-6.1+2.92,-1.42) rectangle++ (0.2,0.2);	
+			\\draw[fill=blue] (-6.1+2.92,-1.42-2.28) rectangle++ (0.2,0.2);	
+			\\draw[green] (-6.1+1.51,-1.3)--++(-90:2.29);	
+			\\draw[purple,rounded corners, thick] (-6.1,-3.6) rectangle ++(2.8,2.3);			
+			\\draw[blue] (-5.65,-2.25+0.75+0.5)node {\\textbf{PHẦN II}};
+			\\draw (-5.65+0.2,-2.25+0.75)node {Câu 1};
+			\\draw (-5.65,-2.25+0.4)node {Đúng};
+			\\draw (-5.65+0.64,-2.25+0.4)node {Sai};
+			\\draw (-5.65-0.3,-2.25-0*0.3458)node {a)};
+			\\draw (-5.65-0.3,-2.25-1*0.3458)node {b)};
+			\\draw (-5.65-0.3,-2.25-2*0.3458)node {c)};
+			\\draw (-5.65-0.3,-2.25-3*0.3458)node {d)};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}			
+			%%Phần II-Câu 2	
+			\\begin{scope}[shift={(1.3,0)}]
+			\\draw (-5.65+0.3,-2.25+0.75)node {Câu 2};
+			\\draw (-5.65+0.1,-2.25+0.4)node {Đúng};
+			\\draw (-5.65+0.64+0.1,-2.25+0.4)node {Sai};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\end{scope}					
+		\\end{scope}		
+		\\begin{scope}[shift={(3.255,0)}]		
+			\\draw[fill=blue] (-6.1+2.92,-1.42) rectangle++ (0.2,0.2);	
+			\\draw[fill=blue] (-6.1+2.92,-1.42-2.28) rectangle++ (0.2,0.2);	
+			\\draw[green] (-6.1+1.51,-1.3)--++(-90:2.29);	
+			\\draw[purple,rounded corners, thick] (-6.1,-3.6) rectangle ++(2.8,2.3);			
+			\\draw (-5.65+0.2,-2.25+0.75)node {Câu 3};
+			\\draw (-5.65,-2.25+0.4)node {Đúng};
+			\\draw (-5.65+0.64,-2.25+0.4)node {Sai};
+			\\draw (-5.65-0.3,-2.25-0*0.3458)node {a)};
+			\\draw (-5.65-0.3,-2.25-1*0.3458)node {b)};
+			\\draw (-5.65-0.3,-2.25-2*0.3458)node {c)};
+			\\draw (-5.65-0.3,-2.25-3*0.3458)node {d)};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}			
+			%%Phần II-Câu 2	
+			\\begin{scope}[shift={(1.3,0)}]
+				\\draw (-5.65+0.3,-2.25+0.75)node {Câu 4};
+				\\draw (-5.65+0.1,-2.25+0.4)node {Đúng};
+				\\draw (-5.65+0.64+0.1,-2.25+0.4)node {Sai};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\end{scope}					
+		\\end{scope}	
+		\\begin{scope}[shift={(3.255*2,0)}]		
+			\\draw[fill=blue] (-6.1+2.92,-1.42) rectangle++ (0.2,0.2);	
+			\\draw[fill=blue] (-6.1+2.92,-1.42-2.28) rectangle++ (0.2,0.2);	
+			\\draw[green] (-6.1+1.51,-1.3)--++(-90:2.29);	
+			\\draw[purple,rounded corners, thick] (-6.1,-3.6) rectangle ++(2.8,2.3);			
+			\\draw (-5.65+0.2,-2.25+0.75)node {Câu 5};
+			\\draw (-5.65,-2.25+0.4)node {Đúng};
+			\\draw (-5.65+0.64,-2.25+0.4)node {Sai};
+			\\draw (-5.65-0.3,-2.25-0*0.3458)node {a)};
+			\\draw (-5.65-0.3,-2.25-1*0.3458)node {b)};
+			\\draw (-5.65-0.3,-2.25-2*0.3458)node {c)};
+			\\draw (-5.65-0.3,-2.25-3*0.3458)node {d)};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}			
+			%%Phần II-Câu 2	
+			\\begin{scope}[shift={(1.3,0)}]
+				\\draw (-5.65+0.3,-2.25+0.75)node {Câu 6};
+				\\draw (-5.65+0.1,-2.25+0.4)node {Đúng};
+				\\draw (-5.65+0.64+0.1,-2.25+0.4)node {Sai};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\end{scope}					
+		\\end{scope}
+		\\begin{scope}[shift={(3.255*3,0)}]		
+			\\draw[green] (-6.1+1.51,-1.3)--++(-90:2.29);	
+			\\draw[purple,rounded corners, thick] (-6.1,-3.6) rectangle ++(2.8,2.3);			
+			\\draw (-5.65+0.2,-2.25+0.75)node {Câu 7};
+			\\draw (-5.65,-2.25+0.4)node {Đúng};
+			\\draw (-5.65+0.64,-2.25+0.4)node {Sai};
+			\\draw (-5.65-0.3,-2.25-0*0.3458)node {a)};
+			\\draw (-5.65-0.3,-2.25-1*0.3458)node {b)};
+			\\draw (-5.65-0.3,-2.25-2*0.3458)node {c)};
+			\\draw (-5.65-0.3,-2.25-3*0.3458)node {d)};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}			
+			%%Phần II-Câu 2	
+			\\begin{scope}[shift={(1.3,0)}]
+				\\draw (-5.65+0.3,-2.25+0.75)node {Câu 8};
+				\\draw (-5.65+0.1,-2.25+0.4)node {Đúng};
+				\\draw (-5.65+0.64+0.1,-2.25+0.4)node {Sai};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.65+0.65+0.125,-2.25-0.03-\\x*0.335) circle (3.65pt);}
+			\\end{scope}					
+		\\end{scope}
+		%%PHẦN III
+		\\draw[blue] (-5.65,-4.105+0.1) node[above]{\\textbf{PHẦN III}};
+		\\foreach \\i in {0,...,5}{		
+		\\draw[thick,violet, rounded corners] (-6.1+\\i*12.5/6,-9.4) rectangle++ (12.5/6,5.2);}
+		\\foreach \\y in {0,1,3,4}{
+			\\pgfmathtruncatemacro{\\kq}{\\y+1}
+			\\begin{scope}[shift={(2.083*\\y,0)}]
+			\\draw[fill=blue] (-4.1,-3.98) rectangle++(0.2,0.2);
+			\\draw[fill=blue] (-4.1,-3.98-5.875) rectangle++(0.2,0.2);
+			\\draw[blue] (-5.64,-5.27) circle (3.65pt);			
+			\\draw[blue] (-5.995+0.75,-5.105+0.65-0.1) node[above]{Câu \\kq};
+			\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.8+0.41*\\x,-5) rectangle ++(0.41,0.35);}			
+			\\draw(-5.64-0.3,-5.27+0*0.345) node {$\\textbf{-}$};
+			\\draw(-5.64-0.3,-5.27-0.345) node {$\\textbf{,}$};
+			\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64,-5.27-0.345*\\i) circle (3.65pt);}
+			\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45,-5.27-0.345*\\i) circle (3.65pt);}	
+			\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45*2,-5.27-0.345*\\i) circle (3.65pt);}
+			\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64+0.45*3,-5.27-0.345*\\i) circle (3.65pt);}		
+			%%thêm số
+			\\foreach \\i in {2,3,...,11}{
+				\\pgfmathtruncatemacro{\\result}{\\i -2}
+				\\draw[blue] (-5.64-0.3,-5.27-0.345*\\i)node{\\tiny \\result};}			
+		\\end{scope}}
+	\\begin{scope}[shift={(2.083*2,0)}]
+		\\draw[blue] (-5.64,-5.27) circle (3.65pt);	
+		\\draw[fill=blue] (-4.1,-3.98-5.875) rectangle++(0.2,0.2);		
+		\\draw[blue] (-5.995+0.75,-5.105+0.65-0.1) node[above]{Câu 3};
+		\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.8+0.41*\\x,-5) rectangle ++(0.41,0.35);}			
+		\\draw(-5.64-0.3,-5.27+0*0.345) node {$\\textbf{-}$};
+		\\draw(-5.64-0.3,-5.27-0.345) node {$\\textbf{,}$};
+		\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64,-5.27-0.345*\\i) circle (3.65pt);}
+		\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45,-5.27-0.345*\\i) circle (3.65pt);}	
+		\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45*2,-5.27-0.345*\\i) circle (3.65pt);}
+		\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64+0.45*3,-5.27-0.345*\\i) circle (3.65pt);}		
+		%%thêm số
+		\\foreach \\i in {2,3,...,11}{
+			\\pgfmathtruncatemacro{\\result}{\\i -2}
+			\\draw[blue] (-5.64-0.3,-5.27-0.345*\\i)node{\\tiny \\result};}			
+	\\end{scope}
+	\\begin{scope}[shift={(2.083*5,0)}]
+		\\draw[blue] (-5.64,-5.27) circle (3.65pt);			
+		\\draw[blue] (-5.995+0.75,-5.105+0.65-0.1) node[above]{Câu 6};
+		\\foreach \\x in {0,1,2,3}{\\draw[blue] (-5.8+0.41*\\x,-5) rectangle ++(0.41,0.35);}			
+		\\draw(-5.64-0.3,-5.27+0*0.345) node {$\\textbf{-}$};
+		\\draw(-5.64-0.3,-5.27-0.345) node {$\\textbf{,}$};
+		\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64,-5.27-0.345*\\i) circle (3.65pt);}
+		\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45,-5.27-0.345*\\i) circle (3.65pt);}	
+		\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-5.64+0.45*2,-5.27-0.345*\\i) circle (3.65pt);}
+		\\foreach \\i in {2,3,...,11}{\\draw[blue] (-5.64+0.45*3,-5.27-0.345*\\i) circle (3.65pt);}		
+		%%thêm số
+		\\foreach \\i in {2,3,...,11}{
+			\\pgfmathtruncatemacro{\\result}{\\i -2}
+			\\draw[blue] (-5.64-0.3,-5.27-0.345*\\i)node{\\tiny \\result};}			
+	\\end{scope}
+	\\draw[green, rounded corners,thick] (\\a-0.3,\\b-0.3) rectangle ++(15-0.1,21.5);%%HCN
+	\\draw[fill=blue] (\\a,\\b) rectangle (\\a+0.4,\\b+0.4);%%trái dưới
+	\\draw[fill=blue] (\\a,\\b+14.13) rectangle (\\a+0.4,\\b+0.4+14.13);
+	\\draw[fill=blue] (-\\a-0.06,\\b) rectangle (-\\a-0.06+0.4,\\b+0.4);%%phải dưới
+	\\draw[fill=blue] (-\\a-0.06,\\b+14.13+0.245) rectangle ++(0.4,0.4);
+	\\draw[fill=blue] (-\\a-0.035-3.615,\\b+14.13+0.245) rectangle ++(0.4,0.4);
+	\\draw[fill=blue] (-\\a-0.06-1.25,\\b+14.13+0.755) rectangle ++(0.2,0.2);
+	\\draw[fill=blue] (-\\a-0.06-1.25,\\b+14.13+0.75+2.18) rectangle ++(0.2,0.2);
+	\\draw[fill=blue] (-\\a-0.06-3.615,-\\b-0.515) rectangle (-\\a-0.06+0.4-3.615,-\\b-0.515+0.4);
+	\\draw[fill=blue] (-\\a-0.06,-\\b-0.515) rectangle ++(0.4,0.4);%%phải trên
+	\\draw[fill=blue] (\\a,-\\b-0.515) rectangle  ++(0.4,0.4);%%trái trên
+	%%Thông tin
+	\\draw[thick,violet] (-6.6,4.5) rectangle (-3.4,8.6);
+	\\draw[violet] (-5,8.15) node[align=center]{Họ tên, chữ ký\\\\của cán bộ coi thị 1};
+	\\draw[violet] (-5,6.25) node[align=center]{Họ tên, chữ ký\\\\của cán bộ coi thị 2};
+	\\draw[thick,violet] (-6.6,6.55)--(-3.4,6.55);
+	\\draw[thick,violet](-3.25,8.6) rectangle (3.2,4.5);
+	\\node[align=left] at (.5,6.5) {
+		\\begin{minipage}{10cm}
+			\\begin{enumerate}
+				\\setlength\\itemsep{1.15em}
+				\\item Hội đồng thi ......................................................
+				\\item Điểm thi ............................................................
+				\\item Phòng thì số ......................................................
+				\\item Họ và tên thí sinh ..............................................
+				\\item Ngày sinh ........./........./..............(Nam/Nữ).......
+				\\item Chữ ký của thí sinh ...........................................
+			\\end{enumerate}
+		\\end{minipage}
+	};
+	\\node[align=left] at (-2.5,8.95) {
+		\\begin{minipage}{10cm}
+			Bài Thi:.....................................................Ngày Thi:....................
+		\\end{minipage}
+	};
+	\\node[align=left] at (-.5,9.5) {
+		\\begin{minipage}{6cm}
+			Kỳ Thi:.....................................................
+		\\end{minipage}
+	};
+	\\node[align=left] at (-1.5,10) {
+		\\begin{minipage}{8cm}
+			\\textbf{PHIẾU TRẢ LỜI TRẮC NGHIỆM}
+		\\end{minipage}
+	};
+		\\end{tikzpicture}
+  }
+     \\end{center}`;
             case 'phieu2':
-                return `
-{Phiếu Tô 2}
-\\begin{itemize}
-\\item Nội dung 1 của Phiếu 2
-\\item Nội dung 2 của Phiếu 2
-\\item Nội dung 3 của Phiếu 2
-\\end{itemize}
-`;
+                return `\\begin{center}
+      \\resizebox{0.88\\textwidth}{!}{
+         \\begin{tikzpicture}[line join = round, line cap =round,>=stealth,very thin,font=\\footnotesize,scale=1.25]			
+			\\def \\x{-8.4}\\def \\y{-11}
+			\\def \\a{-7}\\def \\b{-10.1}			
+			\\draw[thick,double,rounded corners, double, cyan] (\\a-0.3,\\b-0.3) rectangle++(15,20.7);
+			\\draw[fill=blue] (\\a,\\b) rectangle (\\a+0.37,\\b+0.37);%%trái dưới
+			\\draw[fill=blue] (-\\a-0.02,\\b) rectangle (-\\a-0.02+0.37,\\b+0.37);%%phải dưới
+			\\draw[fill=blue] (-\\a-0.03,-\\b-0.49) rectangle (-\\a-0.03+0.37,-\\b-0.49+0.37);%%phải trên
+			\\draw[fill=blue] (\\a,-\\b-0.49) rectangle (\\a+0.37,-\\b-0.49+0.37);%%trái trên						
+			\\draw[fill=blue] (-\\a+0.055,\\b+6.035) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (-\\a+0.055,\\b+8.97) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (-\\a+0.055,\\b+13.626) rectangle++(0.21,0.21);
+			%\\draw[fill=blue] (-\\a-0.06-3.615,\\b+14.13) rectangle++(0.21,0.21);
+			%\\draw[blue] (-\\a-0.06-3.615,-\\b-0.515) rectangle (-\\a-0.06+0.4-3.615,-\\b-0.515+0.4);		
+			%%PHẦN 1-10
+			\\begin{scope}
+				\\draw[fill=blue] (\\a+0.078,\\b+9.035-0.065) rectangle++(0.21,0.21);
+				\\draw[fill=blue] (\\a+0.078,\\b+13.627) rectangle++(0.21,0.21);			
+				\\draw[rounded corners, double,magenta] (-6.7,-.65) rectangle (-6.33+2.865,3.33);
+				\\draw[blue] (-6+0.5+0*0.73,3.1308+0.5) node {\\textbf{PHẦN I}};
+				\\draw[blue] (-6+0*0.73,3.1308+0.02) node {A};
+				\\draw[blue] (-6+1*0.73,3.1308+0.02) node {B};	
+				\\draw[blue] (-6+2*0.73,3.1308+0.02) node {C};
+				\\draw[blue] (-6+3*0.73,3.1308+0.02) node {D};				
+				\\foreach \\x in {1,2,...,10}{\\draw (-6-0.4,3.03-\\x*0.342) node {\\tiny\\x};}
+				\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-6+\\j*0.73,3.03-\\x*0.342) circle (3.56pt);}}						
+			\\end{scope}
+			%%PHẦN 11-20
+			\\begin{scope}[shift={(0:3.495)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+9.035-0.065) rectangle++(0.21,0.21);
+				\\draw[fill=blue] (\\a+0.078,\\b+13.627) rectangle++(0.21,0.21);			
+				\\draw[rounded corners, double,magenta] (-6.7,-.65) rectangle (-6.33+2.865,3.33);
+				\\draw[blue] (-6+0*0.73,3.1308+0.02) node {A};
+				\\draw[blue] (-6+1*0.73,3.1308+0.02) node {B};	
+				\\draw[blue] (-6+2*0.73,3.1308+0.02) node {C};
+				\\draw[blue] (-6+3*0.73,3.1308+0.02) node {D};				
+				\\foreach \\x in {1,2,...,10}{
+				\\pgfmathtruncatemacro{\\result}{\\x + 10}
+				\\draw (-6-0.4,3.03-\\x*0.342) node {\\tiny\\result};}
+				\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-6+\\j*0.73,3.03-\\x*0.342) circle (3.56pt);}}						
+			\\end{scope}
+				%%PHẦN 21-30
+			\\begin{scope}[shift={(0:3.495*2)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+9.035-0.065) rectangle++(0.21,0.21);
+				\\draw[fill=blue] (\\a+0.078,\\b+13.627) rectangle++(0.21,0.21);			
+				\\draw[rounded corners, double,magenta] (-6.7,-.65) rectangle (-6.33+2.865,3.33);
+				\\draw[blue] (-6+0*0.73,3.1308+0.02) node {A};
+				\\draw[blue] (-6+1*0.73,3.1308+0.02) node {B};	
+				\\draw[blue] (-6+2*0.73,3.1308+0.02) node {C};
+				\\draw[blue] (-6+3*0.73,3.1308+0.02) node {D};				
+				\\foreach \\x in {1,2,...,10}{
+					\\pgfmathtruncatemacro{\\result}{\\x + 20}
+					\\draw (-6-0.4,3.03-\\x*0.342) node {\\tiny\\result};}
+				\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-6+\\j*0.73,3.03-\\x*0.342) circle (3.56pt);}}						
+			\\end{scope}
+			%%PHẦN 31-40
+			\\begin{scope}[shift={(0:3.495*3)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+9.035-0.065) rectangle++(0.21,0.21);
+				\\draw[rounded corners, double,magenta] (-6.7,-.65) rectangle (-6.33+2.865,3.33);
+				\\draw[blue] (-6+0*0.73,3.1308+0.02) node {A};
+				\\draw[blue] (-6+1*0.73,3.1308+0.02) node {B};	
+				\\draw[blue] (-6+2*0.73,3.1308+0.02) node {C};
+				\\draw[blue] (-6+3*0.73,3.1308+0.02) node {D};				
+				\\foreach \\x in {1,2,...,10}{
+					\\pgfmathtruncatemacro{\\result}{\\x + 30}
+					\\draw (-6-0.4,3.03-\\x*0.342) node {\\tiny\\result};}
+				\\foreach \\j in {0,1,2,3}{\\foreach \\x in {1,2,...,10}{\\draw[blue] (-6+\\j*0.73,3.03-\\x*0.342) circle (3.56pt);}}						
+			\\end{scope}
+			%%Phần II-Câu 1
+			\\begin{scope}	
+				\\draw[fill=blue] (\\a+0.078,\\b+6.038) rectangle++(0.21,0.21);		
+				\\draw[thick,green] (-6.7,-3.65) rectangle (-6.2+2.72,-1.4);				
+				\\draw[blue] (-5.65,-2.25+0.75+0.5)node {\\textbf{PHẦN II}};
+				\\draw (-6+0.2,-2.4+0.75)node {Câu 1};
+				\\draw (-6,-2.4+0.4)node {Đúng};
+				\\draw (-6+0.73,-2.4+0.4)node {Sai};
+				\\draw (-6-0.4,-2.4-0*0.3458)node {a)};
+				\\draw (-6-0.4,-2.4-1*0.3458)node {b)};
+				\\draw (-6-0.4,-2.4-2*0.3458)node {c)};
+				\\draw (-6-0.4,-2.4-3*0.3458)node {d)};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\begin{scope}[shift={(0:0.73*2)}]
+					\\draw (-6+0.2,-2.4+0.75)node {Câu 2};
+					\\draw (-6,-2.4+0.4)node {Đúng};
+					\\draw (-6+0.73,-2.4+0.4)node {Sai};
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\end{scope}
+			\\end{scope}	
+			%%câu 3-4
+			\\begin{scope}[shift={(0:3.495)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+6.038) rectangle++(0.21,0.21);		
+				\\draw[thick,green] (-6.7,-3.65) rectangle (-6.2+2.72,-1.4);	
+				\\draw (-6+0.2,-2.4+0.75)node {Câu 3};
+				\\draw (-6,-2.4+0.4)node {Đúng};
+				\\draw (-6+0.73,-2.4+0.4)node {Sai};
+				\\draw (-6-0.4,-2.4-0*0.3458)node {a)};
+				\\draw (-6-0.4,-2.4-1*0.3458)node {b)};
+				\\draw (-6-0.4,-2.4-2*0.3458)node {c)};
+				\\draw (-6-0.4,-2.4-3*0.3458)node {d)};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\begin{scope}[shift={(0:0.73*2)}]
+					\\draw (-6+0.2,-2.4+0.75)node {Câu 4};
+					\\draw (-6,-2.4+0.4)node {Đúng};
+					\\draw (-6+0.73,-2.4+0.4)node {Sai};
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\end{scope}
+			\\end{scope}	
+			%%câu 5-6
+			\\begin{scope}[shift={(0:3.495*2)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+6.038) rectangle++(0.21,0.21);		
+				\\draw[thick,green] (-6.7,-3.65) rectangle (-6.2+2.72,-1.4);	
+				\\draw (-6+0.2,-2.4+0.75)node {Câu 5};
+				\\draw (-6,-2.4+0.4)node {Đúng};
+				\\draw (-6+0.73,-2.4+0.4)node {Sai};
+				\\draw (-6-0.4,-2.4-0*0.3458)node {a)};
+				\\draw (-6-0.4,-2.4-1*0.3458)node {b)};
+				\\draw (-6-0.4,-2.4-2*0.3458)node {c)};
+				\\draw (-6-0.4,-2.4-3*0.3458)node {d)};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\begin{scope}[shift={(0:0.73*2)}]
+					\\draw (-6+0.2,-2.4+0.75)node {Câu 6};
+					\\draw (-6,-2.4+0.4)node {Đúng};
+					\\draw (-6+0.73,-2.4+0.4)node {Sai};
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\end{scope}
+			\\end{scope}	
+			%%câu 7-8
+			\\begin{scope}[shift={(0:3.495*3)}]
+				\\draw[fill=blue] (\\a+0.078,\\b+6.038) rectangle++(0.21,0.21);		
+				\\draw[thick,green] (-6.7,-3.65) rectangle (-6.2+2.72,-1.4);	
+				\\draw (-6+0.2,-2.4+0.75)node {Câu 7};
+				\\draw (-6,-2.4+0.4)node {Đúng};
+				\\draw (-6+0.73,-2.4+0.4)node {Sai};
+				\\draw (-6-0.4,-2.4-0*0.3458)node {a)};
+				\\draw (-6-0.4,-2.4-1*0.3458)node {b)};
+				\\draw (-6-0.4,-2.4-2*0.3458)node {c)};
+				\\draw (-6-0.4,-2.4-3*0.3458)node {d)};
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\begin{scope}[shift={(0:0.73*2)}]
+					\\draw (-6+0.2,-2.4+0.75)node {Câu 8};
+					\\draw (-6,-2.4+0.4)node {Đúng};
+					\\draw (-6+0.73,-2.4+0.4)node {Sai};
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6,-2.4-\\x*0.3458) circle (3.56pt);}
+					\\foreach \\x in {0,1,2,3}{\\draw[blue] (-6+0.73,-2.4-\\x*0.3458) circle (3.56pt);}
+				\\end{scope}
+			\\end{scope}	
+			%%Phần III
+			\\draw[blue] (-5.65,-4.105) node[above]{\\textbf{PHẦN III}};
+			\\foreach \\x in {0,1,...,5}{\\draw[rounded corners, double,cyan] (-6.7+2.283*\\x,-4.4) rectangle++(2.283,-5.1);}
+			\\foreach \\x in {0,1,...,5}{
+			\\begin{scope}[shift={(0:2.325*\\x)}]
+				\\pgfmathtruncatemacro{\\result}{\\x + 1}
+				\\draw[blue] (-6,-5.5) circle (3.56pt);			
+				\\draw[blue] (-6+0.35,-5.105+0.35) node[above]{Câu \\result};
+				\\foreach \\x in {0,1,2,3} {
+					\\draw[blue] (-6.15+\\x*0.345,-5.22) rectangle++(0.345,0.345);}
+				\\draw(-6-0.4,-5.5) node {$\\textbf{-}$};
+				\\draw(-6-0.4,-5.5-0.3458) node {$\\textbf{,}$};
+				\\foreach \\i in {2,3,...,11}{\\draw[blue] (-6,-5.475-0.343*\\i) circle (3.56pt);}
+				\\foreach \\i in {0,1,...,9}{\\draw (-6-0.4,-5.475-0.3565*2-0.343*\\i) node {\\tiny\\i};}
+				\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-6+0.345,-5.475-0.343*\\i) circle (3.56pt);}
+				\\foreach \\i in {1,2,3,...,11}{\\draw[blue] (-6+0.345*2,-5.475-0.343*\\i) circle (3.56pt);}
+				\\foreach \\i in {2,3,...,11}{\\draw[blue] (-6+0.345*3,-5.475-0.343*\\i) circle (3.56pt);}
+			\\end{scope}}
+		\\begin{scope}[shift={(-90:5.95)}]
+			\\draw[fill=blue] (\\a+2.4,\\b+6.038) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (\\a+4.74,\\b+6.038) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (\\a+9.39,\\b+6.038) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (\\a+11.72,\\b+6.038) rectangle++(0.21,0.21);
+			\\draw[fill=blue] (\\a+4.74+2.33,\\b+6.038) rectangle++(0.21,0.21);
+		\\end{scope}
+		\\draw[fill=blue] (\\a+2.4,\\b+6.038) rectangle++(0.21,0.21);
+		\\draw[fill=blue] (\\a+4.74,\\b+6.038) rectangle++(0.21,0.21);
+		\\draw[fill=blue] (\\a+9.39,\\b+6.038) rectangle++(0.21,0.21);
+		\\draw[fill=blue] (\\a+11.72,\\b+6.038) rectangle++(0.21,0.21);	
+		%Mã đề
+		\\foreach \\j in {0,1,2}{
+			\\foreach \\x in {0,1,...,9}{
+				\\draw[cyan] (6.25, 8.05+1.3) node{8. Mã đề thi};
+				\\draw[cyan] (6.09+\\j*0.28-0.14, 8.05+0.395+0.395/2) rectangle++(0.28,0.395);				
+				% Thêm đoạn mã này để vẽ hình chữ nhật trước khi vẽ hình tròn
+				\\draw[cyan] (6.09+\\j*0.28-0.14, 8.05-\\x*0.395+0.395/2-0.395) rectangle++(0.28,0.395);
+				% Vẽ hình tròn màu đỏ như trước
+				\\draw[blue] (6.09+\\j*0.28,8.05-\\x*0.395) circle (2.9pt);
+				\\draw[blue] (0.65+6.09+1*0.28,8.05-\\x*0.395) circle (2.9pt)node{\\tiny\\x};;}}
+			\\draw[fill=blue] (5.59, 8.425)rectangle++(0.21,0.21);
+			\\draw[fill=blue] (5.59, 3.89)rectangle++(0.21,0.21);
+		%SBD
+		\\begin{scope}[shift={(0:-2.35)}]
+		\\foreach \\j in {0,1,2,3,4,5}{
+			\\foreach \\x in {0,1,...,9}{
+				\\draw[cyan] (6.5, 8.05+1.3) node{7. Số báo danh};
+				\\draw[cyan] (6.09+\\j*0.28-0.14, 8.05+0.395+0.395/2) rectangle++(0.28,0.395);				
+				% Thêm đoạn mã này để vẽ hình chữ nhật trước khi vẽ hình tròn
+				\\draw[cyan] (6.09+\\j*0.28-0.14, 8.05-\\x*0.395+0.395/2-0.395) rectangle++(0.28,0.395);
+				% Vẽ hình tròn màu đỏ như trước
+				\\draw[blue] (6.09+\\j*0.28,8.05-\\x*0.395) circle (2.9pt);
+				\\draw[blue] (0.65+6.09+1*0.28-1.33,8.05-\\x*0.395) circle (2.9pt)node{\\tiny\\x};;
+			}}
+		\\draw[fill=red] (5.57, 8.425)rectangle++(0.21,0.21);
+		\\draw[fill=red] (5.57, 3.89)rectangle++(0.21,0.21);
+		\\end{scope}
+		%%Thông tin
+		\\draw[thick,violet] (-6.6,4.5) rectangle (-3.4,8.6);
+		\\draw[thick,violet] (-5,8.45) node{Họ tên, chữ ký};
+		\\draw[thick,violet] (-5,8.3-0.05) node{của cán bộ coi thi 1};
+		\\draw[thick,violet] (-6.6,6.55)--(-3.4,6.55);
+		\\draw[thick,violet] (-5,6.4) node{Họ tên, chữ ký};
+		\\draw[thick,violet] (-5,6.25-0.05) node{của cán bộ coi thi 2};
+		\\draw[thick,violet](-3.25,8.6) rectangle (3.08,4.5);
+		\\begin{minipage}{8cm}
+        \\begin{enumerate}[leftmargin=*,label=\\arabic*.,itemsep=1.15em]
+            \\item Hội đồng thi \\dotfill
+            \\item Điểm thi \\dotfill
+            \\item Phòng thi số \\dotfill
+            \\item Họ và tên thí sinh \\dotfill
+            \\item Ngày sinh \\dotfill (Nam/Nữ) \\dotfill
+            \\item Chữ ký của thí sinh \\dotfill
+        \\end{enumerate}
+    \\end{minipage}
+};	
+		\\node[align=left] at (-2.5,8.95) {
+			\\begin{minipage}{10cm}
+				Bài Thi:.....................................................Ngày Thi:....................
+			\\end{minipage}
+		};
+		\\node[align=left] at (-.5,9.5) {
+			\\begin{minipage}{6cm}
+				Kỳ Thi:.....................................................
+			\\end{minipage}
+		};
+		\\node[align=left] at (-.5,10) {
+			\\begin{minipage}{8cm}
+				\\textbf{PHIẾU TRẢ LỜI TRẮC NGHIỆM}
+			\\end{minipage}
+		};
+		\\end{tikzpicture}
+  }
+     \\end{center}`;
             case 'phieu3':
-                return `
-\\section*{Phiếu Tô 3}
-\\begin{itemize}
-\\item Nội dung 1 của Phiếu 3
-\\item Nội dung 2 của Phiếu 3
-\\item Nội dung 3 của Phiếu 3
-\\end{itemize}
-`;
+                return `\\begin{center}
+      \\resizebox{0.88\\textwidth}{!}{
+         \\begin{tikzpicture}[line join = round, line cap =round,>=stealth,very thin,font=\\footnotesize,scale=1]	
+			%	\\draw[thick,red,rounded corners=5pt] (-10,-13.8) rectangle (9,13);	
+			\\draw[thick,cyan] (-10,-13.5) rectangle (8.5,13.2);	
+			\\draw[fill=blue] (-10,-13.5) rectangle (-10+0.8,-13.5+0.8);	
+			\\draw[fill=blue] (-10,13.2) rectangle (-10+0.8,13.2-0.8);
+			\\draw[fill=blue] (8.5,13.2) rectangle (8.5-0.8,13.2-0.8);	
+			\\draw[fill=blue] (8.5,-13.5) rectangle (8.5-0.8,-13.5+0.8);
+			%%Phần I
+			\\draw[blue] (-9,5.275)node{\\textbf{PHẦN I}};	
+			\\begin{scope}
+				\\draw[fill=blue] (-9.475,4.275) rectangle (-9.475+0.425,4.275+0.425);	
+				\\draw[fill=blue] (-9.475,4.275-4.5) rectangle (-9.475+0.425,4.275+0.425-4.5);					
+				\\foreach \\x/\\letter in {0/A, 1/B, 2/C, 3/D}{
+					\\draw (-9+0.15+0.41*\\x,4.5) circle (4.5pt) node at (-9+0.15+0.41*\\x,4.5) {\\tiny\\letter};}
+				\\foreach \\y in {0,1,...,10}{
+					\\foreach \\x in {0,1,2,3}{ \\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {1,...,10}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) node{\\y};}}
+			\\end{scope}
+			\\begin{scope}[shift={(0:4.61)}]
+				\\foreach \\x/\\letter in {0/A, 1/B, 2/C, 3/D}{
+					\\draw (-9+0.15+0.41*\\x,4.5) circle (4.5pt) node at (-9+0.15+0.41*\\x,4.5) {\\tiny\\letter};}
+				\\draw[fill=blue] (-9.475,4.275) rectangle (-9.475+0.425,4.275+0.425);	
+				\\draw[fill=blue] (-9.475,4.275-4.5) rectangle (-9.475+0.425,4.275+0.425-4.5);	
+				\\foreach \\y in {0,1,...,10}{
+					\\foreach \\x in {0,1,2,3}{ \\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {1,...,10}{
+					\\foreach \\x in {-1}{ 
+						\\pgfmathtruncatemacro{\\result}{\\y + 10}
+						\\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) node{\\result};}}
+			\\end{scope}
+			\\begin{scope}[shift={(0:4.61*2)}]
+				\\foreach \\x/\\letter in {0/A, 1/B, 2/C, 3/D}{
+					\\draw (-9+0.15+0.41*\\x,4.5) circle (4.5pt) node at (-9+0.15+0.41*\\x,4.5) {\\tiny\\letter};}
+				\\draw[fill=blue] (-9.475,4.275) rectangle (-9.475+0.425,4.275+0.425);	
+				\\draw[fill=blue] (-9.475,4.275-4.5) rectangle (-9.475+0.425,4.275+0.425-4.5);	
+				\\foreach \\y in {0,1,...,10}{
+					\\foreach \\x in {0,1,2,3}{ \\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {1,...,10}{
+					\\foreach \\x in {-1}{ 
+						\\pgfmathtruncatemacro{\\result}{\\y + 20}
+						\\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) node{\\result};}}
+			\\end{scope}
+			\\begin{scope}[shift={(0:4.61*3)}]
+				\\foreach \\x/\\letter in {0/A, 1/B, 2/C, 3/D}{
+					\\draw (-9+0.15+0.41*\\x,4.5) circle (4.5pt) node at (-9+0.15+0.41*\\x,4.5) {\\tiny\\letter};}
+				\\draw[fill=blue] (-9.475,4.275) rectangle (-9.475+0.425,4.275+0.425);	
+				\\draw[fill=blue] (-9.475,4.275-4.5) rectangle (-9.475+0.425,4.275+0.425-4.5);	
+				\\foreach \\y in {0,1,...,10}{
+					\\foreach \\x in {0,1,2,3}{ \\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {1,...,10}{
+					\\foreach \\x in {-1}{ 
+						\\pgfmathtruncatemacro{\\result}{\\y + 30}
+						\\draw (-9+0.15+0.41*\\x,4.5-0.41*\\y) node{\\result};}}
+			\\end{scope}	
+			%%Phần II
+			\\draw[blue] (-8.75,-.75)node{\\textbf{PHẦN II}};
+			\\begin{scope}
+				\\draw[blue] (-8.75,-1.275)node{Câu 1};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 2};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*2)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 3};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*3)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 4};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*4)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 5};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*5)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 6};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*6)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 7};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			\\begin{scope}[shift={(0:4.61*0.5*7)}]
+				\\draw[blue] (-8.75,-1.275)node{Câu 8};
+				\\draw[fill=blue] (-9.475,4.275-6.325) rectangle (-9.475+0.425,4.275+0.425-6.325);
+				\\draw[fill=blue] (-9.475,4.275-6.325-2.05) rectangle (-9.475+0.425,4.275+0.425-6.325-2.05);					
+				\\foreach \\y in {1,2,...,4}{
+					\\foreach \\x in {0,1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0}{
+					\\foreach \\x/\\kt in {0/Đ,1/S}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node{\\kt};}}					
+				\\foreach \\y/\\letter in {1/a),2/b),3/c),4/d)}{
+					\\foreach \\x in {-1}{ \\draw (-9+0.15+0.41*\\x,4.275+0.2-6.325-0.41*\\y) node {\\tiny\\letter};}}					
+			\\end{scope}	
+			%%PHẦN III
+			\\draw[blue] (-8.75,-4.65)node{\\textbf{PHẦN III}};
+			\\begin{scope}
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 1};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}				
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}	
+			\\begin{scope}[shift={(0:3.075)}]
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 2};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}		
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}				
+			\\begin{scope}[shift={(0:3.075*2)}]
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 3};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}		
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}	
+			\\begin{scope}[shift={(0:3.075*3)}]
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 4};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}		
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}	
+			\\begin{scope}[shift={(0:3.075*4)}]
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 5};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}		
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}	
+			\\begin{scope}[shift={(0:3.075*5)}]
+				\\foreach \\y in {-5}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.45+3*0.41,-7.33-0.7+0.41*7) node{Câu 6};
+						\\draw (-9.45+\\x*0.41,-7.33-0.8-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}		
+				\\draw[fill=blue] (-9.475,-6.72) rectangle (-9.475+0.425,-6.295);
+				\\draw[fill=blue] (-9.475,-6.72-5.325) rectangle (-9.475+0.425,-6.295-5.325);
+				\\draw[blue] (-9.475+0.21+0.41,-6.72-0.2) circle (4.5pt);
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2) node{-};
+				\\draw[blue] (-9.475+0.21+0.41-0.41,-6.72-0.2-0.41) node{,};
+				\\draw[blue] (-9.475+0.21+0.41+0.41,-6.72-0.2-0.41)  circle (4.5pt);
+				\\draw (-9.265+3*0.41,-7.33)  circle (4.5pt);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3,4}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y)  circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{
+						\\draw (-9.265+\\x*0.41,-7.33-0.41-0.41*\\y) node{\\y};}}
+			\\end{scope}	
+			%type
+			\\foreach \\x in {0,1,...,7}{\\draw (-6.91+0.515*\\x,-12.8) circle (4.5pt);}
+			\\foreach \\x in {0,1,5,7}{\\draw[fill=blue] (-6.91+0.515*\\x,-12.8) circle (4.5pt);}
+			\\draw (-6.91-1,-12.8) node{\\textbf{Type}};
+			\\draw[double,blue,rounded corners=5pt] (-6.91-0.25,-12.8-0.25) rectangle ++(4.1,0.5);
+			%%MÃ ĐỀ
+			\\begin{scope}
+				\\draw[fill=blue] (6.165,10.435) rectangle ++(0.425,0.425);
+				\\draw[fill=blue] (6.165,10.435-0.41*11) rectangle ++(0.425,0.425);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,3}{\\draw (6.165+0.2+0.41*\\x,10.435-0.2-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{\\draw (6.165+0.2+0.41*\\x,10.435-0.2-0.41*\\y)node{\\y};}}	
+				\\foreach \\y in {-3}{
+					\\foreach \\x in {1,2,3}{
+						\\draw (6.165+0.1+0.41*2,10.3+0.41*4) node{8. Mã đề};
+						\\draw (6.165+0.41*\\x,10.435-0.6-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}	
+			\\end{scope}		
+			%%SBD
+			\\begin{scope}[shift={(0:-3.725)}]
+				\\draw[fill=blue] (6.165,10.435) rectangle ++(0.425,0.425);
+				\\draw[fill=blue] (6.165,10.435-0.41*11) rectangle ++(0.425,0.425);
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {1,2,...,6}{\\draw (6.165+0.2+0.41*\\x,10.435-0.2-0.41*\\y) circle (4.5pt);}}
+				\\foreach \\y in {0,1,...,9}{
+					\\foreach \\x in {0}{\\draw (6.165+0.2+0.41*\\x,10.435-0.2-0.41*\\y)node{\\y};}}	
+				\\foreach \\y in {-3}{
+					\\foreach \\x in {1,2,3,4,5,6}{
+						\\draw (6.165+0.5+0.1+0.41*2,10.3+0.41*4) node{7. Số báo danh};
+						\\draw (6.165+0.41*\\x,10.435-0.6-0.41*\\y) rectangle ++(0.41,0.65);
+					}
+				}	
+			\\end{scope}
+			\\draw[blue] (-5.75,10.85) rectangle ++(7.75,-4.65);
+			\\draw[blue] (-5.75-0.1,10.85) rectangle ++(-3.8,-4.65);
+			\\draw[blue] (-5.75-0.1,10.85) rectangle ++(-3.8,-2.3);
+			\\draw (-7.75,10.85-0.5) node[align=center]{Họ tên, chữ ký\\\\của cán bộ coi thị 1};
+			\\draw (-7.75,10.85-0.5-2.3) node[align=center]{Họ tên, chữ ký\\\\của cán bộ coi thị 2};
+			\\draw (-1,12.5) node[align=center]{\\large{\\textbf{PHIẾU TRẢ LỜI TRẮC NGHIỆM}}\\\\Kỳ thi: ........................};
+			\\draw (-4,11.5) node[align=right]{Bài thi:......................................................Ngày thi:.................................};
+			\\node[align=left] at (-1.85,8.5) {
+				\\begin{minipage}{7.2cm}
+					\\begin{enumerate}[leftmargin=*,label=\\arabic*.,itemsep=.8em]
+							\\item Hội đồng thi \\dotfill
+							\\item Điểm thi \\dotfill
+							\\item Phòng thi số \\dotfill
+							\\item Họ và tên thí sinh \\dotfill
+							\\item Ngày sinh \\dotfill (Nam/Nữ) \\dotfill
+							\\item Chữ ký của thí sinh \\dotfill
+						\\end{enumerate}
+				\\end{minipage}
+			};	
+		\\end{tikzpicture}
+  }
+     \\end{center}`;
             default:
                 return `
 \\section*{Phiếu Tô}
@@ -965,7 +1787,7 @@ function getPhieuToContent(phieuTo) {
                 const headers = {
                     default: `\\documentclass[12pt,a4paper]{article}
 \\usepackage{amsmath,amssymb,makecell,fancyhdr,enumerate,arcs,physics,tasks,mathrsfs,graphics}
-\\usepackage{tikz,tikz-3dplot,tkz-euclide,tkz-tab,tkz-linknodes,tabvar,pgfplots,esvect}
+\\usepackage{tikz,tikz-3dplot,tkz-euclide,tkz-tab,tabvar,pgfplots,esvect}
 \\usepackage[top=1.5cm, bottom=1.5cm, left=2cm, right=1.5cm]{geometry}
 \\usepackage[hidelinks,unicode]{hyperref}
 \\usepackage[utf8]{vietnam}
@@ -997,7 +1819,7 @@ function getPhieuToContent(phieuTo) {
 		\\centerline{\\textbf{\\fontsize{13}{0}\\selectfont \\tenkythi}}
 		\\centerline{\\textbf{\\fontsize{13}{0}\\selectfont \\tenmonthi}}
 		\\centerline{\\textit{\\fontsize{12}{0}\\selectfont Thời gian làm bài \\thoigian \\ phút }}
-		\\centerline{\\textit{\\fontsize{12}{0}\\selectfont (Đề có  ${hoanViKetQua.countChoice} câu trắc nghiệm,${hoanViKetQua.countchoiceTF} câu đúng sai,${hoanViKetQua.countNone} câu điền đáp án)}}
+		\\centerline{\\textit{\\fontsize{12}{0}\\selectfont (Đề có AAsangAA câu trắc nghiệm, BBsangBB câu đúng sai, CCsangCC câu điền đáp án)}}
 	\\end{minipage}
 	\\begin{minipage}[b]{13cm}
 		\\vspace*{.75cm}
@@ -1032,6 +1854,7 @@ function getPhieuToContent(phieuTo) {
             function generateFiles(content, numFiles, hoanViType, headerType, school, teacher, exam, subject, time, made, phieuTo, dapAn) {
                 let results = [];
                 let headerContent = getHeaderContent(headerType, school, teacher, exam, subject, time,phieuTo);
+                 
                 const phieuToContent = `\\section*{Phiếu Tô ${phieuTo}}\n\\section*{Đáp án ${dapAn}}\n`;
                 let files = [];
                 let currentMades = []; // Mảng chứa các currentMade
@@ -1065,13 +1888,13 @@ function getPhieuToContent(phieuTo) {
     \\tieude{\\pageref{\\made}}{0}{\\made}
     \\chantrang{\\pageref{\\made}}{\\made}
      ${getPhieuToContent(phieuTo)}
-    \\subsection*{PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu ${hoanViKetQua.countChoice}}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
+    \\subsection*{PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu ${hoanViKetQua.countChoice}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.}
     \\setcounter{ex}{0}
     \\Opensolutionfile{ans}[ans/ans-phanI]
     ${hoanViKetQua.groupChoice}
     \\Closesolutionfile{ans}
     
-    \\subsection*{PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu ${hoanViKetQua.countchoiceTF}}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
+    \\subsection*{PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu ${hoanViKetQua.countchoiceTF}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.}
     \\setcounter{ex}{0}
     \\Opensolutionfile{ans}[ans/ans-phanII]
     ${hoanViKetQua.groupchoiceTF}
@@ -1096,6 +1919,10 @@ function getPhieuToContent(phieuTo) {
     \\inputansbox[3]{6}{ans/ans-phanIII}
     \\end{document}
     `;
+                    // Thay thế các ký hiệu bằng giá trị thực tế
+                    resultContent = resultContent.replace('AAsangAA', hoanViKetQua.countChoice);
+                    resultContent = resultContent.replace('BBsangBB', hoanViKetQua.countchoiceTF);
+                    resultContent = resultContent.replace('CCsangCC', hoanViKetQua.countNone);
     
                     results.push({
                         content: resultContent,

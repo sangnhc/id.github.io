@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Hyperlink Cho File LaTeX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+            background-color: #e0f7ff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        input[type="file"],
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        textarea {
+            width: 97.5%;
+            height: 300px;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            background-color: #f9f9f9;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #result p {
+            color: #28a745;
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin: 10px 0;
+        }
+
+        .back-home {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .back-home a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-home a:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Tạo Hyperlink Cho File LaTeX</h1>
+
+        <!-- Input để người dùng chọn file hoặc thư mục -->
+        <input type="file" id="fileInput" accept=".tex" onchange="loadFileContent()" />
+        <button onclick="loadFolder()">Load Thư Mục</button>
+        <button onclick="loadMultipleFiles()">Load Nhiều File</button>
+
+        <!-- Khung nhập số cho các môi trường -->
+        <div class="input-group">
+            <label for="exStart">Bắt đầu số cho môi trường `ex`: </label>
+            <input type="number" id="exStart" value="1">
+        </div>
+
+        <div class="input-group">
+            <label for="vdStart">Bắt đầu số cho môi trường `vd`: </label>
+            <input type="number" id="vdStart" value="1">
+        </div>
+
+        <div class="input-group">
+            <label for="btStart">Bắt đầu số cho môi trường `bt`: </label>
+            <input type="number" id="btStart" value="1">
+        </div>
+
+        <textarea id="fileContent" placeholder="File content will appear here..."></textarea>
+        <button onclick="processFile()">Tạo File</button>
+
+        <!-- Checkbox để chọn xóa comment -->
+        <label>
+            <input type="checkbox" id="removeComments"> Xóa comment trong file LaTeX
+        </label>
+
+        <!-- Nơi hiển thị kết quả -->
+        <div id="result">
+            <p id="status"></p>
+            <p id="fileCount"></p>
+            <button id="downloadExBtn" style="display: none;" onclick="downloadFile('ex')">Download Đề Bài</button>
+            <button id="downloadSolBtn" style="display: none;" onclick="downloadFile('sol')">Download Lời Giải</button>
+            <button id="downloadHyperlinkedExBtn" style="display: none;"
+                onclick="downloadFile('hyperlinkedEx')">Download Đề Bài Với Hyperlink</button>
+        </div>
+    </div>
+
+    <div class="back-home">
+        <a href="index.html">Quay về Trang Chủ</a>
+        <button onclick="showHDSD()">HDSD</button> <!-- Nút HDSD -->
+    </div>
+
+    <script>
+        let processedExContent = '';  // Biến lưu trữ nội dung bài tập đã xử lý
+        let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
+        let processedHyperlinkedExContent = '';  // Biến lưu trữ nội dung đề bài với các hyperlink
+
+        // Khởi tạo bộ đếm từ localStorage
+        function initializeCounters() {
+            const exStart = localStorage.getItem('exStart') || 1;
+            const vdStart = localStorage.getItem('vdStart') || 1;
+            const btStart = localStorage.getItem('btStart') || 1;
+
+            document.getElementById('exStart').value = exStart;
+            document.getElementById('vdStart').value = vdStart;
+            document.getElementById('btStart').value = btStart;
+        }
+
+        // Lưu bộ đếm vào localStorage
+        function saveCounters() {
+            const exStart = document.getElementById('exStart').value;
+            const vdStart = document.getElementById('vdStart').value;
+            const btStart = document.getElementById('btStart').value;
+
+            localStorage.setItem('exStart', exStart);
+            localStorage.setItem('vdStart', vdStart);
+            localStorage.setItem('btStart', btStart);
+        }
+
+        // Tải nội dung file
+        function loadFileContent() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) {
+                alert("Vui lòng chọn một file .tex.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const decoder = new TextDecoder('utf-8');
+                const content = decoder.decode(e.target.result);
+                document.getElementById('fileContent').value = content;  // Hiển thị nội dung file
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Hàm xử lý file từ nội dung textarea
+        function processFile() {
+            let content = document.getElementById('fileContent').value;  // Lấy nội dung từ textarea
+
+            if (document.getElementById('removeComments').checked) {
+                content = removeComments(content);  // Gọi hàm xóa comment
+            }
+
+            content = content.replace(/^\s*[\r\n]/gm, ''); // Xóa các dòng trống
+
+            let counter_ex = parseInt(document.getElementById('exStart').value); // Lấy số bắt đầu cho môi trường `ex`
+            let counter_vd = parseInt(document.getElementById('vdStart').value); // Lấy số bắt đầu cho môi trường `vd`
+            let counter_bt = parseInt(document.getElementById('btStart').value); // Lấy số bắt đầu cho môi trường `bt`
+
+            // Xử lý file và tạo các loại nội dung
+            const [exContent, solContent] = addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt);
+            processedExContent = exContent;
+            processedSolContent = solContent;
+
+            // Tạo nội dung đề bài với các hyperlink
+            processedHyperlinkedExContent = addHyperlinksToExercises(exContent);
+
+            saveCounters();
+
+            document.getElementById('status').innerText = "Đã Tạo Xong File Đề, Lời Giải và Đề Bài Với Hyperlink!";
+            document.getElementById('downloadExBtn').style.display = 'inline';
+            document.getElementById('downloadSolBtn').style.display = 'inline';
+            document.getElementById('downloadHyperlinkedExBtn').style.display = 'inline';
+        }
+
+        // Hàm xử lý nội dung file
+        function addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt) {
+            let exContent = content;
+            let solContent = "";
+
+            const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\loigiai\s*\{\s*([\s\S]*?)\s*\}\\end\{\1\}/g;
+
+            exContent = exContent.replace(envRegex, (match, envType, exPart, loigiaiPart) => {
+                let label_ex, label_sol;
+                if (envType === "ex") {
+                    label_ex = `ex${counter_ex}b`;
+                    label_sol = `ex${counter_ex}a`;
+                    counter_ex++;
+                } else if (envType === "vd") {
+                    label_ex = `vd${counter_vd}b`;
+                    label_sol = `vd${counter_vd}a`;
+                    counter_vd++;
+                } else if (envType === "bt") {
+                    label_ex = `bt${counter_bt}b`;
+                    label_sol = `bt${counter_bt}a`;
+                    counter_bt++;
+                }
+
+                const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_sol}]{Xem Lời Giải}}\n\\end{${envType}}`;
+                const processedSolPart = `\\hypertarget{${label_sol}}{}\\loigiai{${loigiaiPart.trim()}\n\\par\\noindent{\\mfbox[${label_ex}]{Quay Lại Đề}}}`;
+
+                solContent += processedSolPart + '\n\n';
+                return processedExPart;
+            });
+
+            document.getElementById('exStart').value = counter_ex;
+            document.getElementById('vdStart').value = counter_vd;
+            document.getElementById('btStart').value = counter_bt;
+
+            return [exContent, solContent];
+        }
+
+        // Hàm xử lý chỉ tạo hyperlink cho đề bài
+        function addHyperlinksToExercises(content) {
+            let hyperlinkedContent = content;
+
+            const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\end\{\1\}/g;
+
+            hyperlinkedContent = hyperlinkedContent.replace(envRegex, (match, envType, exPart) => {
+                let label_ex = `ex${Math.random().toString(36).substr(2, 5)}b`;
+                const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_ex}]{Xem Thông Tin}}\n\\end{${envType}}`;
+
+                return processedExPart;
+            });
+
+            return hyperlinkedContent;
+        }
+
+        // Hàm xóa comment trong nội dung LaTeX
+        function removeComments(content) {
+            return content.replace(/(?<!\\)%.*$/gm, '').trim();
+        }
+
+        // Hàm tải về file đã xử lý
+        function downloadFile(type) {
+            let content = '';
+            let filename = '';
+
+            if (type === 'ex') {
+                content = processedExContent;
+                filename = 'ProcessedExercise.tex';
+            } else if (type === 'sol') {
+                content = processedSolContent;
+                filename = 'ProcessedSolution.tex';
+            } else if (type === 'hyperlinkedEx') {
+                content = processedHyperlinkedExContent;
+                filename = 'ProcessedHyperlinkedExercise.tex';
+            }
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+    </script>
+
+</body>
+
+</html>
