@@ -120,8 +120,8 @@ h1 {
 
         <!-- Input để người dùng chọn file hoặc thư mục -->
         <input type="file" id="fileInput" accept=".tex" onchange="loadFileContent()" />
-        <button onclick="loadFolder()">Load Folder</button>
-        <button onclick="loadMultipleFiles()">Load Multiple Files</button>
+        <button onclick="loadFolder()">Load Thư Mục</button>
+        <button onclick="loadMultipleFiles()">Load Nhiều File</button>
 
         <!-- Khung nhập số cho các môi trường -->
         <div class="input-group">
@@ -155,10 +155,95 @@ h1 {
             <button id="downloadSolBtn" style="display: none;" onclick="downloadFile('sol')">Download Lời Giải</button>
         </div>
     </div>
-    <!-- Nút Quay lại Trang Chủ -->
+    <!-- Nút Quay lại Trang Chủ và Hướng Dẫn Sử Dụng -->
     <div class="back-home">
         <a href="index.html">Quay về Trang Chủ</a>
+        <button onclick="showHDSD()">HDSD</button> <!-- Nút HDSD -->
     </div>
+<!-- Modal hiển thị Hướng dẫn sử dụng -->
+<!-- Modal hiển thị Hướng dẫn sử dụng -->
+<div id="hdsdModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow:auto;">
+    <div
+        style="background:white; margin:5% auto; padding:20px; width:80%; max-height:90%; overflow-y:auto; box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2>Hướng Dẫn Sử Dụng</h2>
+        <p><strong>Chọn File:</strong> Bạn có thể chọn file LaTeX (.tex) để xem nội dung và xử lý.</p>
+        <p><strong>Load Thư Mục:</strong> Tải toàn bộ nội dung từ một thư mục và xử lý các file bên trong.</p>
+        <p><strong>Load Nhiều File:</strong> Cho phép tải và xử lý nhiều file LaTeX cùng lúc.</p>
+        <p><strong>Thiết lập số bắt đầu:</strong> Bạn có thể nhập số bắt đầu cho các môi trường `ex`, `vd`, và `bt` (đại
+            diện cho bài tập, ví dụ và bài tập khác).</p>
+        <p><strong>Xóa Comment:</strong> Nếu bạn muốn xóa các comment trong file LaTeX (các dòng bắt đầu bằng dấu `%`),
+            bạn có thể tích chọn ô này trước khi xử lý.</p>
+        <p><strong>Tạo File:</strong> Sau khi xử lý, bạn có thể tải về file đã chỉnh sửa (bao gồm bài tập và lời giải).
+        </p>
+        <p><strong>Download Đề Bài và Lời Giải:</strong> Bạn có thể tải về file chứa đề bài hoặc lời giải sau khi xử lý.
+        </p>
+        <p><strong>Quay về Trang Chủ:</strong> Nhấn nút để quay lại trang chính.</p>
+        <p><strong>Hướng Dẫn Sử Dụng (HDSD):</strong> Nhấn nút HDSD để xem hướng dẫn này.</p>
+
+        <h3>Hướng Dẫn Thêm Gói và Lệnh Vào File LaTeX</h3>
+        <p>Chép nội dung này vào trước <code>\document</code> trong file <code>main.tex</code> của bạn:</p>
+
+        <pre id="latexCode">
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{fontawesome}
+\newif\ifshowloigiai
+\showloigiaitrue % Hiển thị lời giải, đổi thành \showloigiaifalse để ẩn
+
+% Định nghĩa lại lệnh \loigiai với khung đẹp
+\renewcommand{\loigiai}[1]{%
+    \ifshowloigiai
+    \begin{tcolorbox}[colback=orange!10, colframe=orange!85!red,
+    title=\centering\faLightbulbO\ \textbf{Lời giải}]
+    #1
+    \end{tcolorbox}
+    \fi
+}
+
+% Lệnh tạo liên kết với hộp màu cam
+\newcommand{\myfbox}[2][]{%
+    \hypersetup{linkcolor=white}
+    \hyperlink{#1}{\fcolorbox{orange!85!black}{orange!30!white}{%
+    \textbf{\textcolor{black}{\color{blue}#2}}}}
+}
+
+% Lệnh tạo liên kết với hộp bo tròn
+\newcommand{\mfbox}[2][]{%
+    \hypersetup{linkcolor=black}
+    \hyperlink{#1}{\begin{tikzpicture}
+    \node[fill=orange!30!white, rounded corners=10pt,
+    text=blue, font=\bfseries] {#2};
+    \end{tikzpicture}}
+}
+            </pre>
+
+        <button onclick="copyLatexCode()">Sao chép nội dung</button> <!-- Nút Sao chép -->
+        <button onclick="closeHDSD()">Đóng</button> <!-- Nút Đóng Modal -->
+    </div>
+</div>
+<script>
+     // Hiển thị modal HDSD
+        function showHDSD() {
+            document.getElementById('hdsdModal').style.display = 'block';
+        }
+
+        // Đóng modal HDSD
+        function closeHDSD() {
+            document.getElementById('hdsdModal').style.display = 'none';
+        }
+        // Sao chép mã LaTeX vào clipboard
+            function copyLatexCode() {
+                const latexCode = document.getElementById('latexCode').innerText;
+                navigator.clipboard.writeText(latexCode).then(() => {
+                    alert('Đã sao chép nội dung vào clipboard!');
+                }, (err) => {
+                    console.error('Không thể sao chép: ', err);
+                });
+            }
+</script>
     <script>
         let processedExContent = '';  // Biến lưu trữ nội dung bài tập đã xử lý
         let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
