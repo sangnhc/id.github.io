@@ -21,8 +21,9 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-       h1 {
-            margin-top: 0; /* Đảm bảo không có khoảng trống trên thẻ h1 */
+        h1 {
+            margin-top: 0;
+            /* Đảm bảo không có khoảng trống trên thẻ h1 */
             text-align: center;
             color: #333;
             background-color: #e0f7ff;
@@ -80,6 +81,7 @@
         .input-group {
             margin: 10px 0;
         }
+
         /* Nút quay lại trang chủ */
         .back-home {
             margin-top: 20px;
@@ -99,7 +101,8 @@
         .back-home a:hover {
             background-color: #d32f2f;
         }
-h1 {
+
+        h1 {
             color: #007bff;
             margin-bottom: 20px;
             font-size: 2.5rem;
@@ -153,38 +156,45 @@ h1 {
             <p id="fileCount"></p>
             <button id="downloadExBtn" style="display: none;" onclick="downloadFile('ex')">Download Đề Bài</button>
             <button id="downloadSolBtn" style="display: none;" onclick="downloadFile('sol')">Download Lời Giải</button>
+            <button id="downloadCombinedBtn" style="display: none;" onclick="downloadFile('combined')">Download File Đề
+                Có Dòng Kẻ</button> <!-- New Button for Combined File -->
         </div>
+    </div>
     </div>
     <!-- Nút Quay lại Trang Chủ và Hướng Dẫn Sử Dụng -->
     <div class="back-home">
         <a href="index.html">Quay về Trang Chủ</a>
         <button onclick="showHDSD()">HDSD</button> <!-- Nút HDSD -->
     </div>
-<!-- Modal hiển thị Hướng dẫn sử dụng -->
-<!-- Modal hiển thị Hướng dẫn sử dụng -->
-<div id="hdsdModal"
-    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow:auto;">
-    <div
-        style="background:white; margin:5% auto; padding:20px; width:80%; max-height:90%; overflow-y:auto; box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h2>Hướng Dẫn Sử Dụng</h2>
-        <p><strong>Chọn File:</strong> Bạn có thể chọn file LaTeX (.tex) để xem nội dung và xử lý.</p>
-        <p><strong>Load Thư Mục:</strong> Tải toàn bộ nội dung từ một thư mục và xử lý các file bên trong.</p>
-        <p><strong>Load Nhiều File:</strong> Cho phép tải và xử lý nhiều file LaTeX cùng lúc.</p>
-        <p><strong>Thiết lập số bắt đầu:</strong> Bạn có thể nhập số bắt đầu cho các môi trường `ex`, `vd`, và `bt` (đại
-            diện cho bài tập, ví dụ và bài tập khác).</p>
-        <p><strong>Xóa Comment:</strong> Nếu bạn muốn xóa các comment trong file LaTeX (các dòng bắt đầu bằng dấu `%`),
-            bạn có thể tích chọn ô này trước khi xử lý.</p>
-        <p><strong>Tạo File:</strong> Sau khi xử lý, bạn có thể tải về file đã chỉnh sửa (bao gồm bài tập và lời giải).
-        </p>
-        <p><strong>Download Đề Bài và Lời Giải:</strong> Bạn có thể tải về file chứa đề bài hoặc lời giải sau khi xử lý.
-        </p>
-        <p><strong>Quay về Trang Chủ:</strong> Nhấn nút để quay lại trang chính.</p>
-        <p><strong>Hướng Dẫn Sử Dụng (HDSD):</strong> Nhấn nút HDSD để xem hướng dẫn này.</p>
+    <!-- Modal hiển thị Hướng dẫn sử dụng -->
+    <!-- Modal hiển thị Hướng dẫn sử dụng -->
+    <div id="hdsdModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow:auto;">
+        <div
+            style="background:white; margin:5% auto; padding:20px; width:80%; max-height:90%; overflow-y:auto; box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Hướng Dẫn Sử Dụng</h2>
+            <p><strong>Chọn File:</strong> Bạn có thể chọn file LaTeX (.tex) để xem nội dung và xử lý.</p>
+            <p><strong>Load Thư Mục:</strong> Tải toàn bộ nội dung từ một thư mục và xử lý các file bên trong.</p>
+            <p><strong>Load Nhiều File:</strong> Cho phép tải và xử lý nhiều file LaTeX cùng lúc.</p>
+            <p><strong>Thiết lập số bắt đầu:</strong> Bạn có thể nhập số bắt đầu cho các môi trường `ex`, `vd`, và `bt`
+                (đại
+                diện cho bài tập, ví dụ và bài tập khác).</p>
+            <p><strong>Xóa Comment:</strong> Nếu bạn muốn xóa các comment trong file LaTeX (các dòng bắt đầu bằng dấu
+                `%`),
+                bạn có thể tích chọn ô này trước khi xử lý.</p>
+            <p><strong>Tạo File:</strong> Sau khi xử lý, bạn có thể tải về file đã chỉnh sửa (bao gồm bài tập và lời
+                giải).
+            </p>
+            <p><strong>Download Đề Bài và Lời Giải:</strong> Bạn có thể tải về file chứa đề bài hoặc lời giải sau khi xử
+                lý.
+            </p>
+            <p><strong>Quay về Trang Chủ:</strong> Nhấn nút để quay lại trang chính.</p>
+            <p><strong>Hướng Dẫn Sử Dụng (HDSD):</strong> Nhấn nút HDSD để xem hướng dẫn này.</p>
 
-        <h3>Hướng Dẫn Thêm Gói và Lệnh Vào File LaTeX</h3>
-        <p>Chép nội dung này vào trước <code>\document</code> trong file <code>main.tex</code> của bạn:</p>
+            <h3>Hướng Dẫn Thêm Gói và Lệnh Vào File LaTeX</h3>
+            <p>Chép nội dung này vào trước <code>\document</code> trong file <code>main.tex</code> của bạn:</p>
 
-        <pre id="latexCode">
+            <pre id="latexCode">
 \usepackage{hyperref}
 \usepackage{comment}
 \usepackage{tcolorbox}
@@ -218,14 +228,38 @@ h1 {
     text=blue, font=\bfseries] {#2};
     \end{tikzpicture}}
 }
+\newcommand{\mlgfbox}[3][20]{% #1 là số dòng tùy chọn (mặc định là 20)
+\hypersetup{linkcolor=black}
+\hyperlink{#2}{\centering\faLightbulbO\ \textbf{Hướng Dẫn Giải}\\
+\begin{tikzpicture}[x=1cm, y=1cm]
+\foreach \y in {1, 2, ..., #1} { 
+\draw[dotted, gray!30, line width=0.25mm] (0, \y) -- (15, \y);
+}
+\end{tikzpicture}
+\begin{tikzpicture}
+\node[fill=orange!30!white, rounded corners=10pt, text=blue, font=\bfseries] {#3};
+\end{tikzpicture}}%
+}
+\newcommand{\hdg}[1]{%
+\ifshowloigiai
+\begin{tcolorbox}[colback=green!5!white, % Nền xanh nhạt sáng hơn
+colframe=orange!70!red, % Khung viền sáng và nổi bật
+coltext=black, % Màu chữ dễ đọc hơn trên nền sáng
+%%title=\centering\faLightbulbO\ \textbf{Hướng Dẫn Giải},
+coltitle=black, % Màu tiêu đề đậm để dễ đọc
+fonttitle=\bfseries] % Tiêu đề in đậm
+#1
+\end{tcolorbox}
+\fi
+}
             </pre>
 
-        <button onclick="copyLatexCode()">Sao chép nội dung</button> <!-- Nút Sao chép -->
-        <button onclick="closeHDSD()">Đóng</button> <!-- Nút Đóng Modal -->
+            <button onclick="copyLatexCode()">Sao chép nội dung</button> <!-- Nút Sao chép -->
+            <button onclick="closeHDSD()">Đóng</button> <!-- Nút Đóng Modal -->
+        </div>
     </div>
-</div>
-<script>
-     // Hiển thị modal HDSD
+    <script>
+        // Hiển thị modal HDSD
         function showHDSD() {
             document.getElementById('hdsdModal').style.display = 'block';
         }
@@ -235,19 +269,20 @@ h1 {
             document.getElementById('hdsdModal').style.display = 'none';
         }
         // Sao chép mã LaTeX vào clipboard
-            function copyLatexCode() {
-                const latexCode = document.getElementById('latexCode').innerText;
-                navigator.clipboard.writeText(latexCode).then(() => {
-                    alert('Đã sao chép nội dung vào clipboard!');
-                }, (err) => {
-                    console.error('Không thể sao chép: ', err);
-                });
-            }
-</script>
+        function copyLatexCode() {
+            const latexCode = document.getElementById('latexCode').innerText;
+            navigator.clipboard.writeText(latexCode).then(() => {
+                alert('Đã sao chép nội dung vào clipboard!');
+            }, (err) => {
+                console.error('Không thể sao chép: ', err);
+            });
+        }
+    </script>
     <script>
         let processedExContent = '';  // Biến lưu trữ nội dung bài tập đã xử lý
         let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
         let combinedFileContent = '';  // Biến lưu trữ nội dung đã ghép từ các file trong thư mục
+        let processedCombinedContent = ''; // Biến lưu trữ nội dung đã xử lý và ghép từ bài tập và lời giải
 
         // Hàm khởi tạo, khôi phục các giá trị bộ đếm từ localStorage khi tải trang
         function initializeCounters() {
@@ -307,13 +342,27 @@ h1 {
             const [exContent, solContent] = addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt);
             processedExContent = exContent;
             processedSolContent = solContent;
-
+            cnoidung = `\\setcounter{ex}{0}
+\\setcounter{vd}{0}
+\\setcounter{bt}{0}`;
+            // Ghép bài tập và lời giải thành một file
+            processedCombinedContent = cnoidung + '\n' + exContent;// + '\n\n' + solContent;
+            processedCombinedContent = processedCombinedContent.replace(/\\begin{ex}/g, '\\hdg{\\begin{ex}')
+                .replace(/\\begin{vd}/g, '\\hdg{\\begin{vd}')
+                .replace(/\\begin{bt}/g, '\\hdg{\\begin{bt}')
+                .replace(/b}{}\\par/g, 'a}{}\\par')
+                .replace(/\\end{ex}/g, '\\end{ex}}')
+                .replace(/\\end{vd}/g, '\\end{vd}}')
+                .replace(/\\end{bt}/g, '\\end{bt}}')
+                .replace(/\\par\\noindent{\\mfbox\[/g, '\\par\\noindent{\\mlgfbox[20]{')
+                .replace(/a]{Xem Lời Giải}}/g, 'b}{Xem Đề}}');
             // Sau khi xử lý xong file, lưu các bộ đếm
             saveCounters();
 
             document.getElementById('status').innerText = "Đã Tạo Xong File Đề Và Lời Giải!";
             document.getElementById('downloadExBtn').style.display = 'inline';
             document.getElementById('downloadSolBtn').style.display = 'inline';
+            document.getElementById('downloadCombinedBtn').style.display = 'inline';  // Hiển thị nút tải file ghép
         }
 
         // Hàm xử lý nội dung file
@@ -358,9 +407,6 @@ h1 {
             return [exContent, solContent];
         }
 
-        // Khởi động bộ đếm khi tải trang
-        window.onload = initializeCounters;
-
         // Hàm xóa comment trong nội dung LaTeX
         function removeComments(content) {
             // Xóa comment bắt đầu bằng %, nhưng không xóa những comment có dấu \% (ký hiệu phần trăm)
@@ -374,10 +420,13 @@ h1 {
 
             if (type === 'ex') {
                 content = processedExContent;
-                filename = 'ProcessedExercise.tex';
+                filename = 'DeBai.tex';
             } else if (type === 'sol') {
                 content = processedSolContent;
-                filename = 'ProcessedSolution.tex';
+                filename = 'LoiGiai.tex';
+            } else if (type === 'combined') {  // Tải file ghép cả bài tập và lời giải
+                content = processedCombinedContent;
+                filename = 'DeVaDongKe.tex';
             }
 
             const blob = new Blob([content], { type: 'text/plain' });
@@ -437,6 +486,10 @@ h1 {
 
             fileInput.click();
         }
+
+        // Khởi động bộ đếm khi tải trang
+        window.onload = initializeCounters;
+
     </script>
 
 </body>
