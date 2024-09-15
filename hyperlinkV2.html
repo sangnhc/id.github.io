@@ -23,6 +23,7 @@
 
         h1 {
             margin-top: 0;
+            /* Đảm bảo không có khoảng trống trên thẻ h1 */
             text-align: center;
             color: #333;
             background-color: #e0f7ff;
@@ -32,6 +33,7 @@
             font-size: 2.5rem;
             font-weight: bold;
         }
+
 
         input[type="file"],
         button {
@@ -80,6 +82,7 @@
             margin: 10px 0;
         }
 
+        /* Nút quay lại trang chủ */
         .back-home {
             margin-top: 20px;
             text-align: center;
@@ -97,6 +100,18 @@
 
         .back-home a:hover {
             background-color: #d32f2f;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            background-color: #e0f7ff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
@@ -141,170 +156,338 @@
             <p id="fileCount"></p>
             <button id="downloadExBtn" style="display: none;" onclick="downloadFile('ex')">Download Đề Bài</button>
             <button id="downloadSolBtn" style="display: none;" onclick="downloadFile('sol')">Download Lời Giải</button>
-            <button id="downloadHyperlinkedExBtn" style="display: none;"
-                onclick="downloadFile('hyperlinkedEx')">Download Đề Bài Với Hyperlink</button>
+            <button id="downloadCombinedBtn" style="display: none;" onclick="downloadFile('combined')">Download File Đề Có Dòng Kẻ</button> <!-- New Button for Combined File -->
+            </div>
         </div>
     </div>
-
+    <!-- Nút Quay lại Trang Chủ và Hướng Dẫn Sử Dụng -->
     <div class="back-home">
         <a href="index.html">Quay về Trang Chủ</a>
         <button onclick="showHDSD()">HDSD</button> <!-- Nút HDSD -->
     </div>
+    <!-- Modal hiển thị Hướng dẫn sử dụng -->
+    <!-- Modal hiển thị Hướng dẫn sử dụng -->
+    <div id="hdsdModal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); overflow:auto;">
+        <div
+            style="background:white; margin:5% auto; padding:20px; width:80%; max-height:90%; overflow-y:auto; box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h2>Hướng Dẫn Sử Dụng</h2>
+            <p><strong>Chọn File:</strong> Bạn có thể chọn file LaTeX (.tex) để xem nội dung và xử lý.</p>
+            <p><strong>Load Thư Mục:</strong> Tải toàn bộ nội dung từ một thư mục và xử lý các file bên trong.</p>
+            <p><strong>Load Nhiều File:</strong> Cho phép tải và xử lý nhiều file LaTeX cùng lúc.</p>
+            <p><strong>Thiết lập số bắt đầu:</strong> Bạn có thể nhập số bắt đầu cho các môi trường `ex`, `vd`, và `bt`
+                (đại
+                diện cho bài tập, ví dụ và bài tập khác).</p>
+            <p><strong>Xóa Comment:</strong> Nếu bạn muốn xóa các comment trong file LaTeX (các dòng bắt đầu bằng dấu
+                `%`),
+                bạn có thể tích chọn ô này trước khi xử lý.</p>
+            <p><strong>Tạo File:</strong> Sau khi xử lý, bạn có thể tải về file đã chỉnh sửa (bao gồm bài tập và lời
+                giải).
+            </p>
+            <p><strong>Download Đề Bài và Lời Giải:</strong> Bạn có thể tải về file chứa đề bài hoặc lời giải sau khi xử
+                lý.
+            </p>
+            <p><strong>Quay về Trang Chủ:</strong> Nhấn nút để quay lại trang chính.</p>
+            <p><strong>Hướng Dẫn Sử Dụng (HDSD):</strong> Nhấn nút HDSD để xem hướng dẫn này.</p>
 
+            <h3>Hướng Dẫn Thêm Gói và Lệnh Vào File LaTeX</h3>
+            <p>Chép nội dung này vào trước <code>\document</code> trong file <code>main.tex</code> của bạn:</p>
+
+            <pre id="latexCode">
+\usepackage{hyperref}
+\usepackage{comment}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{fontawesome}
+\newif\ifshowloigiai
+\showloigiaitrue % Hiển thị lời giải, đổi thành \showloigiaifalse để ẩn
+
+% Định nghĩa lại lệnh \loigiai với khung đẹp
+\renewcommand{\loigiai}[1]{%
+    \ifshowloigiai
+    \begin{tcolorbox}[colback=orange!10, colframe=orange!85!red,
+    title=\centering\faLightbulbO\ \textbf{Lời giải}]
+    #1
+    \end{tcolorbox}
+    \fi
+}
+
+% Lệnh tạo liên kết với hộp màu cam
+\newcommand{\myfbox}[2][]{%
+    \hypersetup{linkcolor=white}
+    \hyperlink{#1}{\fcolorbox{orange!85!black}{orange!30!white}{%
+    \textbf{\textcolor{black}{\color{blue}#2}}}}
+}
+
+% Lệnh tạo liên kết với hộp bo tròn
+\newcommand{\mfbox}[2][]{%
+    \hypersetup{linkcolor=black}
+    \hyperlink{#1}{\begin{tikzpicture}
+    \node[fill=orange!30!white, rounded corners=10pt,
+    text=blue, font=\bfseries] {#2};
+    \end{tikzpicture}}
+}
+\newcommand{\mlgfbox}[3][20]{% #1 là số dòng tùy chọn (mặc định là 20)
+\hypersetup{linkcolor=black}
+\hyperlink{#2}{\centering\faLightbulbO\ \textbf{Hướng Dẫn Giải}\\
+\begin{tikzpicture}[x=1cm, y=1cm]
+\foreach \y in {1, 2, ..., #1} { 
+\draw[dotted, gray!30, line width=0.25mm] (0, \y) -- (15, \y);
+}
+\end{tikzpicture}
+\begin{tikzpicture}
+\node[fill=orange!30!white, rounded corners=10pt, text=blue, font=\bfseries] {#3};
+\end{tikzpicture}}%
+}
+\newcommand{\hdg}[1]{%
+\ifshowloigiai
+\begin{tcolorbox}[colback=green!5!white, % Nền xanh nhạt sáng hơn
+colframe=orange!70!red, % Khung viền sáng và nổi bật
+coltext=black, % Màu chữ dễ đọc hơn trên nền sáng
+%%title=\centering\faLightbulbO\ \textbf{Hướng Dẫn Giải},
+coltitle=black, % Màu tiêu đề đậm để dễ đọc
+fonttitle=\bfseries] % Tiêu đề in đậm
+#1
+\end{tcolorbox}
+\fi
+}
+            </pre>
+
+            <button onclick="copyLatexCode()">Sao chép nội dung</button> <!-- Nút Sao chép -->
+            <button onclick="closeHDSD()">Đóng</button> <!-- Nút Đóng Modal -->
+        </div>
+    </div>
+    <script>
+        // Hiển thị modal HDSD
+        function showHDSD() {
+            document.getElementById('hdsdModal').style.display = 'block';
+        }
+
+        // Đóng modal HDSD
+        function closeHDSD() {
+            document.getElementById('hdsdModal').style.display = 'none';
+        }
+        // Sao chép mã LaTeX vào clipboard
+        function copyLatexCode() {
+            const latexCode = document.getElementById('latexCode').innerText;
+            navigator.clipboard.writeText(latexCode).then(() => {
+                alert('Đã sao chép nội dung vào clipboard!');
+            }, (err) => {
+                console.error('Không thể sao chép: ', err);
+            });
+        }
+    </script>
     <script>
         let processedExContent = '';  // Biến lưu trữ nội dung bài tập đã xử lý
-        let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
-        let processedHyperlinkedExContent = '';  // Biến lưu trữ nội dung đề bài với các hyperlink
+            let processedSolContent = '';  // Biến lưu trữ nội dung lời giải đã xử lý
+            let combinedFileContent = '';  // Biến lưu trữ nội dung đã ghép từ các file trong thư mục
+            let processedCombinedContent = ''; // Biến lưu trữ nội dung đã xử lý và ghép từ bài tập và lời giải
 
-        // Khởi tạo bộ đếm từ localStorage
-        function initializeCounters() {
-            const exStart = localStorage.getItem('exStart') || 1;
-            const vdStart = localStorage.getItem('vdStart') || 1;
-            const btStart = localStorage.getItem('btStart') || 1;
+            // Hàm khởi tạo, khôi phục các giá trị bộ đếm từ localStorage khi tải trang
+            function initializeCounters() {
+                const exStart = localStorage.getItem('exStart') || 1;
+                const vdStart = localStorage.getItem('vdStart') || 1;
+                const btStart = localStorage.getItem('btStart') || 1;
 
-            document.getElementById('exStart').value = exStart;
-            document.getElementById('vdStart').value = vdStart;
-            document.getElementById('btStart').value = btStart;
-        }
-
-        // Lưu bộ đếm vào localStorage
-        function saveCounters() {
-            const exStart = document.getElementById('exStart').value;
-            const vdStart = document.getElementById('vdStart').value;
-            const btStart = document.getElementById('btStart').value;
-
-            localStorage.setItem('exStart', exStart);
-            localStorage.setItem('vdStart', vdStart);
-            localStorage.setItem('btStart', btStart);
-        }
-
-        // Tải nội dung file
-        function loadFileContent() {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) {
-                alert("Vui lòng chọn một file .tex.");
-                return;
+                document.getElementById('exStart').value = exStart;
+                document.getElementById('vdStart').value = vdStart;
+                document.getElementById('btStart').value = btStart;
             }
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const decoder = new TextDecoder('utf-8');
-                const content = decoder.decode(e.target.result);
-                document.getElementById('fileContent').value = content;  // Hiển thị nội dung file
-            };
-            reader.readAsArrayBuffer(file);
-        }
+            // Hàm lưu các bộ đếm vào localStorage
+            function saveCounters() {
+                const exStart = document.getElementById('exStart').value;
+                const vdStart = document.getElementById('vdStart').value;
+                const btStart = document.getElementById('btStart').value;
 
-        // Hàm xử lý file từ nội dung textarea
-        function processFile() {
-            let content = document.getElementById('fileContent').value;  // Lấy nội dung từ textarea
-
-            if (document.getElementById('removeComments').checked) {
-                content = removeComments(content);  // Gọi hàm xóa comment
+                localStorage.setItem('exStart', exStart);
+                localStorage.setItem('vdStart', vdStart);
+                localStorage.setItem('btStart', btStart);
             }
 
-            content = content.replace(/^\s*[\r\n]/gm, ''); // Xóa các dòng trống
-
-            let counter_ex = parseInt(document.getElementById('exStart').value); // Lấy số bắt đầu cho môi trường `ex`
-            let counter_vd = parseInt(document.getElementById('vdStart').value); // Lấy số bắt đầu cho môi trường `vd`
-            let counter_bt = parseInt(document.getElementById('btStart').value); // Lấy số bắt đầu cho môi trường `bt`
-
-            // Xử lý file và tạo các loại nội dung
-            const [exContent, solContent] = addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt);
-            processedExContent = exContent;
-            processedSolContent = solContent;
-
-            // Tạo nội dung đề bài với các hyperlink
-            processedHyperlinkedExContent = addHyperlinksToExercises(exContent);
-
-            saveCounters();
-
-            document.getElementById('status').innerText = "Đã Tạo Xong File Đề, Lời Giải và Đề Bài Với Hyperlink!";
-            document.getElementById('downloadExBtn').style.display = 'inline';
-            document.getElementById('downloadSolBtn').style.display = 'inline';
-            document.getElementById('downloadHyperlinkedExBtn').style.display = 'inline';
-        }
-
-        // Hàm xử lý nội dung file
-        function addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt) {
-            let exContent = content;
-            let solContent = "";
-
-            const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\loigiai\s*\{\s*([\s\S]*?)\s*\}\\end\{\1\}/g;
-
-            exContent = exContent.replace(envRegex, (match, envType, exPart, loigiaiPart) => {
-                let label_ex, label_sol;
-                if (envType === "ex") {
-                    label_ex = `ex${counter_ex}b`;
-                    label_sol = `ex${counter_ex}a`;
-                    counter_ex++;
-                } else if (envType === "vd") {
-                    label_ex = `vd${counter_vd}b`;
-                    label_sol = `vd${counter_vd}a`;
-                    counter_vd++;
-                } else if (envType === "bt") {
-                    label_ex = `bt${counter_bt}b`;
-                    label_sol = `bt${counter_bt}a`;
-                    counter_bt++;
+            // Hàm tải nội dung file vào textarea ngay khi chọn tệp
+            function loadFileContent() {
+                const file = document.getElementById('fileInput').files[0];
+                if (!file) {
+                    alert("Please select a .tex file.");
+                    return;
                 }
 
-                const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_sol}]{Xem Lời Giải}}\n\\end{${envType}}`;
-                const processedSolPart = `\\hypertarget{${label_sol}}{}\\loigiai{${loigiaiPart.trim()}\n\\par\\noindent{\\mfbox[${label_ex}]{Quay Lại Đề}}}`;
-
-                solContent += processedSolPart + '\n\n';
-                return processedExPart;
-            });
-
-            document.getElementById('exStart').value = counter_ex;
-            document.getElementById('vdStart').value = counter_vd;
-            document.getElementById('btStart').value = counter_bt;
-
-            return [exContent, solContent];
-        }
-
-        // Hàm xử lý chỉ tạo hyperlink cho đề bài
-        function addHyperlinksToExercises(content) {
-            let hyperlinkedContent = content;
-
-            const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\end\{\1\}/g;
-
-            hyperlinkedContent = hyperlinkedContent.replace(envRegex, (match, envType, exPart) => {
-                let label_ex = `ex${Math.random().toString(36).substr(2, 5)}b`;
-                const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_ex}]{Xem Thông Tin}}\n\\end{${envType}}`;
-
-                return processedExPart;
-            });
-
-            return hyperlinkedContent;
-        }
-
-        // Hàm xóa comment trong nội dung LaTeX
-        function removeComments(content) {
-            return content.replace(/(?<!\\)%.*$/gm, '').trim();
-        }
-
-        // Hàm tải về file đã xử lý
-        function downloadFile(type) {
-            let content = '';
-            let filename = '';
-
-            if (type === 'ex') {
-                content = processedExContent;
-                filename = 'ProcessedExercise.tex';
-            } else if (type === 'sol') {
-                content = processedSolContent;
-                filename = 'ProcessedSolution.tex';
-            } else if (type === 'hyperlinkedEx') {
-                content = processedHyperlinkedExContent;
-                filename = 'ProcessedHyperlinkedExercise.tex';
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const decoder = new TextDecoder('utf-8');
+                    const content = decoder.decode(e.target.result);
+                    document.getElementById('fileContent').value = content;  // Hiển thị nội dung file trong textarea
+                };
+                reader.readAsArrayBuffer(file);
             }
 
-            const blob = new Blob([content], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            link.click();
-        }
+            // Hàm xử lý file từ nội dung textarea
+            function processFile() {
+                let content = document.getElementById('fileContent').value;  // Lấy nội dung từ textarea
+
+                // Kiểm tra nếu người dùng muốn xóa comment
+                if (document.getElementById('removeComments').checked) {
+                    content = removeComments(content);  // Gọi hàm xóa comment
+                }
+
+                // Xóa các dòng trống
+                content = content.replace(/^\s*[\r\n]/gm, '');
+
+                let counter_ex = parseInt(document.getElementById('exStart').value); // Lấy số bắt đầu cho môi trường `ex`
+                let counter_vd = parseInt(document.getElementById('vdStart').value); // Lấy số bắt đầu cho môi trường `vd`
+                let counter_bt = parseInt(document.getElementById('btStart').value); // Lấy số bắt đầu cho môi trường `bt`
+
+                const [exContent, solContent] = addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt);
+                processedExContent = exContent;
+                processedSolContent = solContent;
+                cnoidung =`\\setcounter{ex}{0}
+\\setcounter{vd}{0}
+\\setcounter{bt}{0}`;
+                // Ghép bài tập và lời giải thành một file
+                processedCombinedContent = cnoidung+'\n'+exContent;// + '\n\n' + solContent;
+                processedCombinedContent = processedCombinedContent.replace(/\\begin{ex}/g,'\\hdg{\\begin{ex}')
+                                                                    .replace(/\\begin{vd}/g, '\\hdg{\\begin{vd}')
+                                                                    .replace(/\\begin{bt}/g, '\\hdg{\\begin{bt}')
+                                                                    .replace(/b}{}\\par/g, 'a}{}\\par')
+                                                                    .replace(/\\end{ex}/g, '\\end{ex}}')
+                                                                    .replace(/\\end{vd}/g, '\\end{vd}}')
+                                                                    .replace(/\\end{bt}/g, '\\end{bt}}')
+                                                                    .replace(/\\par\\noindent{\\mfbox\[/g,'\\par\\noindent{\\mlgfbox[20]{')
+                                                                    .replace(/a]{Xem Lời Giải}}/g, 'b}{Xem Đề}}');
+                // Sau khi xử lý xong file, lưu các bộ đếm
+                saveCounters();
+
+                document.getElementById('status').innerText = "Đã Tạo Xong File Đề Và Lời Giải!";
+                document.getElementById('downloadExBtn').style.display = 'inline';
+                document.getElementById('downloadSolBtn').style.display = 'inline';
+                document.getElementById('downloadCombinedBtn').style.display = 'inline';  // Hiển thị nút tải file ghép
+            }
+
+            // Hàm xử lý nội dung file
+            function addHyperlinksAndCut(content, counter_ex, counter_vd, counter_bt) {
+                let exContent = content;
+                let solContent = "";
+
+                // Regex để tìm các môi trường ex, vd, bt và loigiai, với xử lý khoảng trống sau \loigiai
+                const envRegex = /\\begin\{(ex|vd|bt)\}([\s\S]*?)\\loigiai\s*\{\s*([\s\S]*?)\s*\}\s*\\end\{\1\}/g;
+
+                exContent = exContent.replace(envRegex, (match, envType, exPart, loigiaiPart) => {
+                    let label_ex, label_sol;
+                    if (envType === "ex") {
+                        label_ex = `ex${counter_ex}b`;
+                        label_sol = `ex${counter_ex}a`;
+                        counter_ex++;
+                    } else if (envType === "vd") {
+                        label_ex = `vd${counter_vd}b`;
+                        label_sol = `vd${counter_vd}a`;
+                        counter_vd++;
+                    } else if (envType === "bt") {
+                        label_ex = `bt${counter_bt}b`;
+                        label_sol = `bt${counter_bt}a`;
+                        counter_bt++;
+                    }
+
+                    // Xử lý bài tập
+                    const processedExPart = `\\begin{${envType}}\n${exPart.trim()}\n\\hypertarget{${label_ex}}{}\\par\\noindent{\\mfbox[${label_sol}]{Xem Lời Giải}}\n\\end{${envType}}`;
+
+                    // Xử lý lời giải
+                    const processedSolPart = `\\hypertarget{${label_sol}}{}\\loigiai{${loigiaiPart.trim()}\n\\par\\noindent{\\mfbox[${label_ex}]{Quay Lại Đề}}}`;
+
+                    solContent += processedSolPart + '\n\n';
+                    return processedExPart;
+                });
+
+                // Cập nhật lại các giá trị bắt đầu mới sau khi xử lý
+                document.getElementById('exStart').value = counter_ex;
+                document.getElementById('vdStart').value = counter_vd;
+                document.getElementById('btStart').value = counter_bt;
+
+                return [exContent, solContent];
+            }
+
+            // Hàm xóa comment trong nội dung LaTeX
+            function removeComments(content) {
+                // Xóa comment bắt đầu bằng %, nhưng không xóa những comment có dấu \% (ký hiệu phần trăm)
+                return content.replace(/(?<!\\)%.*$/gm, '').trim();
+            }
+
+            // Hàm tải về file đã xử lý
+            function downloadFile(type) {
+                let content = '';
+                let filename = '';
+
+                if (type === 'ex') {
+                    content = processedExContent;
+                    filename = 'DeBai.tex';
+                } else if (type === 'sol') {
+                    content = processedSolContent;
+                    filename = 'LoiGiai.tex';
+                } else if (type === 'combined') {  // Tải file ghép cả bài tập và lời giải
+                    content = processedCombinedContent;
+                    filename = 'DeVaDongKe.tex';
+                }
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                link.click();
+            }
+
+            // Hàm load nhiều file và ghép lại
+            function loadMultipleFiles() {
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.multiple = true;
+                fileInput.accept = ".tex";
+                fileInput.onchange = function (event) {
+                    const files = event.target.files;
+                    combinedFileContent = '';  // Reset nội dung đã ghép
+
+                    let promises = [];  // Để xử lý tất cả các file
+
+                    // Kiểm tra trạng thái của checkbox có xóa comment hay không
+                    const removeCommentsChecked = document.getElementById('removeComments').checked;
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const reader = new FileReader();
+
+                        const promise = new Promise((resolve, reject) => {
+                            reader.onload = function (e) {
+                                const decoder = new TextDecoder('utf-8');
+                                let content = decoder.decode(e.target.result);
+
+                                // Nếu checkbox được chọn, xóa comment trong nội dung file
+                                if (removeCommentsChecked) {
+                                    content = removeComments(content);
+                                }
+
+                                // Ghép nội dung (sau khi đã xóa comment nếu có)
+                                combinedFileContent += content + '\n\n';
+                                resolve();
+                            };
+                            reader.onerror = reject;
+                        });
+
+                        reader.readAsArrayBuffer(file);
+                        promises.push(promise);
+                    }
+
+                    // Khi tất cả các file đã đọc xong
+                    Promise.all(promises).then(() => {
+                        document.getElementById('fileContent').value = combinedFileContent;  // Hiển thị nội dung đã ghép vào textarea
+                        document.getElementById('status').innerText = "All files combined successfully!";
+                        document.getElementById('fileCount').innerText = `Total files combined: ${files.length}`;
+                    });
+                };
+
+                fileInput.click();
+            }
+
+            // Khởi động bộ đếm khi tải trang
+            window.onload = initializeCounters;
 
     </script>
 
