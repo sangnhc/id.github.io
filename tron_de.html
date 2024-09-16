@@ -1335,8 +1335,12 @@ function getPhieuToContent(phieuTo) {
             return ngoacLon;
         }
         function extractLatexData(content) {
+                // Xóa các ký tự thừa giữa \shortans và dấu mở ngoặc {
+                content = content.replace(/\\shortans\s*[^({]*\{/g, '\\shortans{');
+                content = content.replace(/\\choiceTF\s*[^({]*\{/g, '\\choiceTF{');
+                content = content.replace(/\\choiceTF/g, '\\choiAceTF');
                 const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
-                const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
+                const regexType2 = /\\begin\{ex\}[^]*?\\choiAceTF\s*([^]*?)\\loigiai/gs;
                 const regexType3 = /\\shortans\{/g;  // Sửa regex để chỉ tìm \shortans{
 
                 let matches, extractedData = [];
@@ -1537,8 +1541,8 @@ function getPhieuToContent(phieuTo) {
                     displayResults(results);
                     // alert('Hoán vị xong!');
                     Swal.fire({
-                        title: 'Hoán vị xong!',
-                        text: 'Quá trình hoán vị đã hoàn tất thành công.',
+                        title: 'Xong!',
+                        text: 'Quá trình trộn đề đã hoàn tất thành công.',
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 1500 // Hộp thoại sẽ tự động đóng sau 1.5 giây
@@ -1606,89 +1610,81 @@ function getPhieuToContent(phieuTo) {
 
                 }
             });
-    
-          ////
-
-        // function extractLatexData2(content) {
-        //     const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
-        //     const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
-        //     const regexType3 = /\\begin\{ex\}[^]*?\\shortans\{([^\}]*)\}/gs;
-
-        //     let matches, extractedData = { type1: [], type2: [], type3: [] };
-
-        //     // Process Type 1 Questions (\choice)
-        //     while ((matches = regexType1.exec(content)) !== null) {
-        //         let choices = matches[1].trim();
-        //         let ngoacLon = layCacNgoacLon(choices);
-        //         if (ngoacLon.length >= 4) {
-        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-        //             let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
-        //             if (correctAnswerIndex !== -1) {
-        //                 extractedData.type1.push(String.fromCharCode(65 + correctAnswerIndex)); // Convert index to A, B, C, D
-        //             } else {
-        //                 extractedData.type1.push("N/A");
-        //             }
-        //         } else {
-        //             extractedData.type1.push("N/A");
-        //         }
-        //     }
-
-        //     // Process Type 2 Questions (\choiceTF)
-        //     while ((matches = regexType2.exec(content)) !== null) {
-        //         let choices = matches[1].trim();
-        //         let ngoacLon = layCacNgoacLon(choices);
-        //         if (ngoacLon.length >= 4) {
-        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-        //             let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
-        //             extractedData.type2.push(result);
-        //         } else {
-        //             extractedData.type2.push("N/A");
-        //         }
-        //     }
-
-        //     // Process Type 3 Questions (\shortans)
-        //     // while ((matches = regexType3.exec(content)) !== null) {
-        //     //     let answer = matches[1].trim();
-        //     //     let ngoacLon = layCacNgoacLon(answer);
-        //     //     if (ngoacLon.length > 0) {
-        //     //         answer = answer.substring(ngoacLon[0][0] + 1, ngoacLon[0][1]).trim();
-        //     //     }
-        //     //     extractedData.type3.push(answer.replace(/\$|\{|\}/g, '').trim());
-        //     // }
-        //    while ((matches = regexType3.exec(content)) !== null) {
-        //         let answer = matches[1].trim();
-
-        //         // In giá trị để kiểm tra
-        //         console.log('Extracted answer:', answer);
-
-        //         let ngoacLon = layCacNgoacLon(answer);
-        //         console.log('NgoacLon positions:', ngoacLon);
-
-        //         if (ngoacLon.length > 0) {
-        //             let fullContent = '';
-        //             let start = 0;
-
-        //             for (let i = 0; i < ngoacLon.length; i++) {
-        //                 fullContent += answer.substring(start, ngoacLon[i][0]);
-        //                 fullContent += answer.substring(ngoacLon[i][0], ngoacLon[i][1] + 1);
-        //                 start = ngoacLon[i][1] + 1;
-        //             }
-
-        //             if (start < answer.length) {
-        //                 fullContent += answer.substring(start);
-        //             }
-
-        //             answer = fullContent;
-        //         }
-
-        //         extractedData.type3.push(answer);
-        //     }
-        //     return extractedData;
-        // } 
         function extractLatexData2(content) {
+                // Xóa các ký tự thừa giữa \shortans và dấu mở ngoặc {
+                content = content.replace(/\\shortans\s*[^({]*\{/g, '\\shortans{');
+                content = content.replace(/\\choiceTF/g, '\\choiAceTF');
+                // Định nghĩa các regex để bắt dữ liệu theo định dạng yêu cầu
+                const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+                const regexType2 = /\\begin\{ex\}[^]*?\\choiAceTF\s*([^]*?)\\loigiai/gs;
+                const regexType3 = /\\shortans\{/g;  // Sửa regex để chỉ tìm \shortans{
+
+                let matches, extractedData = { type1: [], type2: [], type3: [] };
+
+                // Xử lý các câu hỏi loại 1 (\choice)
+                while ((matches = regexType1.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
+                        if (correctAnswerIndex !== -1) {
+                            extractedData.type1.push(String.fromCharCode(65 + correctAnswerIndex)); // Chuyển đổi thành A, B, C, D
+                        } else {
+                            extractedData.type1.push("N/A");
+                        }
+                    } else {
+                        extractedData.type1.push("N/A");
+                    }
+                }
+
+                // Xử lý các câu hỏi loại 2 (\choiceTF)
+                while ((matches = regexType2.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let result = answers.map(answer => answer.includes('\\True') ? 'D' : 'S').join('');
+                        extractedData.type2.push(result);
+                    } else {
+                        extractedData.type2.push("N/A");
+                    }
+                }
+
+                // Xử lý các câu hỏi loại 3 (\shortans)
+                while ((matches = regexType3.exec(content)) !== null) {
+                    let startIndex = regexType3.lastIndex;  // Lấy vị trí bắt đầu sau \shortans{
+                    let openBraces = 1;
+                    let endIndex = startIndex;
+
+                    // Đếm số ngoặc lồng nhau để xác định kết thúc của cặp ngoặc
+                    while (openBraces > 0 && endIndex < content.length) {
+                        if (content[endIndex] === '{') {
+                            openBraces++;
+                        } else if (content[endIndex] === '}') {
+                            openBraces--;
+                        }
+                        endIndex++;
+                    }
+
+                    // Lấy nội dung giữa \shortans{...}
+                    let answer = content.substring(startIndex, endIndex - 1).trim();
+                    // Thay dấu ',' bằng '.'
+                    answer = answer.replace(/,/g, '.')
+                        .replace(/\$/g, '')   // Loại bỏ ký tự $
+                        .replace(/\{/g, '')   // Loại bỏ ký tự {
+                        .replace(/\}/g, '');  // Loại bỏ ký tự }
+                    // Thêm vào danh sách câu hỏi type3
+                    extractedData.type3.push(answer);
+                }
+
+                return extractedData;
+            }
+
+        function extractLatexData2OK(content) {
             // Xóa các ký tự thừa giữa \shortans và dấu mở ngoặc {
             content = content.replace(/\\shortans\s*[^({]*\{/g, '\\shortans{');
-                const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+                const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;                
                 const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
                 const regexType3 = /\\shortans\{/g;  // Sửa regex để chỉ tìm \shortans{
 
