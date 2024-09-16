@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hoán vị file LaTeX</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Thêm SweetAlert2 CSS và JS qua CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -301,7 +304,15 @@ function copyToClipboard(text) {
             tempTextarea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextarea);
-            alert('Đã copy nội dung vào clipboard!');
+            // alert('Đã copy nội dung vào clipboard!');
+            Swal.fire({
+        title: 'Thành công!',
+        text: 'Đã copy nội dung vào clipboard!',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500 // Tự động đóng sau 1.5 giây
+    });
+
         }
 
 function getPhieuToContent(phieuTo) {
@@ -1323,53 +1334,118 @@ function getPhieuToContent(phieuTo) {
     
             return ngoacLon;
         }
-    
         function extractLatexData(content) {
-            const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
-            const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
-            const regexType3 = /\\begin\{ex\}[^]*?\\shortans\{([^\}]*)\}/gs;
-    
-            let matches, extractedData = [];
-    
-            while ((matches = regexType1.exec(content)) !== null) {
-                let choices = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(choices);
-                if (ngoacLon.length >= 4) {
-                    let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-                    let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
-                    if (correctAnswerIndex !== -1) {
-                        extractedData.push(String.fromCharCode(65 + correctAnswerIndex)); // Chuyển đổi sang A, B, C, D
+                const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+                const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
+                const regexType3 = /\\shortans\{/g;  // Sửa regex để chỉ tìm \shortans{
+
+                let matches, extractedData = [];
+
+                // Process Type 1 Questions (\choice)
+                while ((matches = regexType1.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
+                        if (correctAnswerIndex !== -1) {
+                            extractedData.push(String.fromCharCode(65 + correctAnswerIndex)); // Convert index to A, B, C, D
+                        } else {
+                            extractedData.push("N/A");
+                        }
                     } else {
                         extractedData.push("N/A");
                     }
-                } else {
-                    extractedData.push("N/A");
                 }
-            }
-    
-            while ((matches = regexType2.exec(content)) !== null) {
-                let choices = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(choices);
-                if (ngoacLon.length >= 4) {
-                    let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-                    let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
-                    extractedData.push(result);
-                } else {
-                    extractedData.push("N/A");
+
+                // Process Type 2 Questions (\choiceTF)
+                while ((matches = regexType2.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
+                        extractedData.push(result);
+                    } else {
+                        extractedData.push("N/A");
+                    }
                 }
-            }
-    
-            while ((matches = regexType3.exec(content)) !== null) {
-                let answer = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(answer);
-                if (ngoacLon.length > 0) {
-                    answer = answer.substring(ngoacLon[0][0] + 1, ngoacLon[0][1]).trim();
+
+                // Process Type 3 Questions (\shortans)
+                while ((matches = regexType3.exec(content)) !== null) {
+                    let startIndex = regexType3.lastIndex;  // Lấy vị trí bắt đầu sau \shortans{
+                    let openBraces = 1;
+                    let endIndex = startIndex;
+
+                    // Đếm số ngoặc lồng nhau để xác định kết thúc của cặp ngoặc
+                    while (openBraces > 0 && endIndex < content.length) {
+                        if (content[endIndex] === '{') {
+                            openBraces++;
+                        } else if (content[endIndex] === '}') {
+                            openBraces--;
+                        }
+                        endIndex++;
+                    }
+
+                    // Lấy nội dung giữa \shortans{...}
+                    let answer = content.substring(startIndex, endIndex - 1).trim();
+                    // Thay dấu ',' bằng '.'
+                    answer = answer.replace(/,/g, '.')
+                        .replace(/\$/g, '')  // Loại bỏ ký tự $
+                        .replace(/\{/g, '')  // Loại bỏ ký tự {
+                        .replace(/\}/g, ''); // Loại bỏ ký tự }
+                    extractedData.push(answer);
                 }
-                extractedData.push(answer.replace(/\$|\{|\}/g, '').trim());
+
+                return extractedData;
             }
+
+        // function extractLatexData(content) {
+        //     const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+        //     const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
+        //     const regexType3 = /\\begin\{ex\}[^]*?\\shortans\{([^\}]*)\}/gs;
     
-            return extractedData;
-        }
+        //     let matches, extractedData = [];
+    
+        //     while ((matches = regexType1.exec(content)) !== null) {
+        //         let choices = matches[1].trim();
+        //         let ngoacLon = layCacNgoacLon(choices);
+        //         if (ngoacLon.length >= 4) {
+        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+        //             let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
+        //             if (correctAnswerIndex !== -1) {
+        //                 extractedData.push(String.fromCharCode(65 + correctAnswerIndex)); // Chuyển đổi sang A, B, C, D
+        //             } else {
+        //                 extractedData.push("N/A");
+        //             }
+        //         } else {
+        //             extractedData.push("N/A");
+        //         }
+        //     }
+    
+        //     while ((matches = regexType2.exec(content)) !== null) {
+        //         let choices = matches[1].trim();
+        //         let ngoacLon = layCacNgoacLon(choices);
+        //         if (ngoacLon.length >= 4) {
+        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+        //             let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
+        //             extractedData.push(result);
+        //         } else {
+        //             extractedData.push("N/A");
+        //         }
+        //     }
+    
+        //     while ((matches = regexType3.exec(content)) !== null) {
+        //         let answer = matches[1].trim();
+        //         let ngoacLon = layCacNgoacLon(answer);
+        //         if (ngoacLon.length > 0) {
+        //             answer = answer.substring(ngoacLon[0][0] + 1, ngoacLon[0][1]).trim();
+        //         }
+        //         extractedData.push(answer.replace(/\$|\{|\}/g, '').trim());
+        //     }
+    
+        //     return extractedData;
+        // }
     
         function mergeExtractedData(allExtractedData, currentMades) {
             let headers = ['Câu\\Mã đề'];
@@ -1399,7 +1475,7 @@ function getPhieuToContent(phieuTo) {
             const ws = XLSX.utils.aoa_to_sheet(mergedData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-            XLSX.writeFile(wb, "extracted_data.xlsx");
+            XLSX.writeFile(wb, "TNMaker.xlsx");
         }
     
         $(document).ready(function () {
@@ -1459,7 +1535,15 @@ function getPhieuToContent(phieuTo) {
                 if (content && numFiles) {
                     let { results, files, currentMades } = generateFiles(content, numFiles, hoanViType, headerType, school, teacher, exam, subject, time, made, phieuTo, dapAn);
                     displayResults(results);
-                    alert('Hoán vị xong!');
+                    // alert('Hoán vị xong!');
+                    Swal.fire({
+                        title: 'Hoán vị xong!',
+                        text: 'Quá trình hoán vị đã hoàn tất thành công.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500 // Hộp thoại sẽ tự động đóng sau 1.5 giây
+                    });
+
                 }
             });
     
@@ -1482,7 +1566,14 @@ function getPhieuToContent(phieuTo) {
                 if (content && numFiles) {
                     let { results, files, currentMades } = generateFiles(content, numFiles, hoanViType, headerType, school, teacher, exam, subject, time, made, phieuTo, dapAn);
                     displayResults(results);
-                    alert('Hoán vị xong!');
+                    Swal.fire({
+                        title: 'Hoán vị xong!',
+                        text: 'Quá trình hoán vị đã hoàn tất thành công.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500 // Hộp thoại sẽ tự động đóng sau 1.5 giây
+                    });
+
                 }
             });
     
@@ -1504,61 +1595,164 @@ function getPhieuToContent(phieuTo) {
                     let { results, files, currentMades } = generateFiles(content, numFiles, hoanViType, headerType, school, teacher, exam, subject, time, made, phieuTo, dapAn);
                     displayResults(results);
                     extractAndExport(files, currentMades);
-                    alert('Hoán vị và ghi Excel xong!');
+                    // alert('Hoán vị và ghi Excel xong!');
+                    Swal.fire({
+                        title: 'Hoàn tất!',
+                        text: 'Hoán vị và ghi Excel xong!',
+                        icon: 'success',
+                        showConfirmButton: false, // Ẩn nút xác nhận
+                        timer: 1500 // Tự động đóng sau 1.5 giây
+                    });
+
                 }
             });
     
           ////
 
+        // function extractLatexData2(content) {
+        //     const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+        //     const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
+        //     const regexType3 = /\\begin\{ex\}[^]*?\\shortans\{([^\}]*)\}/gs;
+
+        //     let matches, extractedData = { type1: [], type2: [], type3: [] };
+
+        //     // Process Type 1 Questions (\choice)
+        //     while ((matches = regexType1.exec(content)) !== null) {
+        //         let choices = matches[1].trim();
+        //         let ngoacLon = layCacNgoacLon(choices);
+        //         if (ngoacLon.length >= 4) {
+        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+        //             let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
+        //             if (correctAnswerIndex !== -1) {
+        //                 extractedData.type1.push(String.fromCharCode(65 + correctAnswerIndex)); // Convert index to A, B, C, D
+        //             } else {
+        //                 extractedData.type1.push("N/A");
+        //             }
+        //         } else {
+        //             extractedData.type1.push("N/A");
+        //         }
+        //     }
+
+        //     // Process Type 2 Questions (\choiceTF)
+        //     while ((matches = regexType2.exec(content)) !== null) {
+        //         let choices = matches[1].trim();
+        //         let ngoacLon = layCacNgoacLon(choices);
+        //         if (ngoacLon.length >= 4) {
+        //             let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+        //             let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
+        //             extractedData.type2.push(result);
+        //         } else {
+        //             extractedData.type2.push("N/A");
+        //         }
+        //     }
+
+        //     // Process Type 3 Questions (\shortans)
+        //     // while ((matches = regexType3.exec(content)) !== null) {
+        //     //     let answer = matches[1].trim();
+        //     //     let ngoacLon = layCacNgoacLon(answer);
+        //     //     if (ngoacLon.length > 0) {
+        //     //         answer = answer.substring(ngoacLon[0][0] + 1, ngoacLon[0][1]).trim();
+        //     //     }
+        //     //     extractedData.type3.push(answer.replace(/\$|\{|\}/g, '').trim());
+        //     // }
+        //    while ((matches = regexType3.exec(content)) !== null) {
+        //         let answer = matches[1].trim();
+
+        //         // In giá trị để kiểm tra
+        //         console.log('Extracted answer:', answer);
+
+        //         let ngoacLon = layCacNgoacLon(answer);
+        //         console.log('NgoacLon positions:', ngoacLon);
+
+        //         if (ngoacLon.length > 0) {
+        //             let fullContent = '';
+        //             let start = 0;
+
+        //             for (let i = 0; i < ngoacLon.length; i++) {
+        //                 fullContent += answer.substring(start, ngoacLon[i][0]);
+        //                 fullContent += answer.substring(ngoacLon[i][0], ngoacLon[i][1] + 1);
+        //                 start = ngoacLon[i][1] + 1;
+        //             }
+
+        //             if (start < answer.length) {
+        //                 fullContent += answer.substring(start);
+        //             }
+
+        //             answer = fullContent;
+        //         }
+
+        //         extractedData.type3.push(answer);
+        //     }
+        //     return extractedData;
+        // } 
         function extractLatexData2(content) {
-            const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
-            const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
-            const regexType3 = /\\begin\{ex\}[^]*?\\shortans\{([^\}]*)\}/gs;
+            // Xóa các ký tự thừa giữa \shortans và dấu mở ngoặc {
+            content = content.replace(/\\shortans\s*[^({]*\{/g, '\\shortans{');
+                const regexType1 = /\\begin\{ex\}[^]*?\\choice\s*(?!TF\s*\{)\s*([^]*?)\\loigiai/gs;
+                const regexType2 = /\\begin\{ex\}[^]*?\\choiceTF\s*([^]*?)\\loigiai/gs;
+                const regexType3 = /\\shortans\{/g;  // Sửa regex để chỉ tìm \shortans{
 
-            let matches, extractedData = { type1: [], type2: [], type3: [] };
+                let matches, extractedData = { type1: [], type2: [], type3: [] };
 
-            // Process Type 1 Questions (\choice)
-            while ((matches = regexType1.exec(content)) !== null) {
-                let choices = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(choices);
-                if (ngoacLon.length >= 4) {
-                    let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-                    let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
-                    if (correctAnswerIndex !== -1) {
-                        extractedData.type1.push(String.fromCharCode(65 + correctAnswerIndex)); // Convert index to A, B, C, D
+                // Process Type 1 Questions (\choice)
+                while ((matches = regexType1.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let correctAnswerIndex = answers.findIndex(answer => answer.includes('\\True'));
+                        if (correctAnswerIndex !== -1) {
+                            extractedData.type1.push(String.fromCharCode(65 + correctAnswerIndex)); // Convert index to A, B, C, D
+                        } else {
+                            extractedData.type1.push("N/A");
+                        }
                     } else {
                         extractedData.type1.push("N/A");
                     }
-                } else {
-                    extractedData.type1.push("N/A");
                 }
-            }
 
-            // Process Type 2 Questions (\choiceTF)
-            while ((matches = regexType2.exec(content)) !== null) {
-                let choices = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(choices);
-                if (ngoacLon.length >= 4) {
-                    let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
-                    let result = answers.map(answer => answer.includes('\\True') ? 'Đ' : 'S').join('');
-                    extractedData.type2.push(result);
-                } else {
-                    extractedData.type2.push("N/A");
+                // Process Type 2 Questions (\choiceTF)
+                while ((matches = regexType2.exec(content)) !== null) {
+                    let choices = matches[1].trim();
+                    let ngoacLon = layCacNgoacLon(choices);
+                    if (ngoacLon.length >= 4) {
+                        let answers = ngoacLon.slice(0, 4).map(pair => choices.substring(pair[0] + 1, pair[1]));
+                        let result = answers.map(answer => answer.includes('\\True') ? 'D' : 'S').join('');
+                        extractedData.type2.push(result);
+                    } else {
+                        extractedData.type2.push("N/A");
+                    }
                 }
-            }
 
-            // Process Type 3 Questions (\shortans)
-            while ((matches = regexType3.exec(content)) !== null) {
-                let answer = matches[1].trim();
-                let ngoacLon = layCacNgoacLon(answer);
-                if (ngoacLon.length > 0) {
-                    answer = answer.substring(ngoacLon[0][0] + 1, ngoacLon[0][1]).trim();
+                // Process Type 3 Questions (\shortans)
+                while ((matches = regexType3.exec(content)) !== null) {
+                    let startIndex = regexType3.lastIndex;  // Lấy vị trí bắt đầu sau \shortans{
+                    let openBraces = 1;
+                    let endIndex = startIndex;
+
+                    // Đếm số ngoặc lồng nhau để xác định kết thúc của cặp ngoặc
+                    while (openBraces > 0 && endIndex < content.length) {
+                        if (content[endIndex] === '{') {
+                            openBraces++;
+                        } else if (content[endIndex] === '}') {
+                            openBraces--;
+                        }
+                        endIndex++;
+                    }
+
+                    // Lấy nội dung giữa \shortans{...}
+                    let answer = content.substring(startIndex, endIndex - 1).trim();
+                    // Thay dấu ',' bằng '.'
+                    answer = answer.replace(/,/g, '.')
+                                    .replace(/\$/g, '')
+                                    .replace(/\{/g, '')
+                                    .replace(/\}/g, '');
+                    // Không loại bỏ ký tự $, giữ nguyên toàn bộ chuỗi, ví dụ: $1{,}72$
+                    extractedData.type3.push(answer);
                 }
-                extractedData.type3.push(answer.replace(/\$|\{|\}/g, '').trim());
-            }
 
-            return extractedData;
-        }
+                return extractedData;
+            }
 
         function createHorizontalXlsx2(allExtractedData, currentMades) {
             const header = ["Đề \\ Câu"].concat(Array.from({ length: 40 }, (_, i) => (i + 1).toString()));
@@ -1595,7 +1789,7 @@ function getPhieuToContent(phieuTo) {
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-            XLSX.writeFile(wb, "cham_thi.xlsx");
+            XLSX.writeFile(wb, "QM2025.xlsx");
         }
    
         $('#downloadXlsxButtonTwo').on('click', function () {
@@ -1617,7 +1811,14 @@ function getPhieuToContent(phieuTo) {
                     displayResults(results);
                     let allExtractedData = files.map(fileContent => extractLatexData2(fileContent));
                     createHorizontalXlsx2(allExtractedData, currentMades);
-                    alert('Hoán vị và ghi Excel mẫu 2 xong!');
+                    // alert('Hoán vị và ghi Excel mẫu chấm thi xong!');
+                    Swal.fire({
+                        title: 'Thành công!',
+                        text: 'Hoán vị và ghi Excel mẫu chấm thi xong!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+
                 }
             });
        
@@ -1749,7 +1950,15 @@ function getPhieuToContent(phieuTo) {
                 tempTextarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(tempTextarea);
-                alert('Đã copy nội dung vào clipboard!');
+                // alert('Đã copy nội dung vào clipboard!');
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: 'Đã copy nội dung vào clipboard!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500 // Tự động đóng sau 1.5 giây
+                });
+
             }
     
             function hoanViCacNgoacLon(noiDung) {
