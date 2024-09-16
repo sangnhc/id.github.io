@@ -184,6 +184,7 @@
                                 <option value="phieu1">Phiếu TN Maker</option>
                                 <option value="phieu2">Phiếu Chấm Thi</option>
                                 <option value="phieu3">Phiếu Azota V1.5</option>
+                                <option value="phieu4">Phiếu QM 2025 Toán</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -235,9 +236,10 @@
                         <div class="form-group col-md-6">
                             <label for="phieuToPaste">Phiếu Tô:</label>
                             <select class="form-control" id="phieuToPaste" name="phieu_to">
-                                <option value="phieu1">Phiếu 1</option>
-                                <option value="phieu2">Phiếu 2</option>
-                                <option value="phieu3">Phiếu 3</option>
+                                <option value="phieu1">Phiếu TN Maker</option>
+                                <option value="phieu2">Phiếu Chấm Thi</option>
+                                <option value="phieu3">Phiếu Azota V1.5</option>
+                                <option value="phieu4">Phiếu QM 2025 Toán</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
@@ -782,8 +784,8 @@ function getPhieuToContent(phieuTo) {
 				\\draw[blue] (6.09+\\j*0.28,8.05-\\x*0.395) circle (2.9pt);
 				\\draw[blue] (0.65+6.09+1*0.28-1.33,8.05-\\x*0.395) circle (2.9pt)node{\\tiny\\x};;
 			}}
-		\\draw[fill=red] (5.57, 8.425)rectangle++(0.21,0.21);
-		\\draw[fill=red] (5.57, 3.89)rectangle++(0.21,0.21);
+		\\draw[fill=blue] (5.57, 8.425)rectangle++(0.21,0.21);
+		\\draw[fill=blue] (5.57, 3.89)rectangle++(0.21,0.21);
 		\\end{scope}
 		%%Thông tin
 		\\draw[thick,violet] (-6.6,4.5) rectangle (-3.4,8.6);
@@ -793,6 +795,7 @@ function getPhieuToContent(phieuTo) {
 		\\draw[thick,violet] (-5,6.4) node{Họ tên, chữ ký};
 		\\draw[thick,violet] (-5,6.25-0.05) node{của cán bộ coi thi 2};
 		\\draw[thick,violet](-3.25,8.6) rectangle (3.08,4.5);
+\\node[align=left] at (0,6.5) {
 		\\begin{minipage}{8cm}
         \\begin{enumerate}[leftmargin=*,label=\\arabic*.,itemsep=1.15em]
             \\item Hội đồng thi \\dotfill
@@ -803,7 +806,7 @@ function getPhieuToContent(phieuTo) {
             \\item Chữ ký của thí sinh \\dotfill
         \\end{enumerate}
     \\end{minipage}
-};	
+};
 		\\node[align=left] at (-2.5,8.95) {
 			\\begin{minipage}{10cm}
 				Bài Thi:.....................................................Ngày Thi:....................
@@ -1155,6 +1158,106 @@ function getPhieuToContent(phieuTo) {
 		\\end{tikzpicture}
   }
      \\end{center}`;
+            case 'phieu4':
+                return `\\begin{center}
+ \\resizebox{0.999\\textwidth}{!}{
+\\begin{tikzpicture}[line join = round, line cap =round,>=stealth,very thin,font=\\footnotesize,scale=1.25]
+			\\draw[double,magenta] (-8.6,1.5)--(8.6,1.5);
+			\\draw[double,magenta] (-6.9,1.5)--(-6.9,-4.5);
+			\\draw[double,magenta] (-4.3,1.5)--(-4.3,-4.5);
+			\\draw[double,magenta] (-2.3,1.5)--(-2.3,-4.5);
+			\\draw[dashed,double, blue, rounded corners=5pt] (-8.6,-4.5) rectangle (8.6,4.5);
+			\\draw[fill=blue] (-8.375,-4.13) rectangle ++(0.375,0.375);
+			\\draw[fill=blue] (-8.375,-4.13+7.925) rectangle ++(0.375,0.375);	
+			\\draw[fill=blue] (8.03,-4.13) rectangle ++(0.375,0.375);			
+			\\draw[fill=blue] (8.03,-4.13+7.925) rectangle ++(0.375,0.375);
+			%%Phần III
+			\\node at (-1.78, 1.25) {\\tiny PHẦN III};
+			\\foreach \\j in {1,...,6} {
+			\\begin{scope}[shift={(1.68*\\j-1.68,0)}]
+				\\draw[fill=blue] (-2.12,.425) rectangle ++(0.2,0.2);	
+				\\draw[fill=blue] (-2.12,.425-4.17) rectangle ++(0.2,0.2);
+				\\foreach \\i/\\label in {0/-,1/{,}, 2/0, 3/1, 4/2, 5/3, 6/4, 7/5, 8/6, 9/7, 10/8, 11/9} {
+					\\draw[cyan] (-1.65-0.3225*1, .225-0.3225*\\i) circle (3.5pt);
+					\\node at (-1.65-0.3225*1, .225-0.3225*\\i) {\\tiny\\textcolor{gray}{\\label}};}
+				\\foreach \\i in {0,1,2,3} {
+					\\node at (-1.78 + 0.47, 1.05) {\\tiny Câu \\j};
+					\\draw[cyan, rounded corners=2pt] (-1.78 + 0.313*\\i, .85) rectangle ++(0.3,-0.275);}
+				\\foreach \\i in {0,2,3,...,11} {\\draw[cyan] (-1.65+0.3225*0,.225-0.3225*\\i) circle (3.5pt);}
+				\\foreach \\i in {1,2,...,11} {\\draw[cyan] (-1.65+0.3225*1,.225-0.3225*\\i) circle (3.5pt);}
+				\\foreach \\i in {1,2,...,11} {\\draw[cyan] (-1.65+0.3225*2,.225-0.3225*\\i) circle (3.5pt);}
+				\\foreach \\i in {2,3,...,11} {\\draw[cyan] (-1.65+0.3225*3,.225-0.3225*\\i) circle (3.5pt);}	
+			\\end{scope}}	
+		\\begin{scope}[shift={(-1.925,0)}]
+			\\node at (-1.78, 1.25) {\\tiny PHẦN I};
+			\\draw[fill=blue] (-2.12,.425) rectangle ++(0.2,0.2);	
+			\\draw[fill=blue] (-2.12,.425-4.17) rectangle ++(0.2,0.2);
+			\\foreach \\i/\\label in {0/1,1/2, 2/3, 3/4, 4/5, 5/6, 6/7, 7/8, 8/9, 9/10, 10/11, 11/12} {
+				\\draw[cyan] (-1.65-0.3225*1, .225-0.3225*\\i) circle (3.5pt);
+				\\node at (-1.65-0.3225*1, .225-0.3225*\\i) {\\tiny\\textcolor{gray}{\\label}};}
+			\\foreach \\i/\\label in {0/A, 1/B, 2/C, 3/D} {
+				\\draw[cyan, rounded corners=2pt] (-1.78 + 0.313*\\i, .85) rectangle ++(0.3,-0.275);
+				\\node at (-1.78 + 0.313*\\i + 0.15, .85 - 0.1375) {\\tiny\\label}; }
+			\\foreach \\i in {0,...,11} {\\draw[cyan] (-1.68+0.3225*0,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,11} {\\draw[cyan] (-1.68+0.3225*1,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,11} {\\draw[cyan] (-1.68+0.3225*2,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,11} {\\draw[cyan] (-1.68+0.3225*3,.225-0.3225*\\i) circle (3.5pt);}	
+		\\end{scope}		
+			\\begin{scope}[shift={(-4.625,-0.32)}]
+			\\node at (-1.2, 1.25) {\\tiny SỐ BÁO DANH};
+			\\draw[fill=blue] (-2.12,.425) rectangle ++(0.2,0.2);	
+			\\draw[fill=blue] (-2.12+0.013,.425-4.17+2*0.3225) rectangle ++(0.2,0.2);
+			\\foreach \\i/\\label in {0/0,1/1, 2/2, 3/3, 4/4, 5/5, 6/6, 7/7, 8/8, 9/9} {
+				\\draw[cyan] (-1.665-0.3225*1, .225-0.3225*\\i) circle (3.5pt);
+				\\node at (-1.665-0.3225*1, .225-0.3225*\\i) {\\tiny\\textcolor{gray}{\\label}};}
+			\\foreach \\i/\\label in {0,...,5} {
+				\\draw[cyan, rounded corners=2pt] (-1.78 + 0.313*\\i, .85) rectangle ++(0.3,-0.275);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*0,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*1,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*2,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*3,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*4,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*5,.225-0.3225*\\i) circle (3.5pt);}	
+		\\end{scope}		
+		\\begin{scope}[shift={(-5.85-0.3225,-0.32)}]
+			\\node at (-1.35, 1.25) {\\tiny MÃ ĐỀ};
+			\\foreach \\i/\\label in {0/0,1/1, 2/2, 3/3, 4/4, 5/5, 6/6, 7/7, 8/8, 9/9} {
+				\\draw[cyan] (-1.665-0.3225*1, .225-0.3225*\\i) circle (3.5pt);
+				\\node at (-1.665-0.3225*1, .225-0.3225*\\i) {\\tiny\\textcolor{gray}{\\label}};}
+			\\foreach \\i/\\label in {0,...,2} {
+				\\draw[cyan, rounded corners=2pt] (-1.8 + 0.313*\\i, .85) rectangle ++(0.3,-0.275);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*0,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*1,.225-0.3225*\\i) circle (3.5pt);}
+			\\foreach \\i in {0,...,9} {\\draw[cyan] (-1.68+0.3225*2,.225-0.3225*\\i)circle (3.5pt);}
+		\\end{scope}
+		\\node at (1.75,4.2) {\\tiny PHẦN II};
+		\\draw[double,cyan] (0, 4.2) ellipse [x radius=0.75cm, y radius=0.25cm];
+		\\node at (0, 4.2) {Điểm};
+		\\draw[double,magenta] (1,1.5)--(1,4.5);
+		\\draw[double,magenta] (-1,1.5)--(-1,4.5);
+		% Tạo minipage để chèn nội dung với dotfill
+		\\node at (-7.75, 3.5) [text width=8cm, anchor=north west] {
+			Họ tên: \\dotfill \\\\[0.65em]
+			Lớp: \\dotfill \\\\[0.65em]
+			Môn: \\dotfill \\\\[0.65em]
+			Ngày:\\dotfill 
+		};
+		\\foreach \\j in {3,...,6} {
+			\\pgfmathparse{\\j-2} % Tính toán số câu từ 1 đến 4
+			\\pgfmathint{\\pgfmathresult} % Chuyển kết quả thành số nguyên
+			\\let\\cau=\\pgfmathresult % Lưu kết quả thành biến \\cau
+			\\begin{scope}[shift={(1.68*\\j-1.68,3)}]
+				\\draw[fill=blue] (-2.11,.5) rectangle ++(0.2,0.2);	
+				\\foreach \\i/\\label in {1/a),2/b), 3/c), 4/d)} {
+					\\node at (-1.65-0.3225*1, .225-0.3225*\\i) {\\tiny\\label};}
+					\\node at (-1.78 + 0.25, .65) {\\tiny Câu \\cau};
+					\\node at (-1.65+0.3225*0,.225){\\tiny Đ};
+					\\node at (-1.65+0.3225*1,.225){\\tiny S};
+				\\foreach \\i in {1,...,4} {\\draw[cyan] (-1.65+0.3225*0,.225-0.3225*\\i) circle (3.5pt);}
+				\\foreach \\i in {1,...,4} {\\draw[cyan] (-1.65+0.3225*1,.225-0.3225*\\i) circle (3.5pt);}
+		\\end{scope}}
+		\\end{tikzpicture}}
+\\end{center}`;
             default:
                 return `
 \\section*{Phiếu Tô}
