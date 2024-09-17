@@ -996,13 +996,34 @@
         <div id="latexInputContainer">
             <h1 class="mt-4">Tạo Beamer File Latex</h1>
             <div class="form-group">
-                <label for="outputCode">Nội dung file LaTex:</label>
+                <label for="outputCode">Load File Hoặc Dán Nội Dung File LaTex</label>
+                <input type="file" id="loadTexFile" accept=".tex" class="form-control-file">
                 <textarea class="form-control" id="outputCode" rows="10"></textarea>
             </div>
         </div>
-
-
     </div>
+    <script>
+        // Hàm đọc file và dán nội dung vào textarea
+        document.getElementById('loadTexFile').addEventListener('change', function (event) {
+            const file = event.target.files[0]; // Lấy file đầu tiên từ input
+            if (file) {
+                const reader = new FileReader();
+
+                // Khi file được đọc xong
+                reader.onload = function (e) {
+                    const content = e.target.result; // Lấy nội dung file
+                    document.getElementById('outputCode').value = content; // Dán vào textarea
+                    document.getElementById('outputCode').dispatchEvent(new Event('input')); // Kích hoạt render lại nội dung LaTeX
+
+                    // Ẩn input sau khi load file
+                    document.getElementById('loadTexFile').style.display = 'none';
+                };
+
+                // Đọc file dưới dạng text
+                reader.readAsText(file);
+            }
+        });
+    </script>
     <!-- Kết quả trình chiếu -->
     <div id="slidesContainer"></div>
 
@@ -1772,9 +1793,7 @@
         document.getElementById('hdsdButton').addEventListener('click', function () {
                 window.open('hdsd.html', '_blank');
             });
-
-    </script>
-
+     </script>
 </body>
 
 </html>
