@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Change MathJax Formula Color</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script type="text/javascript">
+        // Biến toàn cục để lưu màu sắc
+        let mathColor = 'green'; // Màu mặc định ban đầu
+
+        // Cấu hình MathJax với renderAction để thêm màu động
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            options: {
+                renderActions: {
+                    addColor: [200, function (doc) {
+                        for (const node of doc.math) {
+                            const styles = node.typesetRoot.style;
+                            styles.color = mathColor; // Sử dụng biến màu toàn cục
+                        }
+                    }, '']
+                }
+            }
+        };
+    </script>
+
+</head>
+
+<body>
+
+    <h1>Example: Auto Changing MathJax Formula Color</h1>
+
+    <p>This is a MathJax formula: \( x^2 + y^2 = z^2 \)</p>
+
+    <p>This is another MathJax formula: \( E = mc^2 \)</p>
+
+    <!-- Thêm input để người dùng chọn màu -->
+    <label for="colorPicker">Chọn màu cho công thức toán:</label>
+    <input type="color" id="colorPicker" value="#008000"> <!-- Màu mặc định là xanh lá -->
+
+    <script>
+        // Bắt sự kiện khi người dùng thay đổi màu
+        document.getElementById('colorPicker').addEventListener('input', function (event) {
+            mathColor = event.target.value; // Cập nhật màu sắc
+            MathJax.typesetPromise(); // Gọi lại MathJax để render lại với màu mới
+        });
+    </script>
+
+</body>
+
+</html>

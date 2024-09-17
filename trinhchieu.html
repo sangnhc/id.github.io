@@ -6,7 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trình Chiếu Từ File Latex</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
+    <!-- Đảm bảo MathJax được tải đúng cách từ CDN -->
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            options: {
+                renderActions: {
+                    addColor: [200, function (doc) {
+                        for (const node of doc.math) {
+                            const styles = node.typesetRoot.style;
+                            styles.color = mathColor; // Sử dụng biến màu toàn cục để thay đổi màu
+                        }
+                    }, '']
+                }
+            }
+        };
+    </script>
     <style>
         /* CSS for the menu */
         .menu {
@@ -599,35 +617,7 @@
         }
     </style>
 
-    <!-- MathJax Configuration -->
-    <!-- <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            svg: {
-                fontCache: 'global'
-            }
-        };
-    </script> -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
-            },
-            options: {
-                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-            },
-            svg: {
-                fontCache: 'global'
-            }
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script> -->
     <style>
@@ -1005,33 +995,51 @@
                 <button id="increaseFont" class="btn btn-info">Tăng Kích Thước Chữ</button>
                 <button id="decreaseFont" class="btn btn-info">Giảm Kích Thước Chữ</button>
             </div>
+            <!-- Thêm nút đổi màu MathJax -->
+            <div class="form-group">
+                <label for="colorPicker">Đổi Màu Công Thức Toán:</label>
+                <input type="color" id="colorPicker" class="form-control-color" value="#FF00FF">
+            </div>
         </div>
     </div>
+    
     <script>
         // Khởi tạo kích thước chữ mặc định
-        let fontSize = 2; // Đơn vị là 'em'
+            let fontSize = 2; // Đơn vị là 'em'
+            let mathColor = "#FF00FF"; // Màu magenta (hồng tím)
 
-        // Hàm cập nhật kích thước chữ
-        function updateFontSize() {
-            document.body.style.fontSize = fontSize + 'em';
-        }
-
-        // Sự kiện khi nhấn nút Tăng kích thước
-        document.getElementById('increaseFont').addEventListener('click', function () {
-            fontSize += 0.1; // Tăng kích thước chữ
-            updateFontSize(); // Cập nhật lại kích thước chữ
-        });
-
-        // Sự kiện khi nhấn nút Giảm kích thước
-        document.getElementById('decreaseFont').addEventListener('click', function () {
-            if (fontSize > 0.5) { // Đảm bảo kích thước không quá nhỏ
-                fontSize -= 0.1; // Giảm kích thước chữ
-                updateFontSize(); // Cập nhật lại kích thước chữ
+            // Hàm cập nhật kích thước chữ
+            function updateFontSize() {
+                document.body.style.fontSize = fontSize + 'em';
             }
-        });
 
-        // Áp dụng kích thước chữ ban đầu khi tải trang
-        updateFontSize();
+            // Hàm cập nhật màu sắc cho MathJax
+            function updateMathColor() {
+                MathJax.typesetPromise(); // Gọi MathJax render lại để áp dụng màu mới
+            }
+
+            // Sự kiện khi nhấn nút Tăng kích thước
+            document.getElementById('increaseFont').addEventListener('click', function () {
+                fontSize += 0.1; // Tăng kích thước chữ
+                updateFontSize(); // Cập nhật lại kích thước chữ
+            });
+
+            // Sự kiện khi nhấn nút Giảm kích thước
+            document.getElementById('decreaseFont').addEventListener('click', function () {
+                if (fontSize > 0.5) { // Đảm bảo kích thước không quá nhỏ
+                    fontSize -= 0.1; // Giảm kích thước chữ
+                    updateFontSize(); // Cập nhật lại kích thước chữ
+                }
+            });
+
+            // Sự kiện khi thay đổi màu MathJax
+            document.getElementById('colorPicker').addEventListener('input', function (event) {
+                mathColor = event.target.value; // Lấy màu được chọn
+                updateMathColor(); // Cập nhật màu sắc cho MathJax
+            });
+
+            // Áp dụng kích thước chữ ban đầu khi tải trang
+            updateFontSize();
     </script>
     <script>
         // Hàm đọc file và dán nội dung vào textarea
@@ -1055,6 +1063,7 @@
             }
         });
     </script>
+   
     <!-- Kết quả trình chiếu -->
     <div id="slidesContainer"></div>
 
@@ -1067,7 +1076,7 @@
 
     <!-- Dialog thông báo kết quả -->
     <div id="resultDialog" class="custom-dialog">
-        <h3>Kết Quả</h3>
+        <h3>Thông Báo</h3>
         <p id="resultMessage"></p>
         <p id="retryMessage" style="display: none;">Thử lại sau: <span id="retryCountdown">10</span> giây</p>
         <!-- <button id="closeDialogBtn">Đóng</button> -->
@@ -1711,102 +1720,103 @@
             return content;
         }
 
-        function renderMath() {
-            let content = document.getElementById('outputCode').value;
-            let processed = convertLatexToHtmlAB(content); // Nhận cả nội dung và nút ex-i, vd-i, ...
+        // Hàm render MathJax và cập nhật màu
+            function renderMath() {
+                let content = document.getElementById('outputCode').value;
+                let processed = convertLatexToHtmlAB(content); // Xử lý nội dung LaTeX
 
-            // Xóa các nút trước khi thêm mới
-            const navigationButtons = document.querySelector('.navigation-buttons.fixed-navigation');
-            navigationButtons.querySelectorAll('a[href^="#ex-"], a[href^="#vd-"], a[href^="#bt-"], a[href^="#dn-"], a[href^="#dl-"], a[href^="#tc-"], a[href^="#note-"]').forEach(node => node.remove());
+                // Xóa các nút trước khi thêm mới
+                const navigationButtons = document.querySelector('.navigation-buttons.fixed-navigation');
+                navigationButtons.querySelectorAll('a[href^="#ex-"], a[href^="#vd-"], a[href^="#bt-"], a[href^="#dn-"], a[href^="#dl-"], a[href^="#tc-"], a[href^="#note-"]').forEach(node => node.remove());
 
-            // Chèn nội dung vào slidesContainer
-            const slidesContainer = document.getElementById('slidesContainer');
-            slidesContainer.innerHTML = processed.content;
+                // Chèn nội dung vào slidesContainer
+                const slidesContainer = document.getElementById('slidesContainer');
+                slidesContainer.innerHTML = processed.content;
 
-            // Chèn các nút vào navigation-buttons
-            const buttonsFragment = document.createElement('div');
-            buttonsFragment.innerHTML = processed.buttons;
-            navigationButtons.insertBefore(buttonsFragment, navigationButtons.firstChild);
+                // Chèn các nút vào navigation-buttons
+                const buttonsFragment = document.createElement('div');
+                buttonsFragment.innerHTML = processed.buttons;
+                navigationButtons.insertBefore(buttonsFragment, navigationButtons.firstChild);
 
-            const slides = document.querySelectorAll('.slide');
+                const slides = document.querySelectorAll('.slide');
 
-            // Kiểm tra và hiển thị slide đầu tiên
-            if (slides.length > 0) {
-                slides[0].classList.add('active-slide');
-            } else {
-                console.error("No slides found.");
-                return; // Thoát nếu không có slide nào để hiển thị
-            }
+                // Kiểm tra và hiển thị slide đầu tiên
+                if (slides.length > 0) {
+                    slides[0].classList.add('active-slide');
+                } else {
+                    console.error("No slides found.");
+                    return; // Thoát nếu không có slide nào để hiển thị
+                }
 
-            MathJax.typesetPromise([slidesContainer]).then(() => {
-                let currentSlideIndex = 0;
+                MathJax.typesetPromise([slidesContainer]).then(() => {
+                    let currentSlideIndex = 0;
 
-                function showSlide(index) {
-                    if (slides[currentSlideIndex]) {
-                        slides[currentSlideIndex].classList.remove('active-slide');
+                    function showSlide(index) {
+                        if (slides[currentSlideIndex]) {
+                            slides[currentSlideIndex].classList.remove('active-slide');
+                        }
+
+                        if (index >= 0 && index < slides.length) {
+                            currentSlideIndex = index;
+                            slides[currentSlideIndex].classList.add('active-slide');
+                        }
+
+                        document.getElementById('nextSlide').disabled = currentSlideIndex === slides.length - 1;
+                        document.getElementById('prevSlide').disabled = currentSlideIndex === 0;
                     }
 
-                    if (index >= 0 && index < slides.length) {
-                        currentSlideIndex = index;
-                        slides[currentSlideIndex].classList.add('active-slide');
+                    // Lấy slide từ hash
+                    function getSlideIndexFromHash() {
+                        const hash = window.location.hash;
+                        if (hash) {
+                            const id = hash.substring(1); // Lấy phần sau dấu #
+                            const targetSlide = document.getElementById(id);
+                            if (targetSlide) {
+                                return Array.from(slides).indexOf(targetSlide);
+                            }
+                        }
+                        return -1;
                     }
 
+                    // Xử lý sự kiện hashchange
+                    window.addEventListener('hashchange', () => {
+                        const slideIndex = getSlideIndexFromHash();
+                        if (slideIndex !== -1) {
+                            showSlide(slideIndex);
+                        }
+                    });
+
+                    // Kiểm tra hash ban đầu khi tải trang
+                    const initialSlideIndex = getSlideIndexFromHash();
+                    if (initialSlideIndex !== -1) {
+                        showSlide(initialSlideIndex);
+                    } else if (slides.length > 0) {
+                        slides[0].classList.add('active-slide'); // Hiển thị slide đầu tiên nếu không có hash
+                    }
+
+                    document.getElementById('nextSlide').addEventListener('click', () => {
+                        if (currentSlideIndex < slides.length - 1) {
+                            showSlide(currentSlideIndex + 1);
+                            window.location.hash = slides[currentSlideIndex].id; // Cập nhật hash
+                        }
+                    });
+
+                    document.getElementById('prevSlide').addEventListener('click', () => {
+                        if (currentSlideIndex > 0) {
+                            showSlide(currentSlideIndex - 1);
+                            window.location.hash = slides[currentSlideIndex].id; // Cập nhật hash
+                        }
+                    });
+
+                    // Disable/Enable buttons based on initial slide index
                     document.getElementById('nextSlide').disabled = currentSlideIndex === slides.length - 1;
                     document.getElementById('prevSlide').disabled = currentSlideIndex === 0;
-                }
+                }).catch((err) => console.error("MathJax typeset error: ", err));
+            }
 
-                // Lấy slide từ hash
-                function getSlideIndexFromHash() {
-                    const hash = window.location.hash;
-                    if (hash) {
-                        const id = hash.substring(1); // Lấy phần sau dấu #
-                        const targetSlide = document.getElementById(id);
-                        if (targetSlide) {
-                            return Array.from(slides).indexOf(targetSlide);
-                        }
-                    }
-                    return -1;
-                }
-
-                // Xử lý sự kiện hashchange
-                window.addEventListener('hashchange', () => {
-                    const slideIndex = getSlideIndexFromHash();
-                    if (slideIndex !== -1) {
-                        showSlide(slideIndex);
-                    }
-                });
-
-                // Kiểm tra hash ban đầu khi tải trang
-                const initialSlideIndex = getSlideIndexFromHash();
-                if (initialSlideIndex !== -1) {
-                    showSlide(initialSlideIndex);
-                } else if (slides.length > 0) {
-                    slides[0].classList.add('active-slide'); // Hiển thị slide đầu tiên nếu không có hash
-                }
-
-                document.getElementById('nextSlide').addEventListener('click', () => {
-                    if (currentSlideIndex < slides.length - 1) {
-                        showSlide(currentSlideIndex + 1);
-                        window.location.hash = slides[currentSlideIndex].id; // Cập nhật hash
-                    }
-                });
-
-                document.getElementById('prevSlide').addEventListener('click', () => {
-                    if (currentSlideIndex > 0) {
-                        showSlide(currentSlideIndex - 1);
-                        window.location.hash = slides[currentSlideIndex].id; // Cập nhật hash
-                    }
-                });
-
-                // Disable/Enable buttons based on initial slide index
-                document.getElementById('nextSlide').disabled = currentSlideIndex === slides.length - 1;
-                document.getElementById('prevSlide').disabled = currentSlideIndex === 0;
-            }).catch((err) => console.error("MathJax typeset error: ", err));
-        }
-
-        // Gọi hàm renderMath khi input thay đổi
-        document.getElementById('outputCode').addEventListener('input', renderMath);
-        document.getElementById('outputCode').dispatchEvent(new Event('input'));
+            // Gọi hàm renderMath khi input thay đổi
+            document.getElementById('outputCode').addEventListener('input', renderMath);
+            document.getElementById('outputCode').dispatchEvent(new Event('input'));
 
         // Toggle visibility of the LaTeX input section
         document.getElementById('toggleInput').addEventListener('click', function () {
@@ -1825,6 +1835,7 @@
                 window.open('hdsd.html', '_blank');
             });
      </script>
+     
 </body>
 
 </html>
