@@ -64,7 +64,7 @@
         /* Áp dụng font chữ */
         body {
             font-family: 'Roboto', sans-serif;
-            font-size: 1.2em;
+            font-size: 2em;
         }
         h1, h2, h3 {
             text-align: center;
@@ -1000,8 +1000,39 @@
                 <input type="file" id="loadTexFile" accept=".tex" class="form-control-file">
                 <textarea class="form-control" id="outputCode" rows="10"></textarea>
             </div>
+            <!-- Thêm nút tăng giảm kích thước chữ -->
+            <div class="form-group">
+                <button id="increaseFont" class="btn btn-info">Tăng Kích Thước Chữ</button>
+                <button id="decreaseFont" class="btn btn-info">Giảm Kích Thước Chữ</button>
+            </div>
         </div>
     </div>
+    <script>
+        // Khởi tạo kích thước chữ mặc định
+        let fontSize = 2; // Đơn vị là 'em'
+
+        // Hàm cập nhật kích thước chữ
+        function updateFontSize() {
+            document.body.style.fontSize = fontSize + 'em';
+        }
+
+        // Sự kiện khi nhấn nút Tăng kích thước
+        document.getElementById('increaseFont').addEventListener('click', function () {
+            fontSize += 0.1; // Tăng kích thước chữ
+            updateFontSize(); // Cập nhật lại kích thước chữ
+        });
+
+        // Sự kiện khi nhấn nút Giảm kích thước
+        document.getElementById('decreaseFont').addEventListener('click', function () {
+            if (fontSize > 0.5) { // Đảm bảo kích thước không quá nhỏ
+                fontSize -= 0.1; // Giảm kích thước chữ
+                updateFontSize(); // Cập nhật lại kích thước chữ
+            }
+        });
+
+        // Áp dụng kích thước chữ ban đầu khi tải trang
+        updateFontSize();
+    </script>
     <script>
         // Hàm đọc file và dán nội dung vào textarea
         document.getElementById('loadTexFile').addEventListener('change', function (event) {
