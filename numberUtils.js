@@ -122,7 +122,6 @@ export function thay_haicham_colon(text) {
     text = text.replace(mathModePattern, (match, content) => {
         // Thay thế dấu : bằng \colon, dấu . thành \cdot, và dấu , thành {,} nếu trước và sau là số
         let processedContent = content.replace(/:/g, '\\colon ')
-                                      .replace(/\./g, '\\cdot ')
                                       .replace(/(\d),(\d)/g, '$1{,}$2');
         // Loại bỏ khoảng trắng trước dấu } ở cuối dòng nếu có trong đoạn $
         processedContent = processedContent.replace(/ \}$/gm, '}');

@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Hỗ Trợ Chuyển Đổi Latex Sang HTML</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* CSS for the menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a,
+        .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover,
+        .dropbtn:hover {
+            background-color: #555;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            background-color: #f1f1f1;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-submenu:hover .dropdown-content {
+            display: block;
+        }
+
+        .btn-third {
+            background-color: #9c157f;
+            /* Màu nền cho nút thứ ba */
+            color: #fff;
+            /* Màu chữ trắng */
+        }
+
+        .btn-secondary {
+            background-color: #09a368;
+            /* Màu nền cho nút thứ ba */
+            color: #fff;
+            /* Màu chữ trắng */
+        }
+
+        /* CSS for the render result */
+        #renderResult {
+            min-height: 300px;
+            overflow: auto;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+    </style>
+    <style>
+        /* Áp dụng font chữ */
+        body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2em;
+            /* Tăng kích thước font chữ mặc định */
+        }
+
+        .Header {
+            width: 98vw;
+            /* Thay đổi từ 80vw thành 98vw */
+            padding: 50px;
+            background: linear-gradient(135deg, #ffffff, #f2f2f2);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 2px solid #cccccc;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 4em;
+            font-weight: bold;
+            text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3);
+            border-bottom: 6px solid #ff5e62;
+            padding-bottom: 15px;
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            background-clip: text;
+            color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-header p {
+            margin: 15px 0;
+            font-size: 1.8em;
+            color: #444444;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .sub-header p:nth-child(1) {
+            color: #007acc;
+            /* Màu xanh lam nhạt, tạo cảm giác tin cậy và chuyên nghiệp */
+        }
+
+        .sub-header p:nth-child(2) {
+            color: #ff6347;
+            /* Màu đỏ cam nhẹ, tạo sự nổi bật và năng động */
+        }
+
+        .sub-header p:nth-child(3) {
+            color: #32cd32;
+            /* Màu xanh lá cây nhạt, mang lại cảm giác tươi mới và hy vọng */
+        }
+
+        .footer p {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #555555;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            background-clip: text;
+            color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .center-img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% chiều rộng của phần tử cha */
+            height: auto;
+            /* Tự động điều chỉnh chiều cao để giữ tỉ lệ */
+        }
+
+
+        .left-img {
+            float: left;
+            /* Canh trái */
+            margin-right: 10px;
+            /* Khoảng cách bên phải */
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+        }
+
+        .right-img {
+            float: right;
+            /* Canh phải */
+            margin-left: 10px;
+            /* Khoảng cách bên trái */
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+        }
+
+        .custom-size {
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+        }
+
+        .small-size {
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+            max-height: 200px;
+            /* Chiều cao tối đa là 200px, giữ nguyên tỷ lệ */
+        }
+
+        .tiny-size {
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+            max-height: 150px;
+            /* Chiều cao tối đa là 150px, giữ nguyên tỷ lệ */
+        }
+
+        .ngang-size {
+            max-width: 100%;
+            /* Chiều rộng tối đa là 100% của phần tử cha */
+            height: auto;
+            /* Chiều cao tự động điều chỉnh theo tỷ lệ khung hình */
+        }
+
+        .example {
+            background-color: #fff3e0;
+            border-left: 5px solid #f57c00;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .example::before {
+            content: "Câu " attr(data-example-number) ": ";
+            font-weight: bold;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background-color: #8300f5;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+
+        .loigiai {
+            background-color: #e0f7fa;
+            border-left: 5px solid #00acc1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            position: relative;
+            display: none;
+        }
+
+        .short-ans {
+            background-color: #ffebee;
+            border-left: 5px solid #e53935;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .short-ans::before {
+            content: "Điền Đáp Án: ";
+            font-weight: bold;
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            background-color: #e53935;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+
+        .short-ans-input {
+            width: 150px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #e53935;
+            border-radius: 5px;
+        }
+
+        .custom-radio {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .custom-radio input {
+            display: none;
+        }
+
+        .radio-label {
+            width: 40px;
+            /* Kích thước radio button */
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            position: relative;
+            margin-right: 10px;
+            transition: background-color 0.3s ease;
+            border: 2px solid #f57c00;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            /* Tăng cỡ chữ của ký tự */
+            color: lightblue;
+            /* Màu ký tự trong trạng thái bình thường */
+            font-weight: bold;
+        }
+
+        .radio-label::before {
+            content: attr(data-label);
+            /* Sử dụng thuộc tính data-label để lấy ký tự */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #4CAF50;
+            /* Màu mới cho ký tự, ví dụ: xanh lá cây (#4CAF50) */
+            font-size: 24px;
+            /* Tăng cỡ chữ cho ký tự */
+            font-weight: bold;
+        }
+
+        .custom-radio input:checked~.radio-label {
+            background-color: #0400f5;
+        }
+
+        .custom-radio input:checked~.radio-label::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+
+        /* .custom-radio {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+    
+            .custom-radio input {
+                display: none;
+            }
+    
+            .radio-label {
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: #ccc;
+                position: relative;
+                margin-right: 10px;
+                transition: background-color 0.3s ease;
+                border: 2px solid #f57c00;
+            }
+    
+            .radio-label::after {
+                content: '';
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: #f70b0b;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                transition: transform 0.2s ease;
+            }
+    
+            .custom-radio input:checked~.radio-label {
+                background-color: #0400f5;
+            }
+    
+            .custom-radio input:checked~.radio-label::after {
+                transform: translate(-50%, -50%) scale(1);
+            } */
+
+        .choice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .choice-table th,
+        .choice-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .small-col {
+            width: 50px;
+        }
+
+        .choice-table th {
+            background-color: #f57c00;
+            color: white;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        #scoreDialog,
+        #errorDialog,
+        #settingsDialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2;
+            max-width: 400px;
+            /* Tăng chiều rộng tối đa để hộp thoại rộng hơn */
+            width: 100%;
+            /* Đảm bảo hộp thoại không vượt quá chiều rộng của màn hình */
+            font-family: 'Arial', sans-serif;
+            /* Đặt font chữ đồng nhất */
+        }
+
+        #settingsDialog input {
+            width: 50px;
+        }
+
+        #timer {
+            font-size: 1.5em;
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Thiết kế nút Xem Lời Giải */
+        .toggle-solution {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .toggle-solution:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        .toggle-solution:disabled {
+            background-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+
+        /* Thiết kế nút Nộp Bài */
+        #submitBtn {
+            background-color: #f44336;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+
+        #submitBtn:hover {
+            background-color: #e53935;
+            transform: scale(1.05);
+        }
+
+        #setupContainer {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            width: 95vw;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #setupContainer label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #007acc;
+            align-self: flex-start;
+        }
+
+        #setupContainer input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+
+        #setupContainer input:focus {
+            border-color: #007acc;
+            box-shadow: inset 0 2px 6px rgba(0, 122, 204, 0.3);
+            outline: none;
+        }
+
+        #setupContainer button {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.2em;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        #generateExamBtn {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+        }
+
+        #generateExamBtn:hover {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+            box-shadow: 0 5px 15px rgba(255, 94, 98, 0.4);
+        }
+
+        #settingsBtn {
+            background: linear-gradient(135deg, #007acc, #00b4db);
+            margin-top: 10px;
+        }
+
+        #settingsBtn:hover {
+            background: linear-gradient(135deg, #00b4db, #007acc);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        #loadingMessage {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #ff6347;
+            display: none;
+        }
+
+        #recordTable {
+            margin-top: 20px;
+            width: 95vw;
+            max-width: 1200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        #recordTable table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #recordTable th,
+        #recordTable td {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        #recordTable th {
+            background-color: #007acc;
+            color: white;
+        }
+
+        #recordTable td {
+            background-color: #f9f9f9;
+        }
+
+        .custom-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f2f2f2;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 3;
+            max-width: 400px;
+            width: 100%;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+
+        .custom-dialog h3 {
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            color: #007acc;
+        }
+
+        .custom-dialog p {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .custom-dialog button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-dialog button:hover {
+            background-color: #0056b3;
+        }
+
+        ul,
+        ol {
+            padding-left: 30px;
+            margin-bottom: 20px;
+            list-style-position: outside;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-left: 5px solid #00bcd4;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        ul li:hover,
+        ol li:hover {
+            background-color: #b2ebf2;
+            transform: scale(1.05);
+        }
+
+        ol {
+            counter-reset: item;
+        }
+
+        ol li {
+            counter-increment: item;
+        }
+
+        ol li::before {
+            content: counters(item, ".") ". ";
+            font-weight: bold;
+            color: #00796b;
+            margin-right: 5px;
+        }
+    </style>
+    <!-- Đảm bảo MathJax được tải đúng cách từ CDN -->
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+            renderActions: {
+                addColor: [200, function (doc) {
+                    for (const node of doc.math) {
+                        const styles = node.typesetRoot.style;
+                        styles.color = "#FF00FF"; // Sử dụng biến màu toàn cục để thay đổi màu
+                    }
+                }, '']
+            }
+        }
+    };
+</script>
+    <style>
+        .section-title {
+            text-align: center;
+            /* Căn giữa tiêu đề */
+            background: linear-gradient(135deg, #00b4db, #32cd32);
+            /* Gradient từ xanh lam đến xanh lá */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            /* Tạo bóng đổ cho tiêu đề */
+            color: white;
+            margin-bottom: 30px;
+            /* Tạo khoảng cách phía dưới tiêu đề */
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            /* Chữ in hoa */
+            letter-spacing: 2px;
+            /* Tăng khoảng cách giữa các chữ */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            /* Đổ bóng cho chữ */
+        }
+
+        .section-title p {
+            margin: 10px 0 0 0;
+            /* Khoảng cách giữa đoạn văn và tiêu đề */
+            font-size: 1.2em;
+            font-style: italic;
+            /* Chữ nghiêng */
+            color: #e0ffe0;
+            /* Màu chữ của đoạn văn */
+        }
+
+        .section-title.section-two {
+            background: linear-gradient(135deg, #8e44ad, #e74c3c);
+            /* Gradient từ tím đến hồng */
+        }
+
+        .section-title.section-three {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+            /* Gradient từ xanh biển đến xanh đậm */
+        }
+    </style>
+    <style>
+        /* Đặt style cho thẻ h1 */
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            /* Font chữ đẹp */
+            font-size: 3em;
+            /* Kích thước chữ lớn */
+            font-weight: bold;
+            /* Chữ đậm */
+            color: #ffffff;
+            /* Màu chữ trắng */
+            text-align: center;
+            /* Căn giữa chữ */
+            text-transform: uppercase;
+            /* Viết hoa toàn bộ chữ */
+            letter-spacing: 2px;
+            /* Tăng khoảng cách giữa các chữ */
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+            /* Gradient màu nền */
+            -webkit-background-clip: text;
+            /* Chỉ lấy phần màu của nền */
+            color: transparent;
+            /* Màu chữ trong suốt để thấy màu nền */
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+            /* Đổ bóng cho chữ */
+            margin-top: 50px;
+            /* Khoảng cách phía trên */
+            margin-bottom: 30px;
+            /* Khoảng cách phía dưới */
+            display: inline-block;
+            /* Để margin không ảnh hưởng tới việc căn giữa */
+        }
+    
+        /* Canh giữa cả khối h1 bằng flexbox */
+        .center {
+            display: flex;
+            /* Sử dụng flexbox */
+            justify-content: center;
+            /* Căn giữa ngang */
+            align-items: center;
+            /* Căn giữa dọc */
+            min-height: 100vh;
+            /* Chiều cao tối thiểu bằng 100% chiều cao màn hình */
+            background-color: #282c34;
+            /* Màu nền */
+        }
+    </style>
+    <style>
+        /* Đặt style cho nút bấm */
+        .btn-custom {
+            font-family: 'Roboto', sans-serif; /* Font chữ */
+            font-size: 1.5em; /* Tăng kích thước chữ */
+            font-weight: bold; /* Chữ đậm */
+            color: #fff; /* Màu chữ trắng */
+            background-color: #28a745; /* Màu nền xanh */
+            padding: 15px 40px; /* Tăng kích thước padding để nút dài hơn */
+            border: none; /* Loại bỏ viền */
+            border-radius: 30px; /* Bo góc cho nút */
+            cursor: pointer; /* Con trỏ chuột khi hover */
+            text-transform: uppercase; /* Chữ in hoa */
+            letter-spacing: 1px; /* Khoảng cách giữa các chữ */
+            transition: background-color 0.3s, transform 0.2s; /* Hiệu ứng chuyển màu và scale */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng cho nút */
+        }
+
+        /* Hiệu ứng khi hover */
+        .btn-custom:hover {
+            background-color: #218838; /* Đổi màu nền khi hover */
+            transform: translateY(-2px); /* Nút nhảy lên khi hover */
+        }
+
+        /* Hiệu ứng khi nhấn vào */
+        .btn-custom:active {
+            background-color: #1e7e34; /* Màu nền khi nhấn */
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); /* Đổ bóng khi nhấn */
+            transform: translateY(0); /* Trở về vị trí cũ */
+        }
+
+        /* Canh giữa nút bấm */
+        .button-container {
+            display: flex; /* Sử dụng flexbox */
+            justify-content: center; /* Căn giữa ngang */
+            align-items: center; /* Căn giữa dọc */
+            min-height: 100vh; /* Chiều cao tối thiểu bằng 100% chiều cao màn hình */
+            background-color: #f8f9fa; /* Màu nền nhạt */
+        }
+        /* CSS cho lớp làm nổi bật HINH_i */
+        .highlight-hinh {
+            color: #ffffff; /* Màu chữ trắng */
+            background-color: #ff5733; /* Màu nền cam đậm */
+            font-weight: bold; /* Chữ đậm */
+            padding: 5px 10px; /* Thêm khoảng đệm xung quanh chữ */
+            border-radius: 5px; /* Bo tròn góc */
+            display: inline-block; /* Giữ inline nhưng có padding */
+        }           
+    </style>
+</head>
+
+<body>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+
+
+    <div class="container">
+        <h1 class="mt-4">Tool Hỗ Trợ Chuyển Đổi Latex Sang HTML</h1>
+        <div class="buttons mb-3">
+            <button class="btn btn-success" onclick="fixCodeTool()">Chuyển Đổi</button>
+        </div>
+        <div class="form-group">
+            <label for="inputCode">Dán mã cần sửa:</label>
+            <textarea class="form-control" id="inputCode" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="outputCode">Kết quả sau khi sửa:</label>
+            <textarea class="form-control" id="outputCode" rows="10"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="renderResult">Kết quả hiển thị:</label>
+            <div id="renderResult" class="border p-3"></div>
+        </div>
+    </div>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const storedIdentifier = localStorage.getItem('identifier');
+            if (!isLoggedIn || !storedIdentifier) {
+                alert('Bạn chưa nhập key');
+                window.location.href = 'index.html'; // Chuyển hướng về trang đăng nhập
+            }
+        }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+    
+    <script type="module">
+        import { wordtotex } from './wordtotex.js';
+        import { word2tex } from './word2tex.js';
+        import { fixCodeTool } from './fixCodeTool.js';
+        import { wordtoTF } from './wordtoTF.js';
+        // Gắn các hàm vào window để có thể gọi từ HTML
+        window.wordtotex = wordtotex;
+        window.word2tex = word2tex;
+        window.fixCodeTool = fixCodeTool;
+        window.wordtoTF = wordtoTF;
+
+        function layCacNgoacLon(text) {
+            let ngoacLon = [];
+            let demNgoac = 0;
+            let batDau = null;
+
+            for (let i = 0; i < text.length; i++) {
+                let kyTu = text[i];
+                if (kyTu === "{") {
+                    if (demNgoac === 0) {
+                        batDau = i;
+                    }
+                    demNgoac += 1;
+                } else if (kyTu === "}") {
+                    demNgoac -= 1;
+                    if (demNgoac === 0 && batDau !== null) {
+                        let ketThuc = i;
+                        ngoacLon.push([batDau, ketThuc]);
+                        batDau = null;
+                    }
+                }
+            }
+
+            return ngoacLon;
+        }
+
+
+        function replaceChoice(content) {
+            const regex = /\\choice\s*\{/g;
+            let match;
+            while ((match = regex.exec(content)) !== null) {
+                const startIndex = match.index;
+                const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+                if (ngoacLon.length >= 4) {
+                    const [batDau1, ketThuc1] = ngoacLon[0];
+                    const [batDau2, ketThuc2] = ngoacLon[1];
+                    const [batDau3, ketThuc3] = ngoacLon[2];
+                    const [batDau4, ketThuc4] = ngoacLon[3];
+                    const choices = [
+                        content.slice(startIndex + batDau1 + 1, startIndex + ketThuc1),
+                        content.slice(startIndex + batDau2 + 1, startIndex + ketThuc2),
+                        content.slice(startIndex + batDau3 + 1, startIndex + ketThuc3),
+                        content.slice(startIndex + batDau4 + 1, startIndex + ketThuc4)
+                    ];
+                    const labels = ['A', 'B', 'C', 'D'];
+                    let transformedChoices = '<div class="choices">' + choices.map((choice, index) => {
+                        const isCorrect = choice.includes('\\True');
+                        choice = choice.replace('\\True', '');
+                        return `<div class="choice"><input type="radio" name="choice" value="${isCorrect}"> ${labels[index]}. ${choice}</div>`;
+                    }).join('')+'\n' + '</div><div class="result"></div>';
+                    content = content.slice(0, startIndex) + transformedChoices + content.slice(startIndex + ketThuc4 + 1);
+                }
+            }
+            return content;
+        }
+        function convertNumberToMathMode(text) {
+            // Biểu thức chính quy để thay thế } \end{ex} bằng <br>
+            const endExPattern = /\}\s\\end\{ex\}/g;
+
+            // Thay thế } \end{ex} bằng <br>
+            text = text.replace(endExPattern, '<br>');
+
+            // Thay thế \loigiai{ bằng Lời giải<br>
+            text = text.replace(/\\loigiai\{/g, 'Lời giải<br>');
+
+            // Thay thế \begin{ex} bằng <br>
+            text = text.replace(/\\begin\{ex\}/g, '<br>');
+
+            return text;
+        }
+
+        function processMathContent(input) {
+            // Tìm tất cả các nội dung bên trong dấu $
+            return input.replace(/\$([^$]+)\$/g, function (match, p1) {
+                // Thay thế dấu . thành \cdot
+                let processedContent = p1.replace(/\./g, '.')
+                    // Chỉ thay dấu , thành {,} khi trước và sau là số
+                    .replace(/(\d),(\d)/g, '$1{,}$2');
+                // Trả về nội dung đã xử lý kèm theo dấu $
+                return `$${processedContent}$`;
+            });
+        }
+        function processDoubleDollar(content) {
+            return content.replace(/\$\$\s*([^\$]+?)\s*\$\$/g, function (match, p1) {
+                // Loại bỏ khoảng trắng không cần thiết sau $$ mở và trước $$ đóng
+                return `$$${p1}$$`;
+            });
+        }
+
+
+        function processContent(content) {
+            content = processDoubleDollar(content)
+            content = replaceChoice(content);
+            content = convertNumberToMathMode(content)
+            // Xử lý các nội dung trong dấu $
+            content = processMathContent(content);
+            // content = content.replace(/\\\\/g, '<br>');
+            content = content.replace(/\\\\mathrm/g, '\\mathrm');
+            return content;
+        }
+
+        function convertLatexToHtmlAB(latexContent) {
+            let exampleCounter = 1;
+            let choiceCounter = 1;
+            let choiceTFCounter = 1;
+            let shortAnsCounter = 1;
+
+            let htmlContent = latexContent
+                .replace(/\\begin{ex}/g, function () {
+                    return `<div class="example" data-example-number="${exampleCounter++}">`;
+                })
+                .replace(/\\end{ex}/g, '</div>')
+                .replace(/dropbox.com/g, 'dl.dropboxusercontent.com')
+                .replace(/&dl=0/g, '');
+
+            // Loại bỏ các ký tự giữa \choiceTF và {
+            htmlContent = htmlContent.replace(/\\choiceTF[^{]*\{/g, '\\choiceTF{')
+                .replace(/\\vec/g, '\\overrightarrow')
+                .replace(/\\vv/g, '\\overrightarrow')
+                .replace(/\\itemchoice/g, '\\itemsize')
+                .replace(/\\itemch/g, '\\item');
+
+            htmlContent = replaceChoiceAB(htmlContent, choiceCounter++);
+            htmlContent = replaceChoiceABTF(htmlContent, choiceTFCounter++);
+            htmlContent = replaceShortAnsAB(htmlContent, shortAnsCounter++);
+            htmlContent = replaceLoigiaiAB(htmlContent, exampleCounter++);
+            htmlContent = replaceBreaksInLaTeX(htmlContent)
+            htmlContent = removeLatexCommentsAB(htmlContent)
+            // Convert itemize (danh sách không thứ tự)
+            htmlContent = htmlContent.replace(/\\begin{itemize}/g, '<ul>')
+                .replace(/\\end{itemize}/g, '</ul>')
+                .replace(/\\item\s+/g, '<li>');
+
+            // Convert enumerate (danh sách có thứ tự)
+            htmlContent = htmlContent.replace(/\\begin{enumerate}/g, '<ol>')
+                .replace(/\\end{enumerate}/g, '</ol>')
+                .replace(/\\item\s+/g, '<li>');
+
+            // Convert center (căn giữa nội dung)
+            htmlContent = htmlContent.replace(/\\begin{center}/g, '<div style="text-align: center;">')
+                .replace(/\\end{center}/g, '</div>');
+
+            // Loại bỏ các lệnh LaTeX không cần thiết
+            htmlContent = htmlContent.replace(/\\loigiai/g, '')
+                .replace(/\\choiceTF/g, '')
+                .replace(/\\choice/g, '')
+                .replace(/\\shortans/g, '');
+            return htmlContent;
+        }
+
+        // Các hàm replaceChoiceAB, replaceChoiceABTF, replaceShortAnsAB, replaceLoigiaiAB như bạn đã cung cấp.
+        // function layCacNgoacLon(text) {
+        //     let ngoacLon = [];
+        //     let demNgoac = 0;
+        //     let batDau = null;
+
+        //     for (let i = 0; i < text.length; i++) {
+        //         let kyTu = text[i];
+        //         if (kyTu === "{") {
+        //             if (demNgoac === 0) {
+        //                 batDau = i;
+        //             }
+        //             demNgoac += 1;
+        //         } else if (kyTu === "}") {
+        //             demNgoac -= 1;
+        //             if (demNgoac === 0 && batDau !== null) {
+        //                 let ketThuc = i;
+        //                 ngoacLon.push([batDau, ketThuc]);
+        //                 batDau = null;
+        //             }
+        //         }
+        //     }
+
+        //     return ngoacLon;
+        // }
+
+        function replaceChoiceABTF(content, questionIndex) {
+            const regex = /\\choiceTF\s*\{/g;
+
+            let result = '';
+            let lastIndex = 0;
+            let localCounter = 1; // Biến đếm riêng cho mỗi nhóm lựa chọn trong một câu hỏi
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length >= 4) {
+                    let choices = braces.slice(0, 4).map(pair => remainingString.slice(pair[0] + 1, pair[1]));
+                    let transformedChoices = '<table class="choice-table"><thead><tr><th>Phương án</th><th class="small-col">Đúng</th><th class="small-col">Sai</th></tr></thead><tbody>'
+                        + choices.map((choice, index) => {
+                            const isCorrect = choice.includes('\\True');
+                            choice = choice.replace('\\True', '');
+                            return `<tr>
+                          <td>${choice}</td>
+                          <td class="small-col">
+                              <label class="custom-radio">
+                                  <input type="radio" name="choiceTF-${questionIndex}-${localCounter}-${index}" value="true" data-correct="${isCorrect}">
+                                  <span class="radio-label"></span>
+                              </label>
+                          </td>
+                          <td class="small-col">
+                              <label class="custom-radio">
+                                  <input type="radio" name="choiceTF-${questionIndex}-${localCounter}-${index}" value="false" data-correct="${!isCorrect}">
+                                  <span class="radio-label"></span>
+                              </label>
+                          </td>
+                      </tr>`;
+                        }).join('') + '</tbody></table>';
+
+                    result += content.slice(lastIndex, startIndex) + transformedChoices;
+                    lastIndex = startIndex + braces[3][1] + 1;
+                    localCounter++; // Tăng biến đếm cho mỗi nhóm tick của câu hỏi tiếp theo
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+        function replaceChoiceAB(content, questionIndex) {
+            const regex = /\\choice\s*\{/g;
+
+            let result = '';
+            let lastIndex = 0;
+            let localCounter = 1; // Biến đếm riêng cho mỗi câu `\choice`
+            const choiceLabels = ['A', 'B', 'C', 'D']; // Các ký tự đại diện cho các lựa chọn
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length >= 4) {
+                    let choices = braces.slice(0, 4).map((pair, index) => remainingString.slice(pair[0] + 1, pair[1]));
+                    let transformedChoices = '<div class="choice-container">' +
+                        choices.map((choice, index) => {
+                            const isCorrect = choice.includes('\\True');
+                            choice = choice.replace('\\True', '');
+                            return `<div class="choice">
+                <label class="custom-radio">
+                    <input type="radio" name="choice-${questionIndex}-${localCounter}" value="${isCorrect}">
+                    <span class="radio-label" data-label="${choiceLabels[index]}"></span>
+                    ${choice}
+                </label>
+              </div>`;
+                        }).join('') + '</div>';
+
+                    result += content.slice(lastIndex, startIndex) + transformedChoices;
+                    lastIndex = startIndex + braces[3][1] + 1;
+                    localCounter++; // Tăng biến đếm cho mỗi câu `\choice`
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+        function replaceChoiceABGG(content, questionIndex) {
+            const regex = /\\choice\s*\{/g;
+
+            let result = '';
+            let lastIndex = 0;
+            let localCounter = 1; // Biến đếm riêng cho mỗi câu `\choice`
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length >= 4) {
+                    let choices = braces.slice(0, 4).map(pair => remainingString.slice(pair[0] + 1, pair[1]));
+                    let transformedChoices = '<div class="choice-container">' +
+                        choices.map((choice, index) => {
+                            const isCorrect = choice.includes('\\True');
+                            choice = choice.replace('\\True', '');
+                            return `<div class="choice">
+                <label class="custom-radio">
+                    <input type="radio" name="choice-${questionIndex}-${localCounter}" value="${isCorrect}">
+                    <span class="radio-label"></span>
+                    ${choice}
+                </label>
+              </div>`;
+                        }).join('') + '</div>';
+
+                    result += content.slice(lastIndex, startIndex) + transformedChoices;
+                    lastIndex = startIndex + braces[3][1] + 1;
+                    localCounter++; // Tăng biến đếm cho mỗi câu `\choice`
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+        function replaceShortAnsAB(content, questionIndex) {
+            const regex = /\\shortans\s*\{/g;
+            let result = '';
+            let lastIndex = 0;
+            let localCounter = 1;
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length > 0) {
+                    let answerContent = remainingString.slice(braces[0][0] + 1, braces[0][1]);
+                    // Loại bỏ ký tự $, {, } và thay thế , bằng .
+                    let cleanedAnswer = answerContent.replace(/[\${}]/g, '').replace(/,/g, '.');
+                    result += content.slice(lastIndex, startIndex) + `<div class="short-ans"><input type="text" class="short-ans-input" maxlength="10" data-correct-answer="${cleanedAnswer}" name="shortans-${questionIndex}-${localCounter}"></div>`;
+                    lastIndex = startIndex + braces[0][1] + 1;
+                    localCounter++;
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+
+        function replaceLoigiaiABG(content, questionIndex) {
+            const regex = /\\loigiai\s*\{/g;
+
+            let result = '';
+            let lastIndex = 0;
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length > 0) {
+                    let loigiaiContent = remainingString.slice(braces[0][0] + 1, braces[0][1]);
+                    result += content.slice(lastIndex, startIndex) + `<div class="loigiai" id="loigiai-${questionIndex}">${loigiaiContent}</div>
+  <button class="toggle-solution" data-solution="loigiai-${questionIndex}" disabled>Xem lời giải</button>`;
+                    lastIndex = startIndex + braces[0][1] + 1;
+                    questionIndex++;  // Tăng giá trị `questionIndex` cho mỗi câu hỏi
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+        function replaceLoigiaiAB(content, questionIndex) {
+            const regex = /\\loigiai\s*\{/g;
+
+            let result = '';
+            let lastIndex = 0;
+
+            content.replace(regex, (match, offset, string) => {
+                let startIndex = offset + match.length - 1;
+                let remainingString = string.slice(startIndex);
+                let braces = layCacNgoacLon(remainingString);
+
+                if (braces.length > 0) {
+                    let loigiaiContent = remainingString.slice(braces[0][0] + 1, braces[0][1]);
+
+                    // Hiển thị lời giải mặc định và cho phép toggle để ẩn/hiện lời giải
+                    result += content.slice(lastIndex, startIndex) + `
+                <div class="loigiai" id="loigiai-${questionIndex}">${loigiaiContent}</div>
+                <button class="toggle-solution" data-solution="loigiai-${questionIndex}">Ẩn lời giải</button>`;
+
+                    lastIndex = startIndex + braces[0][1] + 1;
+                    questionIndex++;  // Tăng giá trị `questionIndex` cho mỗi câu hỏi
+                }
+                return match;
+            });
+
+            result += content.slice(lastIndex);
+            return result;
+        }
+
+        // Hàm thêm sự kiện cho nút toggle để ẩn/hiện lời giải
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('toggle-solution')) {
+                const solutionId = event.target.getAttribute('data-solution');
+                const solutionElement = document.getElementById(solutionId);
+
+                if (solutionElement.style.display === 'none') {
+                    solutionElement.style.display = 'block';
+                    event.target.textContent = 'Ẩn lời giải';
+                } else {
+                    solutionElement.style.display = 'none';
+                    event.target.textContent = 'Xem lời giải';
+                }
+            }
+        });
+
+        function replaceBreaksInLaTeX(input) {
+            // Định nghĩa các môi trường toán học và cấu trúc LaTeX cần bảo vệ
+            const mathEnvironments = [
+                /\$\$.*?\$\$/gs,               // $$...$$
+                /\$.*?\$/g,                    // $...$
+                /\\\(.+?\\\)/gs,               // \( ... \)
+                /\\\[.+?\\\]/gs,               // \[ ... \]
+                /\\begin{equation}.*?\\end{equation}/gs,
+                /\\begin{align}.*?\\end{align}/gs,
+                /\\begin{math}.*?\\end{math}/gs,
+                /\\begin{displaymath}.*?\\end{displaymath}/gs,
+                /\\begin{tabular}.*?\\end{tabular}/gs,
+                /\\begin{array}.*?\\end{array}/gs,
+                /\\begin{matrix}.*?\\end{matrix}/gs,
+                /\\begin{eqnarray\*?}.*?\\end{eqnarray\*?}/gs,
+                /\\begin{aligned}.*?\\end{aligned}/gs
+            ];
+
+            // Lưu các môi trường toán học đã tìm được vào một mảng để tránh bị thay đổi
+            let matches = [];
+
+            // Tìm tất cả các đoạn trong môi trường toán học và lưu lại
+            mathEnvironments.forEach((regex) => {
+                let match;
+                while ((match = regex.exec(input)) !== null) {
+                    // Thêm khoảng trống trước và sau các dấu > và <
+                    let modifiedMatch = match[0].replace(/>/g, ' > ').replace(/</g, ' < ');
+                    matches.push(modifiedMatch);
+                    input = input.replace(match[0], `__PLACEHOLDER_${matches.length - 1}__`);
+                }
+            });
+
+            // Thay thế tất cả các dấu \\ thành <br> trong phần không phải toán học
+            let output = input.replace(/\\\\/g, '<br>');
+
+            // Khôi phục lại các môi trường toán học đã lưu
+            matches.forEach((original, index) => {
+                output = output.replace(`__PLACEHOLDER_${index}__`, original);
+            });
+
+            return output;
+        }
+
+        function removeLatexCommentsAB(content) {
+            // Thay thế {listEX} thành {enumerate}
+            content = content.replace(/{listEX}/g, '{enumerate}');
+
+            // Thay thế {aligned}[t] thành {aligned}
+            content = content.replace(/{aligned}\[t\]/g, '{aligned}');
+
+            // Thay thế \quad và \qquad bằng khoảng trắng
+            content = content.replace(/\\quad|\\qquad/g, ' ');
+
+            // Thay thế \newline bằng <br>
+            content = content.replace(/\\newline/g, '<br>');
+            content = content.replace(/\\lq\\lq/g, '"');
+            content = content.replace(/\\rq\\rq/g, '"');
+            // Thay thế \textbf{nội dung} và \bf{nội dung} thành <strong>nội dung</strong>
+            content = content.replace(/\\textbf\{(.*?)\}/g, '<strong>$1</strong>');
+            content = content.replace(/\\bf\{(.*?)\}/g, '<strong>$1</strong>');
+
+            // Thay thế \textit{nội dung} thành <em>nội dung</em>
+            content = content.replace(/\\textit\{(.*?)\}/g, '<em>$1</em>');
+
+            // Thay thế kết hợp \textbf{\textit{nội dung}} và \textit{\textbf{nội dung}} thành <strong><em>nội dung</em></strong>
+            content = content.replace(/\\textbf\{\\textit\{(.*?)\}\}/g, '<strong><em>$1</em></strong>');
+            content = content.replace(/\\textit\{\\textbf\{(.*?)\}\}/g, '<em><strong>$1</strong></em>');
+
+            // Xóa bỏ các comment (phần sau dấu % trong mỗi dòng)
+            content = content.replace(/%.*$/gm, '');
+
+            return content;
+        }
+
+        function renderMath() {
+                // Lấy nội dung từ textarea có id là 'outputCode'
+                let content = document.getElementById('outputCode').value;
+
+                // Nếu bạn có hàm convertLatexToHtmlAB và processContent, hãy sử dụng chúng
+                content = convertLatexToHtmlAB(content);
+                content = processContent(content);
+
+                // Đặt nội dung đã xử lý vào phần tử có id là 'renderResult'
+                const renderElement = document.getElementById('renderResult');
+                renderElement.innerHTML = content;
+
+                // Gọi MathJax để render nội dung toán học trong phần tử 'renderElement'
+                MathJax.typesetPromise([renderElement]).then(() => {
+                    console.log("MathJax rendering complete");
+                }).catch((err) => {
+                    console.error("MathJax rendering error: ", err.message);
+                });
+            }
+
+        document.getElementById('outputCode').addEventListener('input', renderMath);
+
+        // Manually trigger the event for initial rendering
+        document.getElementById('outputCode').dispatchEvent(new Event('input'));
+    </script>
+
+</body>
+
+</html>

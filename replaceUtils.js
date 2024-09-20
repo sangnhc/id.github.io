@@ -38,6 +38,51 @@ export function convertArrayToHoac(text) {
         return '\\hoac{\n' + lines.join(' \\\\\n') + '\n}';
     });
 }
+function convertHoacToArray(content) {
+    const hoacRegex = /\\hoac\s*\{/g;
+    let match;
+    while ((match = hoacRegex.exec(content)) !== null) {
+        const startIndex = match.index;
+        const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+
+        if (ngoacLon.length > 0) {
+            const [batDau, ketThuc] = ngoacLon[0];
+            const innerContent = content.slice(startIndex + batDau + 1, startIndex + ketThuc);
+
+            // Xóa bỏ các dòng trống và khoảng trắng dư thừa
+            const lines = innerContent.replace(/^\s*$/gm, '').trim().split(/\\\\/).map(line => line.trim().replace(/^&\s*/, ''));
+
+            // Chuyển thành \left[ \begin{array}{l} ... \end{array} \right.
+            const replacedMatch = `\\left[\\begin{array}{l} ${lines.join(' \\\\\n')} \\end{array}\\right.`;
+            const fullMatch = content.slice(startIndex, startIndex + ketThuc + 1);
+            content = content.replace(fullMatch, replacedMatch);
+        }
+    }
+    return content;
+}
+function convertHevaToCases(content) {
+    const hevaRegex = /\\heva\s*\{/g;
+    let match;
+    while ((match = hevaRegex.exec(content)) !== null) {
+        const startIndex = match.index;
+        const ngoacLon = layCacNgoacLon(content.slice(startIndex));
+
+        if (ngoacLon.length > 0) {
+            const [batDau, ketThuc] = ngoacLon[0];
+            const innerContent = content.slice(startIndex + batDau + 1, startIndex + ketThuc);
+
+            // Xóa bỏ các dòng trống và khoảng trắng dư thừa
+            const lines = innerContent.replace(/^\s*$/gm, '').trim().split(/\\\\/).map(line => line.trim().replace(/^&\s*/, ''));
+
+            // Chuyển thành \begin{cases} ... \end{cases}
+            const replacedMatch = `\\begin{cases}\n${lines.join(' \\\\\n')}\n\\end{cases}`;
+            const fullMatch = content.slice(startIndex, startIndex + ketThuc + 1);
+            content = content.replace(fullMatch, replacedMatch);
+        }
+    }
+    return content;
+}
+
 // yourFileName.js
 export function removeSpacesInMathMode(text) {
     text = text.replace(/\^\{\prime\}/g, "'");
