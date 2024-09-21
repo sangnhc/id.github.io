@@ -156,10 +156,13 @@ export function fixCodeTool() {
     inputCode = addSectionTitles(inputCode)
     // Các thay thế hiện tại
     inputCode = inputCode.replace('Lò̀i giải','Lời giải');
+    // Sử dụng biểu thức chính quy để xóa tất cả các ký tự giữa "shortans" và "{"
+    inputCode = inputCode.replace(/shortans.*?\{/g, 'shortans{');
     // inputCode = them_dola_cho_so_new(inputCode);
     inputCode = inputCode.replace(/Câu\s+\$(\d+)\$\s*([.:])/g, 'Câu $1$2');
     inputCode = inputCode.replace(/\\mathrm{R}/g, '\\mathbb{R}');
-    inputCode = inputCode.replace(/\\immini{/g, '');
+    inputCode = inputCode.replace(/\\immini.*?\{/g, '');
+     inputCode = inputCode.replace(/\\immini{/g, '');
     inputCode = inputCode.replace(/\[thm\]/g, '');
     inputCode = convertNumberToMathMode(inputCode);
     inputCode = inputCode.replace(/}\s*{/g, '}{');
@@ -179,16 +182,68 @@ export function fixCodeTool() {
         .catch(error => console.error('Error:', error));
 }
 
- export function replaceTikzEnvironment(inputCode) {
-        let tikzCounter = 1;
-        const tikzRegex = /\\begin{tikzpicture}[\s\S]*?\\end{tikzpicture}/g;
+// Mảng toàn cục để lưu trữ các khối TikZ đã tách ra
+let tikzBlocks = [];
 
-        // Thay thế từng khối với HINH1, HINH2, ...
-        inputCode = inputCode.replace(tikzRegex, () => {
-            const replacement = `<span class="highlight-hinh">HINH SỐ ${tikzCounter} Ở ĐÂY</span>`;
-            tikzCounter++;
-            return replacement;
-        });
+export function replaceTikzEnvironment(inputCode) {
+    let tikzCounter = 1;
+    const tikzRegex = /\\begin{tikzpicture}[\s\S]*?\\end{tikzpicture}/g;
 
-        return inputCode;
+    // Đặt lại mảng tikzBlocks để bắt đầu lại từ đầu
+    tikzBlocks = [];
+
+    // Thay thế từng khối với HINH1, HINH2, ... và lưu trữ khối TikZ vào mảng
+    inputCode = inputCode.replace(tikzRegex, (match) => {
+        // Lưu khối TikZ vào mảng tikzBlocks
+        tikzBlocks.push(`Hình ${tikzCounter}\n` + match +'\n');
+
+        // Thay thế bằng placeholder với chỉ số hình ảnh
+        const replacement = `<span class="highlight-hinh">HINH SỐ ${tikzCounter} Ở ĐÂY</span>`;
+        tikzCounter++;
+        return replacement;
+    });
+
+    return inputCode;
+}
+
+// Hàm tạo và tải file .tex chứa các khối TikZ đã tách ra
+export function downloadTikzFile() {
+    if (tikzBlocks.length === 0) {
+        alert('Không có hình TikZ nào để tải xuống!');
+        return;
     }
+
+    // Tạo nội dung file .tex
+    let tikzFileContent = ``;
+
+    tikzBlocks.forEach((block, index) => {
+        tikzFileContent += `
+% ---------------------------
+% Hình ${index + 1}
+% ---------------------------
+${block}
+
+`;
+    });
+
+    tikzFileContent += '';
+
+    // Tạo file blob và link để tải xuống
+    const blob = new Blob([tikzFileContent], { type: 'application/x-tex' });
+    const url = URL.createObjectURL(blob);
+
+    // Tạo link download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'FileHinh.tex';
+    document.body.appendChild(a);
+    a.click();
+
+    // Xóa link download sau khi tải xuống
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Gắn hàm vào đối tượng window để có thể gọi từ HTML
+window.downloadTikzFile = downloadTikzFile;
+
