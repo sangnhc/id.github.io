@@ -135,7 +135,7 @@ function downloadAllFiles() {
     });
 }
 
-function downloadSearchResults() {
+function downloadSearchResultsGGGG() {
     const searchResults = document.getElementById('searchResults');
     const results = searchResults.getElementsByClassName('search-result');
     if (results.length === 0) {
@@ -147,6 +147,31 @@ function downloadSearchResults() {
     for (let i = 0; i < results.length; i++) {
         const result = results[i];
         allContent += result.textContent + "\n\n";
+    }
+
+    const blob = new Blob([allContent], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, "search_results.tex");
+}
+function downloadSearchResults() {
+    const searchResults = document.getElementById('searchResults');
+    const results = searchResults.getElementsByClassName('search-result');
+    if (results.length === 0) {
+        alert("Không có kết quả tìm kiếm để tải về.");
+        return;
+    }
+
+    let allContent = "";
+    for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        let content = result.textContent.trim(); // Lấy nội dung và loại bỏ khoảng trắng đầu cuối
+
+        // Thêm dấu % vào trước link file (giả định link file xuất hiện ở đầu dòng)
+        content = content.replace(/^(.+\.tex)/m, '% $1');
+
+        // Thêm \n trước mỗi môi trường LaTeX (giả định \begin{...} bắt đầu môi trường LaTeX)
+        content = content.replace(/(\\begin\{[^}]+\})/g, "\n$1");
+
+        allContent += content + "\n\n";
     }
 
     const blob = new Blob([allContent], { type: "text/plain;charset=utf-8" });
