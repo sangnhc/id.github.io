@@ -149,7 +149,18 @@ export function layCacNgoacLon(text) {
     }
     return ngoacLon;
 }
-
+export function cleanExWithImmini(inputCode) {
+    // Tìm tất cả các đoạn từ \begin{ex} đến \end{ex}
+    return inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
+        // Kiểm tra xem đoạn đó có chứa từ khóa \immini không
+        if (content.includes('\\immini')) {
+            // Thực hiện việc thay thế các ký tự thừa trong cấu trúc \begin{tikzpicture} ... \end{tikzpicture}
+            const modifiedContent = content.replace(/}\s*\{\s*(\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\})\s*\}/g, '$1');
+            return `\\begin{ex}${modifiedContent}\\end{ex}`;
+        }
+        return match;
+    });
+}
 export function fixCodeTool() {
     let inputCode = document.getElementById('inputCode').value;
     inputCode = cleanLatexContent(inputCode)
@@ -158,11 +169,12 @@ export function fixCodeTool() {
     inputCode = inputCode.replace('Lò̀i giải','Lời giải');
     // Sử dụng biểu thức chính quy để xóa tất cả các ký tự giữa "shortans" và "{"
     inputCode = inputCode.replace(/shortans.*?\{/g, 'shortans{');
+    inputCode = cleanExWithImmini(inputCode)
     // inputCode = them_dola_cho_so_new(inputCode);
     inputCode = inputCode.replace(/Câu\s+\$(\d+)\$\s*([.:])/g, 'Câu $1$2');
     inputCode = inputCode.replace(/\\mathrm{R}/g, '\\mathbb{R}');
     inputCode = inputCode.replace(/\\immini.*?\{/g, '');
-     inputCode = inputCode.replace(/\\immini{/g, '');
+    inputCode = inputCode.replace(/\\immini{/g, '');
     inputCode = inputCode.replace(/\[thm\]/g, '');
     inputCode = convertNumberToMathMode(inputCode);
     inputCode = inputCode.replace(/}\s*{/g, '}{');
@@ -172,7 +184,7 @@ export function fixCodeTool() {
     
     // Thêm đoạn mã để thay thế môi trường TikZ
     inputCode = replaceTikzEnvironment(inputCode);
-
+    inputCode = replacePlaceholdersWithLinks(inputCode);
     fetch('replace.json')
         .then(response => response.json())
         .then(data => {
@@ -182,9 +194,10 @@ export function fixCodeTool() {
         .catch(error => console.error('Error:', error));
 }
 
-// Mảng toàn cục để lưu trữ các khối TikZ đã tách ra
+// Mảng để lưu trữ các khối TikZ
 let tikzBlocks = [];
 
+// Hàm thay thế các khối TikZ bằng placeholder
 export function replaceTikzEnvironment(inputCode) {
     let tikzCounter = 1;
     const tikzRegex = /\\begin{tikzpicture}[\s\S]*?\\end{tikzpicture}/g;
@@ -195,7 +208,7 @@ export function replaceTikzEnvironment(inputCode) {
     // Thay thế từng khối với HINH1, HINH2, ... và lưu trữ khối TikZ vào mảng
     inputCode = inputCode.replace(tikzRegex, (match) => {
         // Lưu khối TikZ vào mảng tikzBlocks
-        tikzBlocks.push(`Hình ${tikzCounter}\n` + match +'\n');
+        tikzBlocks.push(`Hình ${tikzCounter}\n` + match + '\n');
 
         // Thay thế bằng placeholder với chỉ số hình ảnh
         const replacement = `<span class="highlight-hinh">HINH SỐ ${tikzCounter} Ở ĐÂY</span>`;
@@ -203,6 +216,88 @@ export function replaceTikzEnvironment(inputCode) {
         return replacement;
     });
 
+    return inputCode;
+}
+
+// Hàm để thay thế các placeholder bằng các đường dẫn ảnh từ khung linkInput
+function replacePlaceholdersWithLinks(inputCode) {
+    // Lấy nội dung từ khung linkInput và chuyển nó thành một mảng các đường dẫn
+    let linkInput = document.getElementById('linkInput').value.trim();
+    if (!linkInput) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Thiếu link ảnh',
+            text: 'Vui lòng nhập các đường dẫn ảnh vào khung linkInput!'
+        });
+        return inputCode;
+    }
+
+    // Thay thế "thaysangnhc" trong mỗi đường dẫn thành "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2"
+    let links = linkInput.split('\n').map(link => {
+        // Thay thế chuỗi "thaysangnhc" bằng chuỗi mới
+        return link.replace("thaysangnhc", "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2").trim();
+    }).filter(link => link !== '');
+
+    // Kiểm tra nếu số lượng khối TikZ và số lượng link không bằng nhau
+    if (links.length !== tikzBlocks.length) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Không khớp số lượng',
+            text: `Số lượng hình (${tikzBlocks.length}) và số lượng link ảnh (${links.length}) không khớp! Vui lòng kiểm tra lại.`
+        });
+        return inputCode;
+    }
+
+    // Thay thế các placeholder bằng các đường dẫn ảnh tương ứng
+    inputCode = inputCode.replace(/<span class="highlight-hinh">HINH SỐ (\d+) Ở ĐÂY<\/span>/g, (match, number) => {
+        const index = parseInt(number, 10) - 1;
+        if (index >= 0 && index < links.length) {
+            return `<img src="${links[index]}" class="center-img small-size">`;
+        } else {
+            return match; // Nếu không có đủ link, giữ nguyên placeholder
+        }
+    });
+    // Thay thế đoạn }{<img src="https: thành }<img src="https: với mọi khoảng trắng
+    inputCode = inputCode.replace(/\}\s*\}\s*\{\s*<img\s+src="https:/g, '}\n<img src="https:');
+    // Tìm đoạn `small-size">` } `\loigiai{` và loại bỏ dấu `}`
+    inputCode = inputCode.replace(/small-size">\s*\}\s*\\loigiai\{/g, 'small-size">\n\\loigiai{');
+     // Xóa các ký tự giữa \choiceTF và {, giữ lại \choiceTF{
+    inputCode = inputCode.replace(/\\choiceTF[^{]*\{/g, '\\choiceTF{');
+    // Thay thế \motcot và \haicot thành \choice
+    inputCode = inputCode.replace(/\\(motcot|haicot)\b/g, '\\choice');
+    // Xóa các ký tự giữa \choice và {, trừ \choiceTF
+    inputCode = inputCode.replace(/\\choice(?!TF)[^{]*\{/g, '\\choice{');
+     // Tìm và cắt các thẻ <img ... class="center-img small-size"> trước \loigiai và di chuyển trước \choice
+    inputCode = inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
+        let modifiedContent = content;
+
+        // Kiểm tra xem có thẻ ảnh và \loigiai không
+        const imgRegex = /<img[^>]+class="center-img small-size"[^>]*>/g;
+        const loigiaiIndex = content.indexOf('\\loigiai');
+        const choiceIndex = content.indexOf('\\choice');
+        let imgTags = [];
+
+        // Tìm và loại bỏ tất cả các thẻ <img ... class="center-img small-size">
+        if (loigiaiIndex > -1 && choiceIndex > -1 && choiceIndex < loigiaiIndex) {
+            modifiedContent = modifiedContent.replace(imgRegex, (imgTag) => {
+                // Nếu thẻ ảnh nằm trước \loigiai, lưu trữ lại và loại bỏ nó
+                if (content.indexOf(imgTag) < loigiaiIndex) {
+                    imgTags.push(imgTag);
+                    return ''; // Xóa thẻ ảnh khỏi vị trí cũ
+                }
+                return imgTag;
+            });
+
+            // Di chuyển các thẻ ảnh lên trước \choice
+            if (imgTags.length > 0) {
+                modifiedContent = modifiedContent.replace('\\choice', imgTags.join('\n') + '\n\\choice');
+            }
+        }
+
+        // Trả về đoạn đã sửa đổi trong \begin{ex} ... \end{ex}
+        return `\\begin{ex}${modifiedContent}\\end{ex}`;
+    });
+    
     return inputCode;
 }
 
