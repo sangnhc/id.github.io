@@ -903,7 +903,10 @@
             <!-- Thêm nút tải file .tex -->
             <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Upload file .tex</button>
             <input type="file" id="fileInput" style="display:none" accept=".tex" onchange="loadFile(event)">
-            <button class="btn btn-primary" onclick="downloadTikzFile()">Tải File Hình TikZ</button>
+            <button class="btn btn-primary" onclick="downloadTikzFile()">Tải File Chứa Code TikZ</button>
+            <!-- Nút Lấy link Ảnh -->
+            <button class="btn btn-info" onclick="openLinkTool()">Web Lấy Link Ảnh</button>
+            <button class="btn btn-info" onclick="openLinkToolB()">Phần Mềm Tikz2PNG</button>
         </div>
         <div class="form-group">
             <label for="inputCode">Dán Đề Hoặc Load File Latex Của Thầy Cô Vào Đây:</label>
@@ -941,7 +944,12 @@
     </script> -->
     <!-- JavaScript nằm cuối cùng của body để đảm bảo các thành phần HTML đã được tải trước -->
     <script>
-        
+        function openLinkTool() {
+                window.open('https://hinh4web.vercel.app/', '_blank');
+            }
+        function openLinkToolB() {
+                window.open('https://drive.google.com/file/d/1a6AQSvmIW4AYwms8kWnp3awscOjjTlQQ/view', '_blank');
+            }
         function loadFile(event) {
             var input = event.target;
             var reader = new FileReader();
