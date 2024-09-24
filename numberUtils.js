@@ -275,6 +275,7 @@ export function them_dola_cho_so_new(text) {
     // Replace \lim _ with \lim \limits_
     resultText = resultText.replace(/\\lim\s*_/g, '\\lim\\limits_');
     resultText = resultText.replace(/\s+}$/gm, '}');
+    resultText = resultText.replace(/\s+}/gm, '}');
     resultText = resultText.replace(/\\int\s*_/g, '\\int\\limits_');
     resultText = resultText.replace(/(?<!\\displaystyle\s*)\\int/g, '\\displaystyle\\int');
     return resultText;
