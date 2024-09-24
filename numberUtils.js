@@ -118,16 +118,25 @@ export function thay_haicham_colon(text) {
     // Biểu thức chính quy để tìm các đoạn nằm trong dấu $...$
     const mathModePattern = /\$([^$]+)\$/g;
     
-    // Chỉ thay thế các ký tự trong đoạn $...$
+    // Mảng để lưu trữ các đoạn đã thay thế
+    let replacedSegments = [];
+    
+    // Thay thế các ký tự trong đoạn $...$
     text = text.replace(mathModePattern, (match, content) => {
-        // Thay thế dấu : bằng \colon, dấu . thành \cdot, và dấu , thành {,} nếu trước và sau là số
+        // Thay thế dấu : bằng \colon chỉ trong đoạn toán học
         let processedContent = content.replace(/:/g, '\\colon ')
                                       .replace(/(\d),(\d)/g, '$1{,}$2');
         // Loại bỏ khoảng trắng trước dấu } ở cuối dòng nếu có trong đoạn $
         processedContent = processedContent.replace(/ \}$/gm, '}');
         
-        // Trả về nội dung đã xử lý kèm theo dấu $
-        return `$${processedContent}$`;
+        // Đưa nội dung đã xử lý vào mảng và giữ chỗ bằng một ký tự đặc biệt
+        replacedSegments.push(`$${processedContent}$`);
+        return `@REPLACEMENT${replacedSegments.length - 1}@`; // Đặt chỗ với chỉ số đoạn đã thay thế
+    });
+
+    // Sau khi thay thế xong đoạn toán học, thay thế lại các chỗ đã giữ chỗ
+    replacedSegments.forEach((segment, index) => {
+        text = text.replace(`@REPLACEMENT${index}@`, segment);
     });
 
     // Trả về text đã được xử lý chỉ trong đoạn $
@@ -276,7 +285,10 @@ export function them_dola_cho_so_new(text) {
     resultText = resultText.replace(/\\lim\s*_/g, '\\lim\\limits_');
     resultText = resultText.replace(/\s+}$/gm, '}');
     resultText = resultText.replace(/\s+}/gm, '}');
+    resultText = resultText.replace(/\\vec\s*{/g, '\\overrightarrow\s*{');
     resultText = resultText.replace(/\\int\s*_/g, '\\int\\limits_');
     resultText = resultText.replace(/(?<!\\displaystyle\s*)\\int/g, '\\displaystyle\\int');
+    resultText = resultText.replace(/d\s*x\$\}/g, '\\mathrm{\\,d}x$}');
+
     return resultText;
 }

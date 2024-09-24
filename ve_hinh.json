@@ -217,6 +217,13 @@
             }
         },
     "Khối Tròn Xoay": {
+        "Quay Quanh Ox": {
+            "Quay f(x)": {
+                "content": "\\begin{tikzpicture}   \n \\def\\xA{0.5}\\def\\yA{1.75}\n \\def\\xB{2}  \\def\\yB{0}\n \\def\\xC{4} \\def\\yC{2}\n \\def\\xD{7} \\def\\yD{1}\n \\def\\xE{9} \\def\\yE{1.5} \n \\pgfmathsetmacro{\\ymax}{max(\\yA,\\yB,\\yC,\\yD,\\yE)}\n \\pgfmathsetmacro{\\ymin}{-\\ymax-1}\n \\pgfmathsetmacro{\\ymaxNew}{\\ymax+1}\n \\draw[->] (0,\\ymin) -- (0,\\ymaxNew) node[above] {$y$};\n \\draw[->](-1,0) -- (\\xE+1,0) node[above] {$x$};\n \\coordinate (A) at (\\xA,\\yA);\n \\coordinate (B) at (\\xB,\\yB);\n \\coordinate (C) at (\\xC,\\yC);\n \\coordinate (D) at (\\xD,\\yD);\n \\coordinate (E) at (\\xE,\\yE);\n \\coordinate (A') at (\\xA,{-\\yA});\n \\coordinate (B') at (\\xB,{-\\yB});\n \\coordinate (C') at (\\xC,{-\\yC});\n \\coordinate (D') at (\\xD,{-\\yD});\n \\coordinate (E') at (\\xE,{-\\yE});\n \\draw[dashed] (A)--(A') (B)--(B') (C)--(C') (D)--(D') (E)--(E');\n \\draw[smooth, thick] plot coordinates {(A) (B) (C) (D) (E)};\n \\draw[smooth, thick] plot coordinates {(A') (B') (C') (D') (E')};\n \\filldraw[dashed,pattern=dots, pattern color=blue] (\\xA,0) -- (\\xA,\\yA) -- plot[smooth] coordinates {(\\xA,\\yA) (\\xB,\\yB) (\\xC,\\yC) (\\xD,\\yD) (\\xE,\\yE)} -- (\\xE,0) -- cycle;\n \\foreach \\point/\\y in {A/\\yA, B/\\yB, C/\\yC, D/\\yD} {\n \\coordinate (Mid\\point) at ($(\\point)!0.5!(\\point')$);\n \\draw[blue] (Mid\\point) ++(90:\\y/4 and \\y) arc (90:270:\\y/4 and \\y);\n \\draw[dashed,red] (Mid\\point) ++(270:\\y/4 and \\y) arc (270:450:\\y/4 and \\y);\n }\n \\coordinate (MidE) at ($(E)!0.5!(E')$);\n \\draw[blue] (MidE) ellipse (\\yE/4 and \\yE);\n \\foreach \\point/\\label in {C/f(x)} {\n \\fill (\\point) circle (0.1pt) node[above right] {$\\label$};\n }\n \\fill (0,0) circle (1.5pt) node[above left]{$O$};\n \\end{tikzpicture}",
+                "image": "HinhTIKZ/fxquanhOx.png"
+            }
+        }
+        ,
         "Khối Nón": {
             "Nón Cơ Bản": {
                 "content": "\\begin{tikzpicture}[scale=1, font=\\footnotesize, line join=round, line cap=round, >=stealth]\n\\def\\x{3} % Bán kính trụ lớn\n\\pgfmathsetmacro{\\y}{\\x/4} % Bán kính trục bé\n\\def\\h{5} % Chiều cao\n\\coordinate[label=left:$O$] (O) at (0,0);\n\\coordinate[label=right:$A$] (A) at (\\x,0);\n\\coordinate[label=above:$S$] (S) at (0,\\h);\n\\draw (A) arc (0:-180:{\\x} and {\\y})--(S)--cycle;\n\\draw[dashed] (S)--(O)--(A) arc (0:180:{\\x} and {\\y});\n\\foreach \\diem in {A,S,O} \\fill (\\diem) circle (1pt);\n\\end{tikzpicture}",
