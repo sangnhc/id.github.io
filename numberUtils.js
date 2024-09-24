@@ -258,7 +258,7 @@ export function them_dola_cho_so_new(text) {
     const numberPattern = /\b\d+\b/g;
     escapedText = escapedText.map(part => {
         if (!part.isMath) {
-            part.text = part.text.replace(numberPattern, match => `$${match}$`);
+            part.text = part.text.replace(numberPattern, match => `${match}`);
         }
         return part;
     });
