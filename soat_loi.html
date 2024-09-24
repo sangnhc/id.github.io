@@ -186,6 +186,8 @@
             border-bottom: 1px solid #ccc;
         }
     </style>
+    <!-- Thêm SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -537,7 +539,7 @@
             const blob = new Blob([output], { type: 'text/plain' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = 'latex_content.txt';
+            link.download = 'latex_content.tex';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -567,13 +569,25 @@
         });
 
         document.getElementById('copyButton').addEventListener('click', function () {
-            const outputText = document.getElementById('outputBody').innerText;
-            navigator.clipboard.writeText(outputText).then(() => {
-                alert('Đã sao chép nội dung!');
-            }).catch(err => {
-                alert('Không thể sao chép nội dung!');
+                const textareas = document.querySelectorAll('.fixed-size-textarea');
+                const outputText = Array.from(textareas).map(el => el.value).join('\n\n');
+                navigator.clipboard.writeText(outputText).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đã sao chép nội dung!',
+                        showConfirmButton: false,
+                        timer: 1500 // Thời gian hiển thị thông báo (1.5 giây)
+                    });
+                }).catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Không thể sao chép nội dung!',
+                        showConfirmButton: false,
+                        timer: 1500 // Thời gian hiển thị thông báo (1.5 giây)
+                    });
+                });
             });
-        });
+
 
         document.getElementById('saveButton').addEventListener('click', saveContent);
 
