@@ -2003,7 +2003,7 @@
             content = content.replace(/\\textit\{(.*?)\}/g, '<em>$1</em>');
             content = content.replace(/\\textbf\{\\textit\{(.*?)\}\}/g, '<strong><em>$1</em></strong>');
             content = content.replace(/\\textit\{\\textbf\{(.*?)\}\}/g, '<em><strong>$1</strong></em>');
-            content = content.replace(/%.*$/gm, '');
+            content = content.replace(/(^|[^\\])%.*/gm, '$1');
             
             return content;
         }
