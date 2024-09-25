@@ -90,6 +90,10 @@
             color: #333;
             margin-bottom: 20px;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            font-family: "Roboto", "Arial", "Helvetica", sans-serif;
+    font-weight: bold;
+    letter-spacing: normal; /* Giảm letter-spacing */
+    text-transform: none; /* Không chuyển đổi chữ */
         }
         h1 {
             font-size: 3rem;
@@ -511,7 +515,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             z-index: 3;
-            max-width: 400px;
+            max-width: 650px;
             width: 100%;
             font-family: 'Arial', sans-serif;
             text-align: center;
@@ -975,6 +979,14 @@
             display: none;
             text-align: left;
         }
+        .highlight-hinh {
+            color: #ffffff; /* Màu chữ trắng */
+            background-color: #ff5733; /* Màu nền cam đậm */
+            font-weight: bold; /* Chữ đậm */
+            padding: 5px 10px; /* Thêm khoảng đệm xung quanh chữ */
+            border-radius: 5px; /* Bo tròn góc */
+            display: inline-block; /* Giữ inline nhưng có padding */
+        } 
     </style>
 </head>
 
@@ -1042,6 +1054,88 @@
             updateFontSize();
     </script>
     <script>
+        function cleanExWithImmini(inputCode) {
+                // Tìm tất cả các đoạn từ \begin{ex} đến \end{ex}
+                return inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
+                    // Kiểm tra xem đoạn đó có chứa từ khóa \immini không
+                    if (content.includes('\\immini')) {
+                        // Thực hiện việc thay thế các ký tự thừa trong cấu trúc \begin{tikzpicture} ... \end{tikzpicture}
+                        const modifiedContent = content.replace(/}\s*\{\s*(\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\})\s*\}/g, '$1');
+                        return `\\begin{ex}${modifiedContent}\\end{ex}`;
+                    }
+                    return match;
+                });}
+        function replacePlaceholdersWithLinks(inputCode) {
+                // Tìm và cắt các thẻ <img ... class="center-img small-size"> trước \loigiai và di chuyển trước \choice
+                inputCode = inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
+                    let modifiedContent = content;
+
+                    // Kiểm tra xem có thẻ ảnh và \choice không
+                    const imgRegex = /<span class="highlight-hinh">HINH SỐ \d+ Ở ĐÂY<\/span>/g;
+                    const loigiaiIndex = content.indexOf('\\loigiai');
+                    const choiceIndex = content.indexOf('\\choice');
+                    let imgTags = [];
+
+                    // Tìm và loại bỏ tất cả các thẻ <span class="highlight-hinh">HINH SỐ ...</span> trong phần \immini
+                    if (choiceIndex > -1) {
+                        modifiedContent = modifiedContent.replace(imgRegex, (imgTag) => {
+                            // Nếu thẻ ảnh nằm trước \loigiai hoặc nằm trong phần \immini
+                            if (content.indexOf(imgTag) < loigiaiIndex || loigiaiIndex === -1) {
+                                imgTags.push(imgTag);
+                                return ''; // Xóa thẻ ảnh khỏi vị trí cũ
+                            }
+                            return imgTag;
+                        });
+
+                        // Di chuyển các thẻ ảnh lên trước \choice
+                        if (imgTags.length > 0) {
+                            modifiedContent = modifiedContent.replace('\\choice', imgTags.join('\n') + '\n\\choice');
+                        }
+                    }
+
+                    // Trả về đoạn đã sửa đổi trong \begin{ex} ... \end{ex}
+                    return `\\begin{ex}${modifiedContent}\\end{ex}`;
+                });
+
+                return inputCode;
+            }
+
+
+            // Biến để lưu các khối TikZ
+            let tikzBlocks = [];
+            function replaceTikzEnvironment(inputCode) {
+                inputCode = cleanExWithImmini(inputCode)
+                inputCode = inputCode.replace(/\\immini.*?\{/g, '');
+                inputCode = inputCode.replace(/\\immini{/g, '');
+                inputCode = inputCode.replace(/\[thm\]/g, '');                
+                let tikzCounter = 1;
+                const tikzRegex = /\\begin{tikzpicture}[\s\S]*?\\end{tikzpicture}/g;
+
+                // Đặt lại mảng tikzBlocks để bắt đầu lại từ đầu
+                tikzBlocks = [];
+
+                // Thay thế từng khối với HINH1, HINH2, ... và lưu trữ khối TikZ vào mảng
+                inputCode = inputCode.replace(tikzRegex, (match) => {
+                    // Lưu khối TikZ vào mảng tikzBlocks
+                    tikzBlocks.push(`Hình ${tikzCounter}\n` + match + '\n');
+
+                    // Thay thế bằng placeholder với chỉ số hình ảnh
+                    const replacement = `<span class="highlight-hinh">HINH SỐ ${tikzCounter} Ở ĐÂY</span>`;
+                    tikzCounter++;
+                    return replacement;
+                });
+
+                // Truyền tikzCounter vào hàm replacePlaceholdersWithLinks
+                inputCode = replacePlaceholdersWithLinks(inputCode, tikzCounter);
+                // Xóa các dòng trống, bao gồm các dòng chỉ chứa khoảng trắng
+                inputCode = inputCode.replace(/^\s*[\r\n]/gm, '');
+                inputCode = inputCode.replace(/<span class="highlight-hinh">HINH SỐ \d+ Ở ĐÂY<\/span>/g, match => {
+                    return `<div style="text-align: center; margin: 10px 0;">${match}</div>`;
+                });
+                inputCode = inputCode.replace(/^\s*(\\cau|\\Closesolutionfile|\\indapan|\\Opensolutionfile).*$/gm, '');
+                return inputCode;
+            }
+
         // Hàm đọc file và dán nội dung vào textarea
         document.getElementById('loadTexFile').addEventListener('change', function (event) {
             const file = event.target.files[0]; // Lấy file đầu tiên từ input
@@ -1051,7 +1145,8 @@
                 // Khi file được đọc xong
                 reader.onload = function (e) {
                     const content = e.target.result; // Lấy nội dung file
-                    document.getElementById('outputCode').value = content; // Dán vào textarea
+                    const replacedContent = replaceTikzEnvironment(content); // Thay thế các khối TikZ
+                    document.getElementById('outputCode').value = replacedContent; // Dán vào textarea
                     document.getElementById('outputCode').dispatchEvent(new Event('input')); // Kích hoạt render lại nội dung LaTeX
 
                     // Ẩn input sau khi load file
@@ -1161,13 +1256,13 @@
     <script type="module">
         import { wordtotex } from './wordtotex.js';
         import { word2tex } from './word2tex.js';
-        import { fixCode } from './fixCode.js';
+        import { fixCodeTool } from './fixCodeTool.js';
         import { wordtoTF } from './wordtoTF.js';
         window.wordtotex = wordtotex;
         window.word2tex = word2tex;
-        window.fixCode = fixCode;
+        window.fixCodeTool = fixCodeTool;
         window.wordtoTF = wordtoTF;
-
+        
         function layCacNgoacLon(text) {
             let ngoacLon = [];
             let demNgoac = 0;
@@ -1408,6 +1503,7 @@
             htmlContent = replaceHevaAB(htmlContent);
             htmlContent = replaceHoacAB(htmlContent);
             htmlContent = removeLatexCommentsAB(htmlContent);
+            
             htmlContent = htmlContent.replace(/\\begin{itemize}/g, '<ul>')
                 .replace(/\\end{itemize}/g, '</ul>')
                 .replace(/\\item\s+/g, '<li>');
