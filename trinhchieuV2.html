@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Đảm bảo MathJax được tải đúng cách từ CDN -->
     <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -1011,6 +1012,7 @@
             <div class="form-group">
                 <button id="increaseFont" class="btn btn-info">Tăng Kích Thước Chữ</button>
                 <button id="decreaseFont" class="btn btn-info">Giảm Kích Thước Chữ</button>
+                <button id="replaceLinks" class="btn btn-success">Thay thế link ảnh</button>
             </div>
             <!-- Thêm nút đổi màu MathJax -->
             <div class="form-group">
@@ -1059,58 +1061,17 @@
             updateFontSize();
     </script>
     <script>
-        // Hàm để thay thế các placeholder bằng các đường dẫn ảnh từ khung linkInput
-            function replacePlaceholdersWithLinksH(inputCode) {
-                // Lấy nội dung từ khung linkInput và chuyển nó thành một mảng các đường dẫn
-                let linkInput = document.getElementById('linkInput').value.trim();
-                if (!linkInput) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Thiếu link ảnh',
-                        text: 'Vui lòng nhập các đường dẫn ảnh vào khung linkInput!'
-                    });
-                    return inputCode;
-                }
-
-                // Thay thế "thaysangnhc" trong mỗi đường dẫn thành "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2"
-                let links = linkInput.split('\n').map(link => {
-                    // Thay thế chuỗi "thaysangnhc" bằng chuỗi mới
-                    return link.replace("thaysangnhc", "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2").trim();
-                }).filter(link => link !== '');
-
-                // Kiểm tra nếu số lượng khối TikZ và số lượng link không bằng nhau
-                if (links.length !== tikzBlocks.length) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Không khớp số lượng',
-                        text: `Số lượng hình (${tikzBlocks.length}) và số lượng link ảnh (${links.length}) không khớp! Vui lòng kiểm tra lại.`
-                    });
-                    return inputCode;
-                }
-
-                // Thay thế các placeholder bằng các đường dẫn ảnh tương ứng
-                inputCode = inputCode.replace(/<span class="highlight-hinh">HINH SỐ (\d+) Ở ĐÂY<\/span>/g, (match, number) => {
-                    const index = parseInt(number, 10) - 1;
-                    if (index >= 0 && index < links.length) {
-                        return `<img src="${links[index]}" class="center-img small-size">`;
-                    } else {
-                        return match; // Nếu không có đủ link, giữ nguyên placeholder
-                    }
-                });
-
-                return inputCode;
-            }
         function cleanExWithImmini(inputCode) {
-                // Tìm tất cả các đoạn từ \begin{ex} đến \end{ex}
-                return inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
-                    // Kiểm tra xem đoạn đó có chứa từ khóa \immini không
-                    if (content.includes('\\immini')) {
-                        // Thực hiện việc thay thế các ký tự thừa trong cấu trúc \begin{tikzpicture} ... \end{tikzpicture}
-                        const modifiedContent = content.replace(/}\s*\{\s*(\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\})\s*\}/g, '$1');
-                        return `\\begin{ex}${modifiedContent}\\end{ex}`;
-                    }
-                    return match;
-                });}
+            // Tìm tất cả các đoạn từ \begin{ex} đến \end{ex}
+            return inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
+                // Kiểm tra xem đoạn đó có chứa từ khóa \immini không
+                if (content.includes('\\immini')) {
+                    // Thực hiện việc thay thế các ký tự thừa trong cấu trúc \begin{tikzpicture} ... \end{tikzpicture}
+                    const modifiedContent = content.replace(/}\s*\{\s*(\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\})\s*\}/g, '$1');
+                    return `\\begin{ex}${modifiedContent}\\end{ex}`;
+                }
+                return match;
+            });}
         function replacePlaceholdersWithLinks(inputCode) {
                 // Tìm và cắt các thẻ <img ... class="center-img small-size"> trước \loigiai và di chuyển trước \choice
                 inputCode = inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
@@ -1151,7 +1112,7 @@
             let tikzBlocks = [];
             function replaceTikzEnvironment(inputCode) {
                 inputCode = cleanExWithImmini(inputCode)
-                inputCode = inputCode.replace(/\\immini.*?\{/g, '');
+                inputCode = inputCode.replace(/\\immini*?\{/g, '');
                 inputCode = inputCode.replace(/\\immini{/g, '');
                 inputCode = inputCode.replace(/\[thm\]/g, '');                
                 let tikzCounter = 1;
@@ -1204,8 +1165,57 @@
                 reader.readAsText(file);
             }
         });
+
     </script>
-   
+<script>
+    // Hàm thay thế các placeholder bằng các đường dẫn ảnh từ khung linkInput
+    function replacePlaceholdersWithLinksH(inputCode) {
+        // Lấy nội dung từ khung linkInput và chuyển nó thành một mảng các đường dẫn
+        let linkInput = document.getElementById('linkInput').value.trim();
+        if (!linkInput) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Thiếu link ảnh',
+                text: 'Vui lòng nhập các đường dẫn ảnh vào khung linkInput!'
+            });
+            return inputCode;
+        }
+
+        // Tạo mảng chứa các đường dẫn từ linkInput
+        let links = linkInput.split('\n').map(link => link.trim()).filter(link => link !== '');
+
+        // Kiểm tra số lượng link với số lượng placeholder
+        let placeholders = inputCode.match(/<span class="highlight-hinh">HINH SỐ \d+ Ở ĐÂY<\/span>/g);
+        if (placeholders && links.length !== placeholders.length) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Không khớp số lượng',
+                text: `Số lượng hình (${placeholders.length}) và số lượng link ảnh (${links.length}) không khớp!`
+            });
+            return inputCode;
+        }
+
+        // Thay thế các placeholder bằng các đường dẫn ảnh tương ứng
+        inputCode = inputCode.replace(/<div style="text-align: center; margin: 10px 0;"><span class="highlight-hinh">HINH SỐ (\d+) Ở ĐÂY<\/span><\/div>/g, (match, number) => {
+            const index = parseInt(number, 10) - 1;
+            if (index >= 0 && index < links.length) {
+                return `<img src="${links[index]}" class="center-img small-size">`;
+            } else {
+                return match; // Nếu không có đủ link, giữ nguyên placeholder
+            }
+        });
+
+        return inputCode;
+    }
+
+    // Sự kiện khi nhấn nút "Thay thế link ảnh"
+    document.getElementById('replaceLinks').addEventListener('click', function () {
+        let inputCode = document.getElementById('outputCode').value;
+        let replacedContent = replacePlaceholdersWithLinksH(inputCode);
+        document.getElementById('outputCode').value = replacedContent;
+    });
+</script>
+
     <!-- Kết quả trình chiếu -->
     <div id="slidesContainer"></div>
 
