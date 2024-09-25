@@ -1103,7 +1103,7 @@
                     // Trả về đoạn đã sửa đổi trong \begin{ex} ... \end{ex}
                     return `\\begin{ex}${modifiedContent}\\end{ex}`;
                 });
-
+                
                 return inputCode;
             }
 
@@ -1113,6 +1113,8 @@
             function replaceTikzEnvironment(inputCode) {
                 inputCode = cleanExWithImmini(inputCode)
                 inputCode = inputCode.replace(/\\immini*?\{/g, '');
+                // Dùng cờ 's' để khớp với ký tự xuống dòng
+                inputCode = inputCode.replace(/\\immini\s*\{/gs, '');
                 inputCode = inputCode.replace(/\\immini{/g, '');
                 inputCode = inputCode.replace(/\[thm\]/g, '');                
                 let tikzCounter = 1;
@@ -1140,7 +1142,10 @@
                     return `<div style="text-align: center; margin: 10px 0;">${match}</div>`;
                 });
                 inputCode = inputCode.replace(/^\s*(\\cau|\\Closesolutionfile|\\indapan|\\Opensolutionfile).*$/gm, '');
-                
+                inputCode = inputCode.replace(/(\\shortans\{[^}]*\})(<div[^>]*>\s*<span[^>]*>HINH SỐ \d+ Ở ĐÂY<\/span><\/div>)/g, function (match, shortans, divTag) {
+                    return divTag + '\n' + shortans;
+                });
+
                 return inputCode;
             }
 
@@ -1999,12 +2004,13 @@
             content = content.replace(/\\textbf\{\\textit\{(.*?)\}\}/g, '<strong><em>$1</em></strong>');
             content = content.replace(/\\textit\{\\textbf\{(.*?)\}\}/g, '<em><strong>$1</strong></em>');
             content = content.replace(/%.*$/gm, '');
+            
             return content;
         }
 
         // Hàm render MathJax và cập nhật màu
             function renderMath() {
-                let content = document.getElementById('outputCode').value;
+                let content = document.getElementById('outputCode').value;           
                 let processed = convertLatexToHtmlAB(content); // Xử lý nội dung LaTeX
 
                 // Xóa các nút trước khi thêm mới
