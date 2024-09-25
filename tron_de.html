@@ -403,8 +403,66 @@ function loadJSON(filePath, callback) {
         return positions;
     }
 
+    // Function to shuffle options within \choice and \choiceTF
+        function hoanViCacNgoacLon(noiDung) {
+            // Find the position of \choice or \choiceTF
+            let choiceIndex = noiDung.search(/\\choice(?!TF)/);
+            let choiceTFIndex = noiDung.search(/\\choiceTF/);
+
+            if (choiceIndex === -1 && choiceTFIndex === -1) {
+                // \choice or \choiceTF not found
+                return noiDung;
+            }
+
+            let command = '';
+            let commandIndex = -1;
+
+            if (choiceIndex !== -1) {
+                command = '\\choice';
+                commandIndex = choiceIndex;
+            } else if (choiceTFIndex !== -1) {
+                command = '\\choiceTF';
+                commandIndex = choiceTFIndex;
+            }
+
+            // Content after \choice or \choiceTF
+            let noiDungSauCommand = noiDung.substring(commandIndex + command.length);
+
+            // Get positions of the first four pairs of braces
+            let cacVitriNgoacLon = layCacNgoacLonSauCommand(noiDungSauCommand);
+
+            if (cacVitriNgoacLon.length >= 4) {
+                let cacNgoacLonGoc = cacVitriNgoacLon.map(pair =>
+                    noiDungSauCommand.slice(pair[0], pair[1] + 1)
+                );
+
+                // Shuffle the options
+                let cacNgoacLonHoanVi = shuffleArray(cacNgoacLonGoc);
+
+                // Build the new content after the command with the shuffled options
+                let noiDungSauCommandMoi = '';
+
+                // Insert a newline before the options for better formatting
+                noiDungSauCommandMoi += '\n';
+
+                // Concatenate the shuffled options, adding '\n' between them
+                noiDungSauCommandMoi += cacNgoacLonHoanVi.join('\n');
+
+                // Add the remaining content after the last option (if any)
+                let lastOptionEndIndex = cacVitriNgoacLon[cacVitriNgoacLon.length - 1][1] + 1;
+                if (lastOptionEndIndex < noiDungSauCommand.length) {
+                    noiDungSauCommandMoi += noiDungSauCommand.substring(lastOptionEndIndex);
+                }
+
+                // Combine the full content
+                noiDung = noiDung.substring(0, commandIndex + command.length) + noiDungSauCommandMoi;
+            }
+
+            return noiDung;
+        }
+
     // Hàm hoán vị các lựa chọn trong \choice và \choiceTF
-    function hoanViCacNgoacLon(noiDung) {
+    function hoanViCacNgoacLonQUAOK(noiDung) {
         // Tìm vị trí của \choice hoặc \choiceTF
         let choiceIndex = noiDung.search(/\\choice(?!TF)/);
         let choiceTFIndex = noiDung.search(/\\choiceTF/);
@@ -2148,7 +2206,7 @@ function shuffleArray(array) {
 }
 
 // Hàm hoán vị các lựa chọn trong \choice và \choiceTF
-function hoanViCacNgoacLon(noiDung) {
+function hoanViCacNgoacLonGGGGGGGGGGG(noiDung) {
     // Tìm vị trí của \choice hoặc \choiceTF
     let choiceIndex = noiDung.search(/\\choice(?!TF)/);
     let choiceTFIndex = noiDung.search(/\\choiceTF/);
