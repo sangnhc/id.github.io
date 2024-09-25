@@ -1002,6 +1002,11 @@
                 <input type="file" id="loadTexFile" accept=".tex" class="form-control-file">
                 <textarea class="form-control" id="outputCode" rows="10"></textarea>
             </div>
+            <!-- Thêm khung nhập link ảnh -->
+            <div class="form-group">
+                <label for="linkInput">Nhập Link Ảnh Mỗi Dòng Một Link</label>
+                <textarea class="form-control" id="linkInput" rows="4" placeholder="Dán các link ảnh vào đây..."></textarea>
+            </div>
             <!-- Thêm nút tăng giảm kích thước chữ -->
             <div class="form-group">
                 <button id="increaseFont" class="btn btn-info">Tăng Kích Thước Chữ</button>
@@ -1054,6 +1059,47 @@
             updateFontSize();
     </script>
     <script>
+        // Hàm để thay thế các placeholder bằng các đường dẫn ảnh từ khung linkInput
+            function replacePlaceholdersWithLinksH(inputCode) {
+                // Lấy nội dung từ khung linkInput và chuyển nó thành một mảng các đường dẫn
+                let linkInput = document.getElementById('linkInput').value.trim();
+                if (!linkInput) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Thiếu link ảnh',
+                        text: 'Vui lòng nhập các đường dẫn ảnh vào khung linkInput!'
+                    });
+                    return inputCode;
+                }
+
+                // Thay thế "thaysangnhc" trong mỗi đường dẫn thành "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2"
+                let links = linkInput.split('\n').map(link => {
+                    // Thay thế chuỗi "thaysangnhc" bằng chuỗi mới
+                    return link.replace("thaysangnhc", "gitlab.com/nguyensangnhc/hinh4web/-/raw/main/K12Hchuong2").trim();
+                }).filter(link => link !== '');
+
+                // Kiểm tra nếu số lượng khối TikZ và số lượng link không bằng nhau
+                if (links.length !== tikzBlocks.length) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Không khớp số lượng',
+                        text: `Số lượng hình (${tikzBlocks.length}) và số lượng link ảnh (${links.length}) không khớp! Vui lòng kiểm tra lại.`
+                    });
+                    return inputCode;
+                }
+
+                // Thay thế các placeholder bằng các đường dẫn ảnh tương ứng
+                inputCode = inputCode.replace(/<span class="highlight-hinh">HINH SỐ (\d+) Ở ĐÂY<\/span>/g, (match, number) => {
+                    const index = parseInt(number, 10) - 1;
+                    if (index >= 0 && index < links.length) {
+                        return `<img src="${links[index]}" class="center-img small-size">`;
+                    } else {
+                        return match; // Nếu không có đủ link, giữ nguyên placeholder
+                    }
+                });
+
+                return inputCode;
+            }
         function cleanExWithImmini(inputCode) {
                 // Tìm tất cả các đoạn từ \begin{ex} đến \end{ex}
                 return inputCode.replace(/\\begin\{ex\}([\s\S]*?)\\end\{ex\}/g, (match, content) => {
@@ -1126,13 +1172,14 @@
                 });
 
                 // Truyền tikzCounter vào hàm replacePlaceholdersWithLinks
-                inputCode = replacePlaceholdersWithLinks(inputCode, tikzCounter);
+                inputCode = replacePlaceholdersWithLinks(inputCode, tikzCounter);                
                 // Xóa các dòng trống, bao gồm các dòng chỉ chứa khoảng trắng
                 inputCode = inputCode.replace(/^\s*[\r\n]/gm, '');
                 inputCode = inputCode.replace(/<span class="highlight-hinh">HINH SỐ \d+ Ở ĐÂY<\/span>/g, match => {
                     return `<div style="text-align: center; margin: 10px 0;">${match}</div>`;
                 });
                 inputCode = inputCode.replace(/^\s*(\\cau|\\Closesolutionfile|\\indapan|\\Opensolutionfile).*$/gm, '');
+                
                 return inputCode;
             }
 
